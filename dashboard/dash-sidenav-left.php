@@ -111,7 +111,7 @@
                             <span>Classroom</span>
                         </a>
                     </li>
-                     <li
+                <!--      <li
                     <?php if ($pagename == "Reports"): ?>
                         class="active"
                     <?php else: ?>
@@ -127,7 +127,7 @@
                                 <a href="../assets/" class=" waves-effect waves-block" target="_BLANK">List of student</a>
                             </li>
                         </ul>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
             <!-- #Menu -->
