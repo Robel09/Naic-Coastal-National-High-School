@@ -16,11 +16,7 @@
                         </div>
                         <div class="body">
                             <!-- Basic Example -->
-            <?php 
-            if (condition) {
-                # code...
-            }
-            ?>
+           
             <div class="row clearfix">
                 <?php 
                 
