@@ -11,7 +11,7 @@
     if(isset($_SESSION['login_level']) )
     {      
         $login_level = $_SESSION['login_level'];
-        if ($login_level != 2) {
+        if ($login_level != 3) {
          
           header('location: error404.php');
         }
@@ -31,7 +31,7 @@
  <?php
     include("dash-head.php");
     ?>
-<body class="theme-light-blue">
+<body class="theme-red">
     <!-- Page Loader -->
     <div class="page-loader-wrapper">
         <div class="loader">
