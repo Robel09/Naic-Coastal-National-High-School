@@ -31,7 +31,7 @@
  <?php
     include("dash-head.php");
     ?>
-<body class="theme-light-blue">
+<body class="theme-red">
     <!-- Page Loader -->
     <div class="page-loader-wrapper">
         <div class="loader">
