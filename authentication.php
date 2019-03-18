@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * @package    DEVELOPMENT OF AN E-LEARNING SYSTEM FOR MGA AKDANG PAMPANITIKANG MEDITERRANEAN AT KANLURANIN
  *
@@ -28,7 +28,7 @@ include("inc/main-head.php");
                 <div id="sign_in" >
                     <div class="text-center msg">
                         
-                        <img src="assets/images/logo.jpg" alt="CvSU Logo" style="width: 100px;">
+                        <img src="assets/images/logo_vectorized.png" alt="Naic HS Logo" style="width: 100px;">
                         <h5>Naic Coastal National High School</h5>
                         <h3>E-Learning System</h3>
                         <small>Login here using your username and password</small>
