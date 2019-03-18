@@ -31,7 +31,7 @@
  <?php
     include("dash-head.php");
     ?>
-<body class="theme-light-blue">
+<body class="theme-red">
     <!-- Page Loader -->
     <div class="page-loader-wrapper">
         <div class="loader">
@@ -64,6 +64,14 @@
 
     <section class="content">
         <div class="container-fluid">
+          
+            <div class="block-header">
+                <h2> Account Management</h2>
+            </div>
+          <ol class="breadcrumb breadcrumb-bg-light-blue">
+                <li><a href="javascript:void(0);"><i class="material-icons">home</i> Home</a></li>
+                <li><a href="javascript:void(0);"><i class="material-icons">archive</i> Account</a></li>
+            </ol>
             <?php
               echo '<pre>';
             var_dump($_SESSION);
@@ -73,11 +81,6 @@
             <div class="row clearfix">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
-                        <div class="header">
-                            <h2>
-                                Account Management
-                            </h2>
-                        </div>
                         <div class="body">
                             <div class="table-responsive">
                                      <div class="removeMessages"></div>
