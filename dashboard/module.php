@@ -56,6 +56,7 @@
     <section>
         <?php 
         include("dash-sidenav-left.php");
+        $mod_ID = $_REQUEST['mod_ID'];
         ?>
 
     </section>
@@ -70,71 +71,62 @@
 
             <ol class="breadcrumb breadcrumb-bg-blue">
                 <li><a href="index"><i class="material-icons">home</i> Home</a></li>
-                <li  class="active"><a href="javascript:void(0);"><i class="material-icons ">account_box</i> Section</a></li>
+                <li><a href="room"><i class="material-icons ">account_box</i> Room</a></li>
+                <li  class="active"><a href="javascript:void(0);"><i class="material-icons ">account_box</i> Modyul <?php echo  $mod_ID;?></a></li>
             </ol>
             <div class="row clearfix">
                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                            <div class="card">
                                <div class="header">
                                    <h2 class="text-center"> MGA AKDANG PAMPANITIKANG MEDITERRANEAN AT KANLURANIN</h2>
-                                   
+                                 
                                    <br>
                                </div>
                                <div class="body">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                      <div class="panel bg-grey">
-                                          <div class="panel-heading text-center" style="border-bottom-style: groove;
-                                              border-bottom-color: coral;
-                                              border-bottom-width: 7px;">
-                                              <h4>SECTION ASSIGN</h4>
+                                <?php 
+                                  $sql = "SELECT * FROM `room_module_topic` WHERE mod_ID = $mod_ID";
+                                  $query = mysqli_query($conn,$sql);
+                                                 
+                                                   
+                                    if (mysqli_num_rows($query) > 0) {
+                                          // output data of each row
+                                        $bg = array();
+                                        
+                                        while($topic = mysqli_fetch_assoc($query)) 
+                                        {
+                                        ?>
+                                        <div class="panel panel-info">
+                                          <div class="panel-heading"><?php echo $topic['topic_Title']; ?></div>
+                                          <div class="body" style="min-height: 100px;">
+                                            <ul style="list-style: none ;">
+                                              <?php 
+                                              $topicID = $topic['topic_ID'];
+                                              $sql = "SELECT * FROM `room_module_subtopic` WHERE topic_ID = $topicID";
+                                              $subquery = mysqli_query($conn,$sql);
+                                              if (mysqli_num_rows($subquery) > 0) {
+                                                while($subtopic = mysqli_fetch_assoc($subquery)) 
+                                                {
+                                                  ?>
+                                                  <li><a href="#" onclick="view(<?php echo $subtopic["subtop_ID"]?>)"><?php echo $subtopic["subtop_Title"]?></a></li>
+                                                  <?php
+                                                }
+                                              }
+                                              ?>
+                                            </ul>
                                           </div>
-                                          <div class="panel-body" style="min-height: 100px;">
-                                              
-                                              <table class="table table-bordered">
-                                                  <tbody>
-                                                    
-                                                        <?php 
-
-                                                        $sql = "SELECT rtd.user_ID,rtd.rtd_FName,rtd.rtd_MName,rtd.rtd_LName,rsn.suffix,sy.*, rs.* FROM `schoolyear` sy
-                                                        LEFT JOIN record_teacher_details rtd ON sy.rtd_ID = rtd.rtd_ID
-                                                        LEFT JOIN ref_section rs ON sy.section_ID = rs.section_ID
-                                                        LEFT JOIN ref_suffixname rsn ON rtd.suffix_ID = rsn.suffix_ID
-                                                        WHERE `rtd`.`user_ID` = '$user_id'";
-                                                        $query = mysqli_query($conn,$sql);
-                                                                       
-                                                                         
-                                                          if (mysqli_num_rows($query) > 0) {
-                                                                // output data of each row
-                                                             
-                                                              while($section = mysqli_fetch_assoc($query)) 
-                                                              {
-                                                              ?>
-                                                                <tr>
-                                                              <td>
-                                                               <h4><?php echo $section['section_Name']?></h4>
-                                                               <?php echo $section['sy_year']?>
-                                                               <div class="btn btn-primary pull-right" onClick="window.open('room?sy_ID=<?php echo $section['sy_ID']?>');">VIEW</div>
-                                                              </td>
-                                                               </tr>
-                                                              <?php
-                                                              }
-                                                             }
-                                                        ?>
-                                                          
-                                                      
-                                                  </tbody>
-                                              </table>
-                                            
-                                            </div>
-                                          </div>
-                                      </div>
-                                    </div>
-                                </div>
+                                        </div>
+                                        <?php
+                                        }
+                                       }
+                                  ?>
+                                    
+    
+                               </div>
                            </div>
                     </div>
             </div>   
-        
+   
+          
         </div>
 
     </section>
@@ -147,9 +139,9 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title" id="mtitle-ann">Modal Header</h4>
+        <h4 class="modal-title">Modal Header</h4>
       </div>
-      <div class="modal-body" id="mbody-ann">
+      <div class="modal-body" >
         <p>Some text in the modal.</p>
       </div>
       <div class="modal-footer">
@@ -160,7 +152,6 @@
   </div>
 </div>
 
- 
     <!-- Jquery Core Js -->
     <script src="../assets/plugins/jquery/jquery.min.js"></script>
 
@@ -193,33 +184,26 @@
 
     <!-- Demo Js -->
     <script src="../assets/js/demo.js"></script>
-    <script type="text/javascript">
-   
+    <script type="text/javascript" language="javascript" >
 
-    function view($var){
-    var news_ID = $var;
+function view($var){
+    var subtop_ID = $var;
     $('#view_modal').modal('show');
-      $.ajax({
-          url:"module-topic-content.php",
-          type:"POST",
-          data:{news_ID:news_ID},
-          dataType:"json",
-          success:function(data)
-          {
-            $('.modal-title').html(data.news_Title);
-            $('.modal-body').html(data.news_Content);
-            
-          },
-          error:function(data) {
-            alert(JSON.stringify(data));
-          }
-        });
-  
+    $.ajax({
+        url:"module-topic-content.php",
+        method:"POST",
+        data:{subtop_ID:subtop_ID},
+        dataType:"json",
+        success:function(data)
+        {
+          $('.modal-title').html(data.subtopic_title);
+          $('.modal-body').html(data.subtopic_content);
 
-    }
-
-
-    </script>
+          
+        }
+      });
+}
+</script>
 </body>
 
 </html>

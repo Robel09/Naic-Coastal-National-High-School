@@ -4,23 +4,16 @@
 
    
     $pagename = "Dashboard";
-    $username = $_SESSION['login_user'];
-    $user_img = "../assets/images/user.png";
-    $user_email = "mail@gmail.com";
+    $username = $_SESSION['user_Name'];
+    $user_id = $_SESSION['login_id'];
+    $user_img = $_SESSION['user_img'];
+    $user_email = $_SESSION['user_Email'];
     $script_for_specific_page = "index";
     if(isset($_SESSION['login_level']) )
     {      
     echo $login_level = $_SESSION['login_level'];
        
          
-    }
-
-
-    if (empty($_REQUEST['page'])) {
-        $page = "";
-    }
-    else{
-        $page = $_REQUEST['page'];
     }
 ?>
 <!DOCTYPE html>
