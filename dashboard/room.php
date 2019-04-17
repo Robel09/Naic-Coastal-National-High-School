@@ -139,7 +139,7 @@ WHERE  sy_ID = $reqsy_ID";
                                               
                                           </div>
                                           <div class="panel-body" style="min-height: 100px;">
-<button class="btn btn-success pull-right">ADD ANNOUNCEMENT</button>
+<button class="btn btn-success pull-right" data-toggle="modal" data-target="#add_news">ADD ANNOUNCEMENT</button>
 <br><br>
                                               <table class="table table-bordered">
                                                   <tbody>
@@ -160,7 +160,22 @@ WHERE  sy_ID = $reqsy_ID";
                                                               <td>
                                                                <h4><?php echo $news['news_Title']?></h4>
                                                                Pub: (<?php echo $news['news_Pub']?>)
-                                                               <div class="btn btn-primary pull-right" onclick="view_news(<?php echo $news['news_ID']?>)">VIEW</div>
+
+                                                               <?php 
+                                                               if ($login_level == 2) {
+                                                                 ?>
+                                                                 <div class="btn btn-danger pull-right delete_news" onclick="delete_news(<?php echo $news['news_ID']?>)" id="<?php echo $news['news_ID']?>">DELETE</div>
+                                                                 <div class="btn btn-info pull-right update_news"  id="<?php echo $news['news_ID']?>">UPDATE</div>
+                                                                 <?php
+                                                               }
+                                                               else{
+                                                                ?>
+                                                                <?php
+                                                               }
+                                                               ?>
+                                                               
+
+                                                               <div class="btn btn-primary pull-right" onclick="view_news(<?php echo $news['news_ID']?>)" id="<?php echo $news['news_ID']?>">VIEW</div>
                                                               </td>
                                                                </tr>
                                                               <?php
@@ -293,7 +308,7 @@ WHERE  sy_ID = $reqsy_ID";
                                               <h4>Assignment</h4>
                                           </div>
                                           <div class="panel-body" style="min-height: 100px;">
-                                              <button class="btn btn-primary pull-right">ADD ASSIGNMENT</button>
+                                              <button class="btn btn-primary pull-right"  data-toggle="modal" data-target="#add_assignment">ADD ASSIGNMENT</button>
 <br><br>
                                               <table class="table table-bordered">
                                                   <tbody>
@@ -362,7 +377,7 @@ WHERE  sy_ID = $reqsy_ID";
                                               <h4>QUIZ</h4>
                                           </div>
                                           <div class="panel-body" style="min-height: 100px;">
-                                               <button class="btn btn-primary pull-right">ADD QUIZ</button>
+                                               <button class="btn btn-primary pull-right"  data-toggle="modal" data-target="#add_quiz">ADD QUIZ</button>
 <br><br>
                                               <table class="table table-bordered">
                                                   <tbody>
@@ -426,6 +441,166 @@ WHERE  sy_ID = $reqsy_ID";
     </section>
 
 <!-- Modal -->
+<div id="add_news" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" id="mtitle-ann">Add Announcement</h4>
+      </div>
+      <form action="action.php?sy_ID=<?php echo $_REQUEST["sy_ID"]?>" method="POST">
+      <div class="modal-body" id="mbody-ann">
+       <div class="row clearfix">
+                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                      <label for="news_Title">Name</label>
+                  </div>
+                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                      <div class="form-group">
+                          <div class="form-line">
+                              <input type="text" class="form-control" id="news_Title" name="news_Title" placeholder="Announcement Title">
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <br>
+                <div class="row clearfix">
+                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                      <label for="news_Content">Content</label>
+                  </div>
+                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                      <div class="form-group">
+                          <div class="form-line">
+                              <textarea class="form-control" id="news_Content" name="news_Content"></textarea>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <br>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success" value="submit_announcement" name="submit_announcement">Submit</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </form>
+    </div>
+
+  </div>
+</div>
+<!-- Modal -->
+<div id="add_assignment" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" id="mtitle-ann">Add Assignment</h4>
+      </div>
+      <form action="action.php?sy_ID=<?php echo $_REQUEST["sy_ID"]?>" method="POST">
+      <div class="modal-body" id="mbody-assign">
+        <div class="row clearfix">
+                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                      <label for="assignment_Name">Name</label>
+                  </div>
+                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                      <div class="form-group">
+                          <div class="form-line">
+                              <input type="text" class="form-control" id="assignment_Name" name="assignment_Name" placeholder="Assignment Name">
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <br>
+               <div class="row clearfix">
+                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                      <label for="assignment_Instruction">Instruction</label>
+                  </div>
+                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                      <div class="form-group">
+                          <div class="form-line">
+                              <textarea class="form-control" id="assignment_Instruction" name="assignment_Instruction"></textarea>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <br>
+               <div class="row clearfix">
+                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                      <label for="assignment_Points">Points</label>
+                  </div>
+                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                      <div class="form-group">
+                          <div class="form-line">
+                            <input type="number" class="form-control" id="assignment_Points" name="assignment_Points" placeholder="Points">
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <br>
+               <div class="row clearfix">
+                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                      <label for="assignment_due">Due Date</label>
+                  </div>
+                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                      <div class="form-group">
+                          <div class="form-line">
+                            <input type="datetime-local" class="form-control" id="assignment_due" name="assignment_due" >
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <br>
+             
+              
+      </div>
+   
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success" value="submit_assignment" name="submit_assignment">Submit</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+       </form>
+    </div>
+
+  </div>
+</div>
+<!-- Modal -->
+<div id="add_quiz" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" id="mtitle-ann">Add Quiz</h4>
+      </div>
+      <form action="action.php?sy_ID=<?php echo $_REQUEST["sy_ID"]?>" method="POST">
+      <div class="modal-body" id="mbody-ann">
+       <div class="row clearfix">
+                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                      <label for="assignment_Name">Name</label>
+                  </div>
+                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                      <div class="form-group">
+                          <div class="form-line">
+                              <input type="text" class="form-control" id="assignment_Name" name="assignment_Name" placeholder="Assignment Name">
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <br>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success" value="submit_quiz" name="submit_quiz">Submit</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </form>
+    </div>
+
+  </div>
+</div>
+<!-- Modal -->
 <div id="view_news" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
 
@@ -433,9 +608,9 @@ WHERE  sy_ID = $reqsy_ID";
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title" id="mtitle-ann">Modal Header</h4>
+        <h4 class="modal-title newsmod" id="mtitle-ann">Modal Header</h4>
       </div>
-      <div class="modal-body" id="mbody-ann">
+      <div class="modal-body newsmod" id="mbody-ann">
         <p>Some text in the modal.</p>
       </div>
       <div class="modal-footer">
@@ -453,14 +628,63 @@ WHERE  sy_ID = $reqsy_ID";
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title" id="mtitle-ann">Modal Header</h4>
+        <h4 class="modal-title actvmod" id="mtitle-ann">Modal Header</h4>
       </div>
-      <div class="modal-body" id="mbody-ann">
+      <div class="modal-body actvmod" id="mbody-ann">
         <p>Some text in the modal.</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="update_news" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title unewsmod" id="mtitle-ann">Add Announcement</h4>
+      </div>
+      <form action="action.php?sy_ID=<?php echo $_REQUEST["sy_ID"]?>" method="POST">
+      <div class="modal-body unewsmod" id="mbody-ann">
+       <div class="row clearfix">
+                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                      <label for="unews_Title">Name</label>
+                  </div>
+                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                      <div class="form-group">
+                          <div class="form-line">
+                              <input type="text" class="form-control" id="unews_Title" name="news_Title" placeholder="Announcement Title">
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <br>
+                <div class="row clearfix">
+                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                      <label for="unews_Content">Content</label>
+                  </div>
+                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                      <div class="form-group">
+                          <div class="form-line">
+                              <textarea class="form-control" id="unews_Content" name="news_Content"></textarea>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <br>
+      </div>
+      <div class="modal-footer">
+         <input type="hidden" class="form-control" id="unews_ID" name="news_ID" placeholder="Announcement Title">
+        <button type="submit" class="btn btn-success" value="edit_announcement" name="edit_announcement">Submit</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </form>
     </div>
 
   </div>
@@ -511,8 +735,8 @@ WHERE  sy_ID = $reqsy_ID";
           dataType:"json",
           success:function(data)
           {
-            $('.modal-title').html(data.news_Title);
-            $('.modal-body').html(data.news_Content);
+            $('.modal-title.actvmod').html(data.news_Title);
+            $('.modal-body.actvmod').html(data.news_Content);
             
           },
           error:function(data) {
@@ -532,8 +756,8 @@ WHERE  sy_ID = $reqsy_ID";
           dataType:"json",
           success:function(data)
           {
-            $('.modal-title').html(data.news_Title);
-            $('.modal-body').html(data.news_Content);
+            $('.modal-title.newsmod').html(data.news_Title);
+            $('.modal-body.newsmod').html(data.news_Content);
             
           },
           error:function(data) {
@@ -543,6 +767,52 @@ WHERE  sy_ID = $reqsy_ID";
   
 
     }
+
+
+    $(document).on('click', '.delete_news', function(){
+    var ann_ID = $(this).attr("id");
+    if(confirm("Are you sure you want to delete this?"))
+    {
+    
+      $.ajax({
+        url:"action.php",
+        type:"POST",
+        data:{delete_announcement:ann_ID},
+        success:function(data)
+        {
+          alert(data);
+        }
+      });
+    }
+    else
+    {
+      return false; 
+    }
+  });
+     $(document).on('click', '.update_news', function(){
+    var news_ID = $(this).attr("id");  
+        $.ajax({
+      
+         url:"module-topic-content.php",
+          type:"POST",
+          data:{news_ID:news_ID},
+          dataType:"json",
+          success:function(data)
+          {
+            $('#update_news').modal('show');
+            $('#unews_Title').val(data.news_Title);
+            $('#unews_Content').val(data.news_Content);
+            $('#unews_ID').val(news_ID);
+            
+          },
+          error:function(data) {
+            alert(JSON.stringify(data));
+          }
+      });
+  
+  });
+    
+    
 
 
     </script>

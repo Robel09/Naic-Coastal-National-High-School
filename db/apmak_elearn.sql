@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 07, 2019 at 11:46 AM
+-- Generation Time: Apr 17, 2019 at 02:01 AM
 -- Server version: 10.1.26-MariaDB
 -- PHP Version: 7.1.8
 
@@ -105,7 +105,8 @@ CREATE TABLE `news` (
 INSERT INTO `news` (`news_ID`, `news_Title`, `news_Content`, `news_Pub`, `sy_ID`) VALUES
 (1, 'Title1', 'asdasdasd 123123', '2019-03-21 04:05:05', 1),
 (2, 'Title2', 'asdasdasd', '2019-03-21 04:05:08', 1),
-(3, 'Title3', 'asdasdasdxxxx', '2019-03-21 04:05:10', 1);
+(3, 'Title3', 'asdasdasdxxxx', '2019-03-21 04:05:10', 1),
+(7, '3333333333', 'aaaaaaaaaaaaaaaasdasd', '2019-04-16 23:56:51', 1);
 
 -- --------------------------------------------------------
 
@@ -673,7 +674,7 @@ ALTER TABLE `choices`
 -- AUTO_INCREMENT for table `news`
 --
 ALTER TABLE `news`
-  MODIFY `news_ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `news_ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `questions`
 --
@@ -693,7 +694,7 @@ ALTER TABLE `record_student_details`
 -- AUTO_INCREMENT for table `record_teacher_details`
 --
 ALTER TABLE `record_teacher_details`
-  MODIFY `rtd_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `rtd_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `ref_section`
 --

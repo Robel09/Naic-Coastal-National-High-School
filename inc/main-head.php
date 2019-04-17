@@ -2,7 +2,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>index</title>
+    <title>Login Authentication</title>
     <!-- Favicon-->
     <link rel="icon" href="assets/images/logo.ico" type="image/x-icon">
 
@@ -47,4 +47,3 @@
     }
     </style>
 </head>
-
