@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 17, 2019 at 02:01 AM
+-- Generation Time: Apr 21, 2019 at 09:45 PM
 -- Server version: 10.1.26-MariaDB
 -- PHP Version: 7.1.8
 
@@ -43,7 +43,7 @@ CREATE TABLE `assignment` (
 
 INSERT INTO `assignment` (`assignment_ID`, `sy_ID`, `assignment_Name`, `assignment_Instruction`, `assignment_Points`, `assignment_Due`) VALUES
 (1, 1, 'Assignment 1', 'instruction', 100, '2019-04-06'),
-(2, 1, 'Assignment 2', 'instruction', 100, '2019-04-08');
+(8, 1, 'Assignment 2', 'instruction', 100, '2019-04-08');
 
 -- --------------------------------------------------------
 
@@ -105,8 +105,7 @@ CREATE TABLE `news` (
 INSERT INTO `news` (`news_ID`, `news_Title`, `news_Content`, `news_Pub`, `sy_ID`) VALUES
 (1, 'Title1', 'asdasdasd 123123', '2019-03-21 04:05:05', 1),
 (2, 'Title2', 'asdasdasd', '2019-03-21 04:05:08', 1),
-(3, 'Title3', 'asdasdasdxxxx', '2019-03-21 04:05:10', 1),
-(7, '3333333333', 'aaaaaaaaaaaaaaaasdasd', '2019-04-16 23:56:51', 1);
+(3, 'Title3', 'asdasdasdxxxx', '2019-03-21 04:05:10', 1);
 
 -- --------------------------------------------------------
 
@@ -153,7 +152,8 @@ CREATE TABLE `quiz` (
 --
 
 INSERT INTO `quiz` (`quiz_ID`, `sy_ID`, `quiz_Name`) VALUES
-(1, 1, 'Quiz 1');
+(1, 1, 'Quiz 1'),
+(4, 1, 'zx');
 
 -- --------------------------------------------------------
 
@@ -664,7 +664,7 @@ ALTER TABLE `user_level`
 -- AUTO_INCREMENT for table `assignment`
 --
 ALTER TABLE `assignment`
-  MODIFY `assignment_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `assignment_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `choices`
 --
@@ -674,7 +674,7 @@ ALTER TABLE `choices`
 -- AUTO_INCREMENT for table `news`
 --
 ALTER TABLE `news`
-  MODIFY `news_ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `news_ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `questions`
 --
@@ -684,7 +684,7 @@ ALTER TABLE `questions`
 -- AUTO_INCREMENT for table `quiz`
 --
 ALTER TABLE `quiz`
-  MODIFY `quiz_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `quiz_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `record_student_details`
 --

@@ -62,12 +62,31 @@
                 <li><a href="javascript:void(0);"><i class="material-icons">home</i> Home</a></li>
             </ol>
 
-            <?php
-              echo '<pre>';
-            var_dump($_SESSION);
-             error_reporting( E_ALL );
-            echo '</pre>';
-             ?>
+             
+            <div class="row">
+                <div class="col-sm-12 text-center " style="min-height: 100px;">
+                     <img src="../assets/images/logo.png" height="80" style="margin-left: -550px;"> <H3 style="margin-top: -50px;">NAIC COSTAL NATIONAL HIGH SCHOOL</H3>
+                </div>
+            </div>
+          
+             <div class="row">
+                <div class="col-sm-6">
+                     <div class="panel panel-default"  style="min-height: 250px">
+                         <div class="panel-heading  text-center" style=" border-bottom: 5px solid ;"><strong> MISSION</strong></div>
+                         <div class="panel-body text-center">
+                          MISSION MISSION   MISSION MISSION   MISSION MISSION  MISSION MISSION
+                         </div>
+                     </div>
+                 </div>
+                 <div class="col-sm-6">
+                     <div class="panel panel-default"  style="min-height: 250px">
+                         <div class="panel-heading text-center" style="border-bottom: 5px solid ;"><strong> VISION</strong></div>
+                         <div class="panel-body text-center">
+                           VISION VISION VISION VISION VISION VISION VISION VISION
+                         </div>
+                     </div>
+                 </div>
+             </div>
          
         </div>
     </section>

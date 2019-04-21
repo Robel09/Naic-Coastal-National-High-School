@@ -10,8 +10,6 @@
 						<ul>
 							<li class="active"><a href="index">Home</a></li>
 							<li><a href="subject">Subject</a></li>
-							<li><a href="about">About</a></li>
-							<li><a href="contact">Contact</a></li>
 							<li class="btn-cta"><a href="authentication" target="_BLANK"><span>Login</span></a></li>
 						</ul>
 					</div>

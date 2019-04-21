@@ -293,7 +293,7 @@ WHERE  sy_ID = $reqsy_ID";
                                     <ul class="nav nav-tabs">
                                       <li class="active"><a data-toggle="tab" href="#assignment">Assigment</a></li>
                                       <li><a data-toggle="tab" href="#quiz">Quiz</a></li>
-                                      <li><a data-toggle="tab" href="#exam">Exam</a></li>
+                                      <!-- <li><a data-toggle="tab" href="#exam">Exam</a></li> -->
                                     </ul>
 
                                     <div class="tab-content">
@@ -308,7 +308,13 @@ WHERE  sy_ID = $reqsy_ID";
                                               <h4>Assignment</h4>
                                           </div>
                                           <div class="panel-body" style="min-height: 100px;">
-                                              <button class="btn btn-primary pull-right"  data-toggle="modal" data-target="#add_assignment">ADD ASSIGNMENT</button>
+                                             <?php 
+                                              if ($login_level == 2) {
+                                             ?>
+                                              <button class="btn btn-primary pull-right add_assignment"  data-toggle="modal" data-target="#add_assignment">ADD ASSIGNMENT</button>
+                                              <?php 
+                                              }
+                                             ?>
 <br><br>
                                               <table class="table table-bordered">
                                                   <tbody>
@@ -327,6 +333,7 @@ WHERE  sy_ID = $reqsy_ID";
                                                               while($assignment = mysqli_fetch_assoc($query)) 
                                                               {
                                                                 $date_now = date("Y-m-d"); // this format is string comparable
+                                                                 $assignment_ID = $assignment['assignment_ID'];
                                                                 $assignment_Due = $assignment['assignment_Due'];
                                                                 
                                                               ?>
@@ -334,12 +341,21 @@ WHERE  sy_ID = $reqsy_ID";
                                                               <td>
                                                                <h4><?php echo $assignment['assignment_Name']?> (Pts.<?php echo $assignment['assignment_Points']?>)</h4>
                                                                Due(<?php echo $assignment['assignment_Due']?>)
-                                                               <?php 
-                                                               if ($date_now > $assignment_Due) {
-                                                                }else{
-                                                                    echo '<div class="btn btn-primary pull-right">VIEW</div>';
-                                                                }
+                                                                 <?php 
+                                                               if ($login_level == 2) {
+                                                                 ?>
+                                                                 <div class="btn btn-danger pull-right delete_assignment" id="<?php echo $assignment_ID?>">DELETE</div>
+                                                                 <div class="btn btn-info pull-right update_assignment"  id="<?php echo $assignment_ID?>">UPDATE</div>
+                                                                 <?php
+                                                               }
+                                                               else{
+                                                                ?>
+                                                                <?php
+                                                               }
                                                                ?>
+                                                               
+
+                                                               <div class="btn btn-primary pull-right view_assignment" id="<?php echo $assignment_ID?>">VIEW</div>
                                                                
                                                               </td>
                                                                </tr>
@@ -377,7 +393,13 @@ WHERE  sy_ID = $reqsy_ID";
                                               <h4>QUIZ</h4>
                                           </div>
                                           <div class="panel-body" style="min-height: 100px;">
-                                               <button class="btn btn-primary pull-right"  data-toggle="modal" data-target="#add_quiz">ADD QUIZ</button>
+                                            <?php 
+                                              if ($login_level == 2) {
+                                             ?>
+                                               <button class="btn btn-primary pull-right add_quizz"  data-toggle="modal" data-target="#add_quiz">ADD QUIZ</button>
+                                               <?php 
+                                            }
+                                             ?>
 <br><br>
                                               <table class="table table-bordered">
                                                   <tbody>
@@ -393,11 +415,27 @@ WHERE  sy_ID = $reqsy_ID";
                                                              
                                                               while($quiz = mysqli_fetch_assoc($query)) 
                                                               {
+                                                                $quiz_ID = $quiz['quiz_ID'];
                                                               ?>
                                                                 <tr>
                                                               <td>
                                                                <h4><?php echo $quiz['quiz_Name']?></h4>
-                                                               <div class="btn btn-primary pull-right" onclick="window.open('quiz?quiz_ID=<?php echo $quiz['quiz_ID']?>')">TAKE</div>
+                                                                  <?php 
+                                                               if ($login_level == 2) {
+                                                                 ?>
+                                                                 <div class="btn btn-danger pull-right delete_quiz" id="<?php echo $quiz_ID?>">DELETE</div>
+                                                                 <div class="btn btn-info pull-right update_quiz"  id="<?php echo $quiz_ID?>">UPDATE</div>
+                                                                  <div class="btn btn-primary pull-right view_quizqa"  id="<?php echo $quiz_ID?>">Q/A</div>
+                                                                 <?php
+                                                               }
+                                                              if ($login_level == 1) {
+                                                                ?>
+                                                                <div class="btn btn-primary pull-right" onclick="window.open('quiz?quiz_ID=<?php echo $quiz_ID?>')">TAKE</div>
+                                                                <?php
+                                                               }
+                                                               ?>
+                                                               
+                                                               
                                                               </td>
                                                                </tr>
                                                               <?php
@@ -496,7 +534,7 @@ WHERE  sy_ID = $reqsy_ID";
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title" id="mtitle-ann">Add Assignment</h4>
+        <h4 class="modal-title" id="atitle-ann">Add Assignment</h4>
       </div>
       <form action="action.php?sy_ID=<?php echo $_REQUEST["sy_ID"]?>" method="POST">
       <div class="modal-body" id="mbody-assign">
@@ -557,7 +595,8 @@ WHERE  sy_ID = $reqsy_ID";
       </div>
    
       <div class="modal-footer">
-        <button type="submit" class="btn btn-success" value="submit_assignment" name="submit_assignment">Submit</button>
+        <input type="hidden" name="ass_ID" value="ass_ID" id="ass_ID">
+        <button type="submit" class="btn btn-success" value="submit_assignment" name="submit_assignment" id="submit_assignment">Submit</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
        </form>
@@ -573,18 +612,18 @@ WHERE  sy_ID = $reqsy_ID";
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title" id="mtitle-ann">Add Quiz</h4>
+        <h4 class="modal-title" id="qtitle-ann">Add Quiz</h4>
       </div>
       <form action="action.php?sy_ID=<?php echo $_REQUEST["sy_ID"]?>" method="POST">
-      <div class="modal-body" id="mbody-ann">
+      <div class="modal-body" id="qtitle-ann">
        <div class="row clearfix">
                   <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                      <label for="assignment_Name">Name</label>
+                      <label for="q_Name">Name</label>
                   </div>
                   <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                       <div class="form-group">
                           <div class="form-line">
-                              <input type="text" class="form-control" id="assignment_Name" name="assignment_Name" placeholder="Assignment Name">
+                              <input type="text" class="form-control" id="q_Name" name="q_Name" placeholder="Assignment Name">
                           </div>
                       </div>
                   </div>
@@ -600,6 +639,8 @@ WHERE  sy_ID = $reqsy_ID";
 
   </div>
 </div>
+
+
 <!-- Modal -->
 <div id="view_news" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
@@ -689,6 +730,30 @@ WHERE  sy_ID = $reqsy_ID";
 
   </div>
 </div>
+
+<div id="view_quizqa" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title qamod" id="mtitle-ann">Question And Answer</h4>
+      </div>
+      <form action="action.php?sy_ID=<?php echo $_REQUEST["sy_ID"]?>" method="POST">
+      <div class="modal-body qamod" id="mbody-ann">
+      
+      </div>
+      <div class="modal-footer">
+         <input type="hidden" class="form-control" id="qz_ID" name="qz_ID" placeholder="">
+        <button type="submit" class="btn btn-success" value="qa_submit" name="qa_submit">Submit</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </form>
+    </div>
+
+  </div>
+</div>
  
     <!-- Jquery Core Js -->
     <script src="../assets/plugins/jquery/jquery.min.js"></script>
@@ -771,6 +836,7 @@ WHERE  sy_ID = $reqsy_ID";
 
     $(document).on('click', '.delete_news', function(){
     var ann_ID = $(this).attr("id");
+    var sy_ID = <?php echo $_REQUEST['sy_ID']?>;
     if(confirm("Are you sure you want to delete this?"))
     {
     
@@ -781,6 +847,7 @@ WHERE  sy_ID = $reqsy_ID";
         success:function(data)
         {
           alert(data);
+         location.reload('room?sy_ID='+sy_ID)
         }
       });
     }
@@ -811,8 +878,153 @@ WHERE  sy_ID = $reqsy_ID";
       });
   
   });
+         $(document).on('click', '.add_assignment', function(){
+         $('.modal-title#atitle-ann').text('Add Assignment');
+      $('#submit_assignment').show();
+         
+         $('#submit_assignment').attr('name', 'submit_assignment');
+         $('#assignment_Name').prop("disabled", false);
+            $('#assignment_Instruction').prop("disabled", false);
+            $('#assignment_Points').prop("disabled", false);
+            $('#assignment_due').prop("disabled", false);
+         
+  
+  });
+    $(document).on('click', '.view_assignment', function(){
+    var ass_ID = $(this).attr("id");  
+      $('#add_assignment').modal('show');
+     $('.modal-title#atitle-ann').text('View Assignment');
+       $('#submit_assignment').hide();
     
+
+        $.ajax({
+      
+         url:"module-topic-content.php",
+          type:"POST",
+          data:{view_assignment:ass_ID},
+          dataType:"json",
+          success:function(data)
+          {
+            $('#assignment_Name').prop("disabled", true);
+            $('#assignment_Instruction').prop("disabled", true);
+            $('#assignment_Points').prop("disabled", true);
+            $('#assignment_due').prop("disabled", true);
+            $('#assignment_Name').val(data.Name);
+            $('#assignment_Instruction').val(data.Instruction);
+            $('#assignment_Points').val(data.Points);
+            $('#assignment_due').val(data.Due);
+            
+          },
+          error:function(data) {
+            alert(JSON.stringify(data));
+          }
+      });
+
+  
+  });
+        $(document).on('click', '.update_assignment', function(){
+    var ass_ID = $(this).attr("id");  
+    $('#add_assignment').modal('show');
+    $('.modal-title#atitle-ann').text('Update Assignment');
+    $('#submit_assignment').attr('name', 'update_assignment');
+    $('#submit_assignment').attr('value', 'update_assignment');
+    $('#ass_ID').val(ass_ID);
+    alert(ass_ID);
+     $('#submit_assignment').show();
+        $.ajax({
+      
+         url:"module-topic-content.php",
+          type:"POST",
+          data:{view_assignment:ass_ID},
+          dataType:"json",
+          success:function(data)
+          {
+            $('#assignment_Name').prop("disabled", false);
+            $('#assignment_Instruction').prop("disabled", false);
+            $('#assignment_Points').prop("disabled", false);
+            $('#assignment_due').prop("disabled", false);
+            $('#assignment_Name').val(data.Name);
+            $('#assignment_Instruction').val(data.Instruction);
+            $('#assignment_Points').val(data.Points);
+            $('#assignment_due').val(data.Due);
+         
+
+            
+          },
+          error:function(data) {
+            alert(JSON.stringify(data));
+          }
+      });
+  
+  });
+   $(document).on('click', '.delete_assignment', function(){
+    var ass_ID = $(this).attr("id");  
+      var sy_ID = <?php echo $_REQUEST['sy_ID']?>;
+    if(confirm("Are you sure you want to delete this?"))
+    {
     
+      $.ajax({
+        url:"action.php",
+        type:"POST",
+        data:{delete_assignment:ass_ID},
+        success:function(data)
+        {
+          alert(data);
+         location.reload('room?sy_ID='+sy_ID)
+        }
+      });
+    }
+    else
+    {
+      return false; 
+    }
+  
+  });
+
+     $(document).on('click', '.add_quizz', function(){
+     $('.modal-title#qtitle-ann').text('Add Quiz');
+  
+      $('#submit_quiz').attr('name', 'submit_quiz');
+      $('#submit_quiz').attr('value', 'submit_quiz');
+
+  }); 
+
+ $(document).on('click', '.view_quizqa', function(){
+      var qz_ID = $(this).attr("id");  
+  
+       $('#view_quizqa').modal('show');
+
+  }); 
+  $(document).on('click', '.update_quiz', function(){
+        var qz_ID = $(this).attr("id");  
+    $('#add_quiz').modal('show');
+         $('.modal-title#qtitle-ann').text('Update Quiz');
+      $('#submit_quiz').attr('name', 'update_quiz');
+      $('#submit_quiz').attr('value', 'update_quiz');
+
+  }); 
+  $(document).on('click', '.delete_quiz', function(){
+          var qz_ID = $(this).attr("id");  
+      var sy_ID = <?php echo $_REQUEST['sy_ID']?>;
+  if(confirm("Are you sure you want to delete this?"))
+    {
+    
+      // $.ajax({
+      //   url:"action.php",
+      //   type:"POST",
+      //   data:{delete_assignment:ass_ID},
+      //   success:function(data)
+      //   {
+      //     alert(data);
+      //    location.reload('room?sy_ID='+sy_ID)
+      //   }
+      // });
+    }
+    else
+    {
+      return false; 
+    }
+  }); 
 
 
     </script>
