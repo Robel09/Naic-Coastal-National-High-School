@@ -215,7 +215,18 @@ if (MyIFrameDoc.document) MyIFrameDoc = MyIFrameDoc.document;
 MyIFrameDoc.getElementById("subtmi_qscore").click();
 clearInterval(interval);
 }
-var timer2 = "0:5";
+var timer2 = "<?php 
+  $sql = "SELECT time_allotted FROM `quiz` WHERE quiz_ID = $quiz_ID LIMIT 1";
+  $result = mysqli_query($conn, $sql);
+  if (mysqli_num_rows($result) > 0) {
+       
+        while($row = mysqli_fetch_assoc($result)) {
+          $time_allotted = $row['time_allotted'];
+        }
+    echo  $time_allotted;
+      }
+
+?>:00";
 var interval = setInterval(function() {
 
 
