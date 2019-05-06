@@ -78,13 +78,51 @@
                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                            <div class="card">
                                <div class="header">
-                                   <h2 class="text-center">QUIZ</h2>
-                                 
+                                   <h2 class="text-center">QUIZ
+
+                                   </h2>
+                               <div class="pull-right">
+                                    ATTEMPT(<?php 
+                                        $sql = "SELECT * FROM `quiz_attemp` WHERE quiz_ID = $quiz_ID AND user_ID = $user_id";
+                                       
+                                        $result = mysqli_query($conn, $sql);
+                                        if (mysqli_num_rows($result) > 0) {
+                                            while($row = mysqli_fetch_assoc($result)) {
+                                                $atmp_ID = $row['atmp_ID'];
+                                                $count = $row['count'];
+                                                   
+                                            }
+                                            if ($count <= 0) {
+                                                echo "<script>alert('0 Retake');
+                                                        window.location='room';
+                                                </script>";
+                                             
+                                            }
+                                            $count--;
+                                            $sql = "UPDATE `quiz_attemp` SET `count` = '$count' WHERE `quiz_attemp`.`atmp_ID` = $atmp_ID;";
+                                            echo $count;
+                                            $z11 = mysqli_query($conn, $sql);
+                                            
+
+                                        }
+                                        else{
+                                             $sql = "INSERT INTO 
+                                             `quiz_attemp` (`atmp_ID`, `user_ID`, `quiz_ID`, `count`) 
+                                             VALUES (NULL, $user_id, $quiz_ID, '3');";
+                                              $z12 = mysqli_query($conn, $sql);
+                                             echo "3";
+                                        }
+                                        ?>)
+                                </div>
                                    <br>
                                </div>
                                <div class="body">
-                                
-                                <iframe src="loadquiz.php?quiz_ID=<?php echo $quiz_ID?>" style=" display:block;width:100%; height: 650px;"  frameBorder="0" ></iframe>
+                                  <div class="panel panel-default">
+                                  <div class="panel-heading">Time</div>
+                                  <div class="panel-body" id="quiz_timer"></div>
+                                </div>
+                                <iframe src="loadquiz.php?quiz_ID=<?php echo $quiz_ID?>" style=" display:block;width:100%; height: 650px;"  frameBorder="0" id="frame_quiz"></iframe>
+
                                </div>
                            </div>
                     </div>
@@ -167,6 +205,33 @@ function view($var){
         }
       });
 }
+
+function timeout(){
+
+
+var MyIFrame = document.getElementById("frame_quiz");
+var MyIFrameDoc = (MyIFrame.contentWindow || MyIFrame.contentDocument);
+if (MyIFrameDoc.document) MyIFrameDoc = MyIFrameDoc.document;
+MyIFrameDoc.getElementById("subtmi_qscore").click();
+clearInterval(interval);
+}
+var timer2 = "0:5";
+var interval = setInterval(function() {
+
+
+  var timer = timer2.split(':');
+  //by parsing integer, I avoid all extra string processing
+  var minutes = parseInt(timer[0], 10);
+  var seconds = parseInt(timer[1], 10);
+  --seconds;
+  minutes = (seconds < 0) ? --minutes : minutes;
+  if (minutes < 0) timeout();
+  seconds = (seconds < 0) ? 59 : seconds;
+  seconds = (seconds < 10) ? '0' + seconds : seconds;
+  //minutes = (minutes < 10) ?  minutes : minutes;
+  $('#quiz_timer').html(minutes + ':' + seconds);
+  timer2 = minutes + ':' + seconds;
+}, 1000);
 </script>
 </body>
 

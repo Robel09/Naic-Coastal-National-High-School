@@ -83,9 +83,11 @@
                          <div class="panel-heading text-center" style="border-bottom: 5px solid ;"><strong> VISION</strong></div>
                          <div class="panel-body text-center">
                            VISION VISION VISION VISION VISION VISION VISION VISION
+                           
                          </div>
                      </div>
                  </div>
+                 
              </div>
          
         </div>
@@ -94,6 +96,8 @@
     <?php 
         include("dash-js.php");
     ?>
+
+
 </body>
 
 </html>

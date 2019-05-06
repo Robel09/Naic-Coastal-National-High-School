@@ -1,12 +1,12 @@
 
-<form action="" method="POST">
+<form action="action.php?quiz_ID=<?php echo $_REQUEST['quiz_ID']?>" method="POST" id="load_quiz">
 <?PHP
     include('../session.php');
     if (isset($_REQUEST['quiz_ID'])) {
-    	echo $_REQUEST['quiz_ID'];
+    	$quiz_ID =  $_REQUEST['quiz_ID'];
     }
 	$test_ID = 1;
-	$sql = "select * from `questions` WHERE test_ID =$test_ID ";
+	$sql = "select * from `questions` WHERE test_ID =$test_ID AND quiz_ID = $quiz_ID";
 
 	$result = mysqli_query($conn, $sql);
 	$count_question = mysqli_num_rows($result) ;
@@ -35,27 +35,8 @@
 
 	}
 ?>
-
-	      <input type="submit" value="submit" />
+		<input type="hidden" name="count_question" value="<?php echo $count_question?>">
+	      <input type="submit" value="submit" name="submit_score" id="subtmi_qscore" />
 </form>
 
-<pre>
-<?php 
 
-$answer = $_POST;
-echo "user:".$user_ID = 1;
-
-print_r($answer);
-$is_correct = 0;
-foreach ($answer as $value) {
-   
-     $q = "select * from `choices` where choice_ID = $value and is_correct=1";
-    echo $q." : ";
-    $res = mysqli_query($conn, $q);
-    echo $count = mysqli_num_rows($res);
-    $is_correct += $count;
-    echo "<br>";
-}
-echo "quiz score:".$is_correct."/".$count_question;
-?>
-</pre>

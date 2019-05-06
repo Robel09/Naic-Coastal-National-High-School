@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 21, 2019 at 09:45 PM
+-- Generation Time: May 06, 2019 at 11:50 PM
 -- Server version: 10.1.26-MariaDB
 -- PHP Version: 7.1.8
 
@@ -75,14 +75,26 @@ INSERT INTO `choices` (`choice_ID`, `question_ID`, `is_correct`, `choice`) VALUE
 (10, 3, 0, 'HB'),
 (11, 3, 1, 'HC'),
 (12, 3, 1, 'HD'),
-(13, 4, 0, 'Airlane'),
-(14, 4, 1, 'Book'),
-(15, 4, 0, 'Cow'),
-(16, 4, 0, 'Dance'),
+(13, 4, 0, 'aaaaaaaaa'),
+(14, 4, 0, 'bbbbbbbbbb'),
+(15, 4, 1, 'cccccccccccc'),
+(16, 4, 0, 'dddddddddddddddd'),
 (17, 5, 0, 'HA'),
 (18, 5, 0, 'HB'),
 (19, 5, 1, 'HC'),
-(20, 5, 1, 'HD');
+(20, 5, 1, 'HD'),
+(21, 10, 0, 'aaaaaaaaa'),
+(22, 10, 1, 'bbbbbbbb'),
+(23, 10, 0, 'ccccccccccccccc'),
+(24, 10, 0, 'dddddddddddddddddd'),
+(25, 11, 1, 'a'),
+(26, 11, 0, 'b'),
+(27, 11, 0, 'c'),
+(28, 11, 0, 'd'),
+(29, 12, 1, 'a'),
+(30, 12, 0, 'b'),
+(31, 12, 0, 'c'),
+(32, 12, 0, 'd');
 
 -- --------------------------------------------------------
 
@@ -116,24 +128,24 @@ INSERT INTO `news` (`news_ID`, `news_Title`, `news_Content`, `news_Pub`, `sy_ID`
 CREATE TABLE `questions` (
   `question_ID` int(11) NOT NULL,
   `question` text COLLATE utf16_bin NOT NULL,
-  `test_ID` int(11) UNSIGNED DEFAULT NULL
+  `test_ID` int(11) UNSIGNED DEFAULT NULL,
+  `quiz_ID` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf16 COLLATE=utf16_bin;
 
 --
 -- Dumping data for table `questions`
 --
 
-INSERT INTO `questions` (`question_ID`, `question`, `test_ID`) VALUES
-(1, 'question 1', 1),
-(2, 'question 2', 1),
-(3, 'question 3', 1),
-(4, 'question 4', 1),
-(5, 'question 5', 1),
-(6, 'question 01', 2),
-(7, 'question 02', 2),
-(8, 'question 03', 2),
-(9, 'question 04', 2),
-(10, 'question 05', 2);
+INSERT INTO `questions` (`question_ID`, `question`, `test_ID`, `quiz_ID`) VALUES
+(1, 'question 01', 1, 1),
+(2, 'question 2', 1, 1),
+(3, 'question 3', 1, 1),
+(5, 'question 5', 1, 4),
+(6, 'question 01', 2, NULL),
+(7, 'question 02', 2, NULL),
+(8, 'question 03', 2, NULL),
+(9, 'question 04', 2, NULL),
+(10, 'hey33333', 1, 4);
 
 -- --------------------------------------------------------
 
@@ -144,16 +156,59 @@ INSERT INTO `questions` (`question_ID`, `question`, `test_ID`) VALUES
 CREATE TABLE `quiz` (
   `quiz_ID` int(11) NOT NULL,
   `sy_ID` int(11) DEFAULT NULL,
-  `quiz_Name` varchar(85) DEFAULT NULL
+  `quiz_Name` varchar(85) DEFAULT NULL,
+  `time_allotted` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `quiz`
 --
 
-INSERT INTO `quiz` (`quiz_ID`, `sy_ID`, `quiz_Name`) VALUES
-(1, 1, 'Quiz 1'),
-(4, 1, 'zx');
+INSERT INTO `quiz` (`quiz_ID`, `sy_ID`, `quiz_Name`, `time_allotted`) VALUES
+(1, 1, 'Quiz 1', 10),
+(4, 1, 'zzzzz', 10),
+(11, 1, 'neww', 10),
+(12, 1, 'neww1', 90);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `quiz_attemp`
+--
+
+CREATE TABLE `quiz_attemp` (
+  `atmp_ID` int(11) UNSIGNED NOT NULL,
+  `user_ID` int(11) UNSIGNED DEFAULT NULL,
+  `quiz_ID` int(11) UNSIGNED DEFAULT NULL,
+  `count` tinyint(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `quiz_attemp`
+--
+
+INSERT INTO `quiz_attemp` (`atmp_ID`, `user_ID`, `quiz_ID`, `count`) VALUES
+(2, 7, 1, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `quiz_score`
+--
+
+CREATE TABLE `quiz_score` (
+  `score_ID` int(11) UNSIGNED NOT NULL,
+  `quiz_ID` int(11) UNSIGNED DEFAULT NULL,
+  `score` int(11) UNSIGNED DEFAULT NULL,
+  `user_ID` int(11) UNSIGNED DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `quiz_score`
+--
+
+INSERT INTO `quiz_score` (`score_ID`, `quiz_ID`, `score`, `user_ID`) VALUES
+(1, 1, 0, 7);
 
 -- --------------------------------------------------------
 
@@ -360,7 +415,7 @@ CREATE TABLE `room_module_subtopic` (
 --
 
 INSERT INTO `room_module_subtopic` (`subtop_ID`, `topic_ID`, `subtop_Title`, `subtop_Content`) VALUES
-(1, 1, 'Cupid at Psyche', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum odio leo, suscipit nec dapibus et, luctus id nunc. Donec magna eros, laoreet ut mi at, efficitur auctor orci. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nibh nisl, feugiat ut tempor eget, fringilla quis sapien. Praesent imperdiet scelerisque massa, id semper purus mattis ullamcorper. Pellentesque a blandit orci, sed rutrum sapien. Phasellus ante nulla, blandit at ante quis, rutrum ullamcorper magna. Nam vel vehicula nunc, sed faucibus urna.\r\n\r\nSed in ornare massa. Nam vel elit at velit tristique luctus ut finibus turpis. Nullam eget efficitur purus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed efficitur volutpat accumsan. Duis feugiat ullamcorper augue quis ultrices. Nulla interdum malesuada mauris vitae facilisis. Nulla pharetra, dui a aliquet congue, ex justo sollicitudin odio, vitae lacinia ipsum eros sit amet magna.\r\n\r\nNullam sagittis ex venenatis, hendrerit nunc id, finibus quam. Etiam scelerisque cursus nisi quis maximus. Vivamus enim enim, dignissim et dictum sed, tempus a neque. Aenean auctor odio a urna porttitor rutrum. Mauris sed venenatis tortor, a rhoncus ipsum. Nullam pulvinar quam feugiat libero scelerisque, non pretium augue bibendum. Donec massa nibh, luctus eget tortor vel, auctor vestibulum eros. Vestibulum interdum dignissim efficitur. Etiam tempor aliquam diam. In venenatis sapien ac imperdiet vestibulum. Aliquam non eros in ipsum maximus blandit. Etiam euismod elit a massa feugiat fringilla. Mauris semper ante sit amet libero maximus gravida. Suspendisse sed erat tortor.\r\n\r\nCurabitur eget commodo dolor. Mauris a tincidunt velit. Vivamus eu elementum ligula. Quisque vitae vehicula nisi. Cras convallis ullamcorper ex, nec porttitor elit accumsan nec. Maecenas non velit eget leo maximus eleifend. Duis tincidunt erat tellus, vitae vehicula urna sodales ut. Quisque suscipit elementum tristique. Ut ornare ac odio non sagittis. In ligula tellus, finibus sit amet aliquet in, feugiat id orci. Fusce vehicula mauris id lacus tincidunt, et pharetra felis auctor. Fusce eu metus rhoncus, sollicitudin lectus consectetur, fermentum dolor. Ut et aliquet urna. Morbi porta, odio ac placerat maximus, mi sem porttitor purus, et euismod augue dolor et urna.\r\n\r\nPraesent dapibus tincidunt facilisis. Maecenas vestibulum rhoncus ligula, in facilisis ex porttitor vitae. Sed finibus, massa quis imperdiet bibendum, quam nisi consectetur libero, id faucibus tellus nisl at odio. Donec sit amet porta nisl, vel placerat libero. Sed tempus nunc sed lorem scelerisque auctor. Ut auctor augue a diam imperdiet mattis. Aenean varius hendrerit ornare. Fusce aliquet tincidunt ullamcorper. Nam facilisis et est at viverra. Nullam faucibus dolor id leo dictum, eget convallis purus bibendum. Nullam a ligula feugiat velit venenatis malesuada. Vestibulum ut vestibulum risus. Suspendisse et faucibus ex. Vestibulum pharetra ante et ligula porta fringilla.'),
+(1, 1, 'Cupid at Psyche', '1Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum odio leo, suscipit nec dapibus et, luctus id nunc. Donec magna eros, laoreet ut mi at, efficitur auctor orci. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nibh nisl, feugiat ut tempor eget, fringilla quis sapien. Praesent imperdiet scelerisque massa, id semper purus mattis ullamcorper. Pellentesque a blandit orci, sed rutrum sapien. Phasellus ante nulla, blandit at ante quis, rutrum ullamcorper magna. Nam vel vehicula nunc, sed faucibus urna.\n\nSed in ornare massa. Nam vel elit at velit tristique luctus ut finibus turpis. Nullam eget efficitur purus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed efficitur volutpat accumsan. Duis feugiat ullamcorper augue quis ultrices. Nulla interdum malesuada mauris vitae facilisis. Nulla pharetra, dui a aliquet congue, ex justo sollicitudin odio, vitae lacinia ipsum eros sit amet magna.\n\nNullam sagittis ex venenatis, hendrerit nunc id, finibus quam. Etiam scelerisque cursus nisi quis maximus. Vivamus enim enim, dignissim et dictum sed, tempus a neque. Aenean auctor odio a urna porttitor rutrum. Mauris sed venenatis tortor, a rhoncus ipsum. Nullam pulvinar quam feugiat libero scelerisque, non pretium augue bibendum. Donec massa nibh, luctus eget tortor vel, auctor vestibulum eros. Vestibulum interdum dignissim efficitur. Etiam tempor aliquam diam. In venenatis sapien ac imperdiet vestibulum. Aliquam non eros in ipsum maximus blandit. Etiam euismod elit a massa feugiat fringilla. Mauris semper ante sit amet libero maximus gravida. Suspendisse sed erat tortor.\n\nCurabitur eget commodo dolor. Mauris a tincidunt velit. Vivamus eu elementum ligula. Quisque vitae vehicula nisi. Cras convallis ullamcorper ex, nec porttitor elit accumsan nec. Maecenas non velit eget leo maximus eleifend. Duis tincidunt erat tellus, vitae vehicula urna sodales ut. Quisque suscipit elementum tristique. Ut ornare ac odio non sagittis. In ligula tellus, finibus sit amet aliquet in, feugiat id orci. Fusce vehicula mauris id lacus tincidunt, et pharetra felis auctor. Fusce eu metus rhoncus, sollicitudin lectus consectetur, fermentum dolor. Ut et aliquet urna. Morbi porta, odio ac placerat maximus, mi sem porttitor purus, et euismod augue dolor et urna.\n\nPraesent dapibus tincidunt facilisis. Maecenas vestibulum rhoncus ligula, in facilisis ex porttitor vitae. Sed finibus, massa quis imperdiet bibendum, quam nisi consectetur libero, id faucibus tellus nisl at odio. Donec sit amet porta nisl, vel placerat libero. Sed tempus nunc sed lorem scelerisque auctor. Ut auctor augue a diam imperdiet mattis. Aenean varius hendrerit ornare. Fusce aliquet tincidunt ullamcorper. Nam facilisis et est at viverra. Nullam faucibus dolor id leo dictum, eget convallis purus bibendum. Nullam a ligula feugiat velit venenatis malesuada. Vestibulum ut vestibulum risus. Suspendisse et faucibus ex. Vestibulum pharetra ante et ligula porta fringilla.'),
 (2, 1, 'Nagkaroon ng Anak Sina Wigan at Bugan', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum odio leo, suscipit nec dapibus et, luctus id nunc. Donec magna eros, laoreet ut mi at, efficitur auctor orci. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nibh nisl, feugiat ut tempor eget, fringilla quis sapien. Praesent imperdiet scelerisque massa, id semper purus mattis ullamcorper. Pellentesque a blandit orci, sed rutrum sapien. Phasellus ante nulla, blandit at ante quis, rutrum ullamcorper magna. Nam vel vehicula nunc, sed faucibus urna.\r\n\r\nSed in ornare massa. Nam vel elit at velit tristique luctus ut finibus turpis. Nullam eget efficitur purus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed efficitur volutpat accumsan. Duis feugiat ullamcorper augue quis ultrices. Nulla interdum malesuada mauris vitae facilisis. Nulla pharetra, dui a aliquet congue, ex justo sollicitudin odio, vitae lacinia ipsum eros sit amet magna.\r\n\r\nNullam sagittis ex venenatis, hendrerit nunc id, finibus quam. Etiam scelerisque cursus nisi quis maximus. Vivamus enim enim, dignissim et dictum sed, tempus a neque. Aenean auctor odio a urna porttitor rutrum. Mauris sed venenatis tortor, a rhoncus ipsum. Nullam pulvinar quam feugiat libero scelerisque, non pretium augue bibendum. Donec massa nibh, luctus eget tortor vel, auctor vestibulum eros. Vestibulum interdum dignissim efficitur. Etiam tempor aliquam diam. In venenatis sapien ac imperdiet vestibulum. Aliquam non eros in ipsum maximus blandit. Etiam euismod elit a massa feugiat fringilla. Mauris semper ante sit amet libero maximus gravida. Suspendisse sed erat tortor.\r\n\r\nCurabitur eget commodo dolor. Mauris a tincidunt velit. Vivamus eu elementum ligula. Quisque vitae vehicula nisi. Cras convallis ullamcorper ex, nec porttitor elit accumsan nec. Maecenas non velit eget leo maximus eleifend. Duis tincidunt erat tellus, vitae vehicula urna sodales ut. Quisque suscipit elementum tristique. Ut ornare ac odio non sagittis. In ligula tellus, finibus sit amet aliquet in, feugiat id orci. Fusce vehicula mauris id lacus tincidunt, et pharetra felis auctor. Fusce eu metus rhoncus, sollicitudin lectus consectetur, fermentum dolor. Ut et aliquet urna. Morbi porta, odio ac placerat maximus, mi sem porttitor purus, et euismod augue dolor et urna.\r\n\r\nPraesent dapibus tincidunt facilisis. Maecenas vestibulum rhoncus ligula, in facilisis ex porttitor vitae. Sed finibus, massa quis imperdiet bibendum, quam nisi consectetur libero, id faucibus tellus nisl at odio. Donec sit amet porta nisl, vel placerat libero. Sed tempus nunc sed lorem scelerisque auctor. Ut auctor augue a diam imperdiet mattis. Aenean varius hendrerit ornare. Fusce aliquet tincidunt ullamcorper. Nam facilisis et est at viverra. Nullam faucibus dolor id leo dictum, eget convallis purus bibendum. Nullam a ligula feugiat velit venenatis malesuada. Vestibulum ut vestibulum risus. Suspendisse et faucibus ex. Vestibulum pharetra ante et ligula porta fringilla.'),
 (3, 1, 'Mga Pandiwang Ginagamit sa Pagpapahayag ng Aksiyon,Karanasan, at Pangyayari\r\n', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum odio leo, suscipit nec dapibus et, luctus id nunc. Donec magna eros, laoreet ut mi at, efficitur auctor orci. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nibh nisl, feugiat ut tempor eget, fringilla quis sapien. Praesent imperdiet scelerisque massa, id semper purus mattis ullamcorper. Pellentesque a blandit orci, sed rutrum sapien. Phasellus ante nulla, blandit at ante quis, rutrum ullamcorper magna. Nam vel vehicula nunc, sed faucibus urna.\r\n\r\nSed in ornare massa. Nam vel elit at velit tristique luctus ut finibus turpis. Nullam eget efficitur purus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed efficitur volutpat accumsan. Duis feugiat ullamcorper augue quis ultrices. Nulla interdum malesuada mauris vitae facilisis. Nulla pharetra, dui a aliquet congue, ex justo sollicitudin odio, vitae lacinia ipsum eros sit amet magna.\r\n\r\nNullam sagittis ex venenatis, hendrerit nunc id, finibus quam. Etiam scelerisque cursus nisi quis maximus. Vivamus enim enim, dignissim et dictum sed, tempus a neque. Aenean auctor odio a urna porttitor rutrum. Mauris sed venenatis tortor, a rhoncus ipsum. Nullam pulvinar quam feugiat libero scelerisque, non pretium augue bibendum. Donec massa nibh, luctus eget tortor vel, auctor vestibulum eros. Vestibulum interdum dignissim efficitur. Etiam tempor aliquam diam. In venenatis sapien ac imperdiet vestibulum. Aliquam non eros in ipsum maximus blandit. Etiam euismod elit a massa feugiat fringilla. Mauris semper ante sit amet libero maximus gravida. Suspendisse sed erat tortor.\r\n\r\nCurabitur eget commodo dolor. Mauris a tincidunt velit. Vivamus eu elementum ligula. Quisque vitae vehicula nisi. Cras convallis ullamcorper ex, nec porttitor elit accumsan nec. Maecenas non velit eget leo maximus eleifend. Duis tincidunt erat tellus, vitae vehicula urna sodales ut. Quisque suscipit elementum tristique. Ut ornare ac odio non sagittis. In ligula tellus, finibus sit amet aliquet in, feugiat id orci. Fusce vehicula mauris id lacus tincidunt, et pharetra felis auctor. Fusce eu metus rhoncus, sollicitudin lectus consectetur, fermentum dolor. Ut et aliquet urna. Morbi porta, odio ac placerat maximus, mi sem porttitor purus, et euismod augue dolor et urna.\r\n\r\nPraesent dapibus tincidunt facilisis. Maecenas vestibulum rhoncus ligula, in facilisis ex porttitor vitae. Sed finibus, massa quis imperdiet bibendum, quam nisi consectetur libero, id faucibus tellus nisl at odio. Donec sit amet porta nisl, vel placerat libero. Sed tempus nunc sed lorem scelerisque auctor. Ut auctor augue a diam imperdiet mattis. Aenean varius hendrerit ornare. Fusce aliquet tincidunt ullamcorper. Nam facilisis et est at viverra. Nullam faucibus dolor id leo dictum, eget convallis purus bibendum. Nullam a ligula feugiat velit venenatis malesuada. Vestibulum ut vestibulum risus. Suspendisse et faucibus ex. Vestibulum pharetra ante et ligula porta fringilla.'),
 (4, 2, 'Ang Alegorya ng Yungib', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum odio leo, suscipit nec dapibus et, luctus id nunc. Donec magna eros, laoreet ut mi at, efficitur auctor orci. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nibh nisl, feugiat ut tempor eget, fringilla quis sapien. Praesent imperdiet scelerisque massa, id semper purus mattis ullamcorper. Pellentesque a blandit orci, sed rutrum sapien. Phasellus ante nulla, blandit at ante quis, rutrum ullamcorper magna. Nam vel vehicula nunc, sed faucibus urna.\r\n\r\nSed in ornare massa. Nam vel elit at velit tristique luctus ut finibus turpis. Nullam eget efficitur purus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed efficitur volutpat accumsan. Duis feugiat ullamcorper augue quis ultrices. Nulla interdum malesuada mauris vitae facilisis. Nulla pharetra, dui a aliquet congue, ex justo sollicitudin odio, vitae lacinia ipsum eros sit amet magna.\r\n\r\nNullam sagittis ex venenatis, hendrerit nunc id, finibus quam. Etiam scelerisque cursus nisi quis maximus. Vivamus enim enim, dignissim et dictum sed, tempus a neque. Aenean auctor odio a urna porttitor rutrum. Mauris sed venenatis tortor, a rhoncus ipsum. Nullam pulvinar quam feugiat libero scelerisque, non pretium augue bibendum. Donec massa nibh, luctus eget tortor vel, auctor vestibulum eros. Vestibulum interdum dignissim efficitur. Etiam tempor aliquam diam. In venenatis sapien ac imperdiet vestibulum. Aliquam non eros in ipsum maximus blandit. Etiam euismod elit a massa feugiat fringilla. Mauris semper ante sit amet libero maximus gravida. Suspendisse sed erat tortor.\r\n\r\nCurabitur eget commodo dolor. Mauris a tincidunt velit. Vivamus eu elementum ligula. Quisque vitae vehicula nisi. Cras convallis ullamcorper ex, nec porttitor elit accumsan nec. Maecenas non velit eget leo maximus eleifend. Duis tincidunt erat tellus, vitae vehicula urna sodales ut. Quisque suscipit elementum tristique. Ut ornare ac odio non sagittis. In ligula tellus, finibus sit amet aliquet in, feugiat id orci. Fusce vehicula mauris id lacus tincidunt, et pharetra felis auctor. Fusce eu metus rhoncus, sollicitudin lectus consectetur, fermentum dolor. Ut et aliquet urna. Morbi porta, odio ac placerat maximus, mi sem porttitor purus, et euismod augue dolor et urna.\r\n\r\nPraesent dapibus tincidunt facilisis. Maecenas vestibulum rhoncus ligula, in facilisis ex porttitor vitae. Sed finibus, massa quis imperdiet bibendum, quam nisi consectetur libero, id faucibus tellus nisl at odio. Donec sit amet porta nisl, vel placerat libero. Sed tempus nunc sed lorem scelerisque auctor. Ut auctor augue a diam imperdiet mattis. Aenean varius hendrerit ornare. Fusce aliquet tincidunt ullamcorper. Nam facilisis et est at viverra. Nullam faucibus dolor id leo dictum, eget convallis purus bibendum. Nullam a ligula feugiat velit venenatis malesuada. Vestibulum ut vestibulum risus. Suspendisse et faucibus ex. Vestibulum pharetra ante et ligula porta fringilla.'),
@@ -381,7 +436,49 @@ INSERT INTO `room_module_subtopic` (`subtop_ID`, `topic_ID`, `subtop_Title`, `su
 (18, 7, 'Epiko ni Gilgamesh', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum odio leo, suscipit nec dapibus et, luctus id nunc. Donec magna eros, laoreet ut mi at, efficitur auctor orci. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nibh nisl, feugiat ut tempor eget, fringilla quis sapien. Praesent imperdiet scelerisque massa, id semper purus mattis ullamcorper. Pellentesque a blandit orci, sed rutrum sapien. Phasellus ante nulla, blandit at ante quis, rutrum ullamcorper magna. Nam vel vehicula nunc, sed faucibus urna.\r\n\r\nSed in ornare massa. Nam vel elit at velit tristique luctus ut finibus turpis. Nullam eget efficitur purus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed efficitur volutpat accumsan. Duis feugiat ullamcorper augue quis ultrices. Nulla interdum malesuada mauris vitae facilisis. Nulla pharetra, dui a aliquet congue, ex justo sollicitudin odio, vitae lacinia ipsum eros sit amet magna.\r\n\r\nNullam sagittis ex venenatis, hendrerit nunc id, finibus quam. Etiam scelerisque cursus nisi quis maximus. Vivamus enim enim, dignissim et dictum sed, tempus a neque. Aenean auctor odio a urna porttitor rutrum. Mauris sed venenatis tortor, a rhoncus ipsum. Nullam pulvinar quam feugiat libero scelerisque, non pretium augue bibendum. Donec massa nibh, luctus eget tortor vel, auctor vestibulum eros. Vestibulum interdum dignissim efficitur. Etiam tempor aliquam diam. In venenatis sapien ac imperdiet vestibulum. Aliquam non eros in ipsum maximus blandit. Etiam euismod elit a massa feugiat fringilla. Mauris semper ante sit amet libero maximus gravida. Suspendisse sed erat tortor.\r\n\r\nCurabitur eget commodo dolor. Mauris a tincidunt velit. Vivamus eu elementum ligula. Quisque vitae vehicula nisi. Cras convallis ullamcorper ex, nec porttitor elit accumsan nec. Maecenas non velit eget leo maximus eleifend. Duis tincidunt erat tellus, vitae vehicula urna sodales ut. Quisque suscipit elementum tristique. Ut ornare ac odio non sagittis. In ligula tellus, finibus sit amet aliquet in, feugiat id orci. Fusce vehicula mauris id lacus tincidunt, et pharetra felis auctor. Fusce eu metus rhoncus, sollicitudin lectus consectetur, fermentum dolor. Ut et aliquet urna. Morbi porta, odio ac placerat maximus, mi sem porttitor purus, et euismod augue dolor et urna.\r\n\r\nPraesent dapibus tincidunt facilisis. Maecenas vestibulum rhoncus ligula, in facilisis ex porttitor vitae. Sed finibus, massa quis imperdiet bibendum, quam nisi consectetur libero, id faucibus tellus nisl at odio. Donec sit amet porta nisl, vel placerat libero. Sed tempus nunc sed lorem scelerisque auctor. Ut auctor augue a diam imperdiet mattis. Aenean varius hendrerit ornare. Fusce aliquet tincidunt ullamcorper. Nam facilisis et est at viverra. Nullam faucibus dolor id leo dictum, eget convallis purus bibendum. Nullam a ligula feugiat velit venenatis malesuada. Vestibulum ut vestibulum risus. Suspendisse et faucibus ex. Vestibulum pharetra ante et ligula porta fringilla.'),
 (19, 7, 'Kasaysayan ng Epiko', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum odio leo, suscipit nec dapibus et, luctus id nunc. Donec magna eros, laoreet ut mi at, efficitur auctor orci. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nibh nisl, feugiat ut tempor eget, fringilla quis sapien. Praesent imperdiet scelerisque massa, id semper purus mattis ullamcorper. Pellentesque a blandit orci, sed rutrum sapien. Phasellus ante nulla, blandit at ante quis, rutrum ullamcorper magna. Nam vel vehicula nunc, sed faucibus urna.\r\n\r\nSed in ornare massa. Nam vel elit at velit tristique luctus ut finibus turpis. Nullam eget efficitur purus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed efficitur volutpat accumsan. Duis feugiat ullamcorper augue quis ultrices. Nulla interdum malesuada mauris vitae facilisis. Nulla pharetra, dui a aliquet congue, ex justo sollicitudin odio, vitae lacinia ipsum eros sit amet magna.\r\n\r\nNullam sagittis ex venenatis, hendrerit nunc id, finibus quam. Etiam scelerisque cursus nisi quis maximus. Vivamus enim enim, dignissim et dictum sed, tempus a neque. Aenean auctor odio a urna porttitor rutrum. Mauris sed venenatis tortor, a rhoncus ipsum. Nullam pulvinar quam feugiat libero scelerisque, non pretium augue bibendum. Donec massa nibh, luctus eget tortor vel, auctor vestibulum eros. Vestibulum interdum dignissim efficitur. Etiam tempor aliquam diam. In venenatis sapien ac imperdiet vestibulum. Aliquam non eros in ipsum maximus blandit. Etiam euismod elit a massa feugiat fringilla. Mauris semper ante sit amet libero maximus gravida. Suspendisse sed erat tortor.\r\n\r\nCurabitur eget commodo dolor. Mauris a tincidunt velit. Vivamus eu elementum ligula. Quisque vitae vehicula nisi. Cras convallis ullamcorper ex, nec porttitor elit accumsan nec. Maecenas non velit eget leo maximus eleifend. Duis tincidunt erat tellus, vitae vehicula urna sodales ut. Quisque suscipit elementum tristique. Ut ornare ac odio non sagittis. In ligula tellus, finibus sit amet aliquet in, feugiat id orci. Fusce vehicula mauris id lacus tincidunt, et pharetra felis auctor. Fusce eu metus rhoncus, sollicitudin lectus consectetur, fermentum dolor. Ut et aliquet urna. Morbi porta, odio ac placerat maximus, mi sem porttitor purus, et euismod augue dolor et urna.\r\n\r\nPraesent dapibus tincidunt facilisis. Maecenas vestibulum rhoncus ligula, in facilisis ex porttitor vitae. Sed finibus, massa quis imperdiet bibendum, quam nisi consectetur libero, id faucibus tellus nisl at odio. Donec sit amet porta nisl, vel placerat libero. Sed tempus nunc sed lorem scelerisque auctor. Ut auctor augue a diam imperdiet mattis. Aenean varius hendrerit ornare. Fusce aliquet tincidunt ullamcorper. Nam facilisis et est at viverra. Nullam faucibus dolor id leo dictum, eget convallis purus bibendum. Nullam a ligula feugiat velit venenatis malesuada. Vestibulum ut vestibulum risus. Suspendisse et faucibus ex. Vestibulum pharetra ante et ligula porta fringilla.'),
 (20, 7, 'Mga Pananda sa Mabisang Paglalahad ng Pahayag', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum odio leo, suscipit nec dapibus et, luctus id nunc. Donec magna eros, laoreet ut mi at, efficitur auctor orci. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nibh nisl, feugiat ut tempor eget, fringilla quis sapien. Praesent imperdiet scelerisque massa, id semper purus mattis ullamcorper. Pellentesque a blandit orci, sed rutrum sapien. Phasellus ante nulla, blandit at ante quis, rutrum ullamcorper magna. Nam vel vehicula nunc, sed faucibus urna.\r\n\r\nSed in ornare massa. Nam vel elit at velit tristique luctus ut finibus turpis. Nullam eget efficitur purus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed efficitur volutpat accumsan. Duis feugiat ullamcorper augue quis ultrices. Nulla interdum malesuada mauris vitae facilisis. Nulla pharetra, dui a aliquet congue, ex justo sollicitudin odio, vitae lacinia ipsum eros sit amet magna.\r\n\r\nNullam sagittis ex venenatis, hendrerit nunc id, finibus quam. Etiam scelerisque cursus nisi quis maximus. Vivamus enim enim, dignissim et dictum sed, tempus a neque. Aenean auctor odio a urna porttitor rutrum. Mauris sed venenatis tortor, a rhoncus ipsum. Nullam pulvinar quam feugiat libero scelerisque, non pretium augue bibendum. Donec massa nibh, luctus eget tortor vel, auctor vestibulum eros. Vestibulum interdum dignissim efficitur. Etiam tempor aliquam diam. In venenatis sapien ac imperdiet vestibulum. Aliquam non eros in ipsum maximus blandit. Etiam euismod elit a massa feugiat fringilla. Mauris semper ante sit amet libero maximus gravida. Suspendisse sed erat tortor.\r\n\r\nCurabitur eget commodo dolor. Mauris a tincidunt velit. Vivamus eu elementum ligula. Quisque vitae vehicula nisi. Cras convallis ullamcorper ex, nec porttitor elit accumsan nec. Maecenas non velit eget leo maximus eleifend. Duis tincidunt erat tellus, vitae vehicula urna sodales ut. Quisque suscipit elementum tristique. Ut ornare ac odio non sagittis. In ligula tellus, finibus sit amet aliquet in, feugiat id orci. Fusce vehicula mauris id lacus tincidunt, et pharetra felis auctor. Fusce eu metus rhoncus, sollicitudin lectus consectetur, fermentum dolor. Ut et aliquet urna. Morbi porta, odio ac placerat maximus, mi sem porttitor purus, et euismod augue dolor et urna.\r\n\r\nPraesent dapibus tincidunt facilisis. Maecenas vestibulum rhoncus ligula, in facilisis ex porttitor vitae. Sed finibus, massa quis imperdiet bibendum, quam nisi consectetur libero, id faucibus tellus nisl at odio. Donec sit amet porta nisl, vel placerat libero. Sed tempus nunc sed lorem scelerisque auctor. Ut auctor augue a diam imperdiet mattis. Aenean varius hendrerit ornare. Fusce aliquet tincidunt ullamcorper. Nam facilisis et est at viverra. Nullam faucibus dolor id leo dictum, eget convallis purus bibendum. Nullam a ligula feugiat velit venenatis malesuada. Vestibulum ut vestibulum risus. Suspendisse et faucibus ex. Vestibulum pharetra ante et ligula porta fringilla.'),
-(21, 1, 'Sample Video', '<iframe width=\"850\" height=\"523\" src=\"https://www.youtube.com/embed/tSbokTGNABQ\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>');
+(21, 1, 'Sample Video', '<iframe width=\"850\" height=\"523\" src=\"https://www.youtube.com/embed/tSbokTGNABQ\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>'),
+(22, 8, 'Talumpati ni Dilma Rousseff sa kaniyang Inagurasyon ', NULL),
+(23, 8, '(Kauna-unahang Pangulong Babae ng Brazil)', NULL),
+(24, 8, 'Kahirapan: Hamon sa Bawat Pilipino', NULL),
+(25, 8, 'Kaisahan at Kasanayan sa Pagpapalawak ng Pangungusap', NULL),
+(26, 9, 'Ako Po ay Pitong Taong Gulang', NULL),
+(27, 9, 'Para sa Kagalingan at Karapatan ng mga Bata', NULL),
+(28, 9, 'Mga Salitang Nagpapahayag ng Pangyayari at Damdamin', NULL),
+(29, 10, 'Ang Matanda at ang Dagat', NULL),
+(30, 10, 'Suring-basa ng Harry Potter', NULL),
+(31, 10, 'Paggamit ng Pahayag na Pagsang-ayon at Pagtutol sa Pagbibigay ng Puna o Panunuring Pa', NULL),
+(32, 11, 'Sina Thor at Loki sa Lupain ng mga Higante', NULL),
+(33, 11, 'Ang Pakikipagsapalaran ni Samson', NULL),
+(34, 11, 'Paggamit ng Wastong Pokus ng Pandiwa na Tagaganap at Layon sa Pagsusuri', NULL),
+(35, 12, 'Ang Aking Pag-ibig', NULL),
+(36, 12, 'Babang-Luksa/Pamana', NULL),
+(37, 12, 'Mabisang Paggamit ng Matatalinghagang Pananalita', NULL),
+(38, 13, 'Sintahang Romeo at Juliet', NULL),
+(39, 13, 'Moses,Moses', NULL),
+(40, 13, 'Pokus sa Kagamitan at Pokus sa Pinaglalaanan sa Pagsulat  Sariling Damdamin', NULL),
+(41, 14, 'Aginaldo ng mga Mago', NULL),
+(42, 14, 'Sa Loob ng Love Class', NULL),
+(43, 14, 'Pokus sa Ganapan at Pokus sa Sanhi Gamit sa Pagsasalasay ng mga Pangyayari', NULL),
+(44, 15, 'Liongo', NULL),
+(45, 15, 'Maaaring Lumipad Ang Tao', NULL),
+(46, 15, 'Pagsasaling-wika', NULL),
+(47, 16, 'Mullah Nassredin', NULL),
+(48, 16, 'Mula sa Anekdota ni Saadi', NULL),
+(49, 16, 'Diskursong Pasalaysay', NULL),
+(50, 17, 'Ang Talumpati ni Nelson Mandela', NULL),
+(51, 17, 'Ako ay Ikaw', NULL),
+(52, 17, 'Paggamit ng Tuwiran at Di-Tuwirang Pahayag sa  \r\nPaghahatid ng Mensahe\r\n', NULL),
+(53, 18, 'Hele ng Ina sa Kaniyang Panganay', NULL),
+(54, 18, 'Ang Matanda at ang Batang Paruparo', NULL),
+(55, 18, 'Matatalinghagang Pananalita at Simbolismo', NULL),
+(56, 19, 'Ang Alaga', NULL),
+(57, 19, 'Rosalia Villanueva  - Teodoro, Ang Dakilang Ina', NULL),
+(58, 19, 'Mga Pangungusap na Naglalahad ng Implikasiyon', NULL),
+(59, 20, 'Sundiata: Ang Epiko ng Sinaunang Mali', NULL),
+(60, 20, 'Dakilang Bayani: Rizal o Bonifacio?', NULL),
+(61, 20, 'Mga Ekspresiyon sa Pagpapahayag ng Layon o \r\nDamdamin\r\n', NULL),
+(62, 21, 'Paglisan (Buod)', NULL),
+(63, 21, 'Pang-ugnay na Gamit sa Pagpapaliwanag', NULL);
 
 -- --------------------------------------------------------
 
@@ -574,6 +671,18 @@ ALTER TABLE `quiz`
   ADD PRIMARY KEY (`quiz_ID`);
 
 --
+-- Indexes for table `quiz_attemp`
+--
+ALTER TABLE `quiz_attemp`
+  ADD PRIMARY KEY (`atmp_ID`);
+
+--
+-- Indexes for table `quiz_score`
+--
+ALTER TABLE `quiz_score`
+  ADD PRIMARY KEY (`score_ID`);
+
+--
 -- Indexes for table `record_student_details`
 --
 ALTER TABLE `record_student_details`
@@ -616,7 +725,8 @@ ALTER TABLE `room_module`
 -- Indexes for table `room_module_subtopic`
 --
 ALTER TABLE `room_module_subtopic`
-  ADD PRIMARY KEY (`subtop_ID`);
+  ADD PRIMARY KEY (`subtop_ID`),
+  ADD KEY `topic_ID` (`topic_ID`);
 
 --
 -- Indexes for table `room_module_topic`
@@ -669,22 +779,32 @@ ALTER TABLE `assignment`
 -- AUTO_INCREMENT for table `choices`
 --
 ALTER TABLE `choices`
-  MODIFY `choice_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `choice_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 --
 -- AUTO_INCREMENT for table `news`
 --
 ALTER TABLE `news`
-  MODIFY `news_ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `news_ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `question_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `question_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT for table `quiz`
 --
 ALTER TABLE `quiz`
-  MODIFY `quiz_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `quiz_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+--
+-- AUTO_INCREMENT for table `quiz_attemp`
+--
+ALTER TABLE `quiz_attemp`
+  MODIFY `atmp_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `quiz_score`
+--
+ALTER TABLE `quiz_score`
+  MODIFY `score_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `record_student_details`
 --
@@ -714,7 +834,7 @@ ALTER TABLE `room_module`
 -- AUTO_INCREMENT for table `room_module_subtopic`
 --
 ALTER TABLE `room_module_subtopic`
-  MODIFY `subtop_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `subtop_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 --
 -- AUTO_INCREMENT for table `room_module_topic`
 --
@@ -744,7 +864,17 @@ ALTER TABLE `user_accounts`
 -- AUTO_INCREMENT for table `user_level`
 --
 ALTER TABLE `user_level`
-  MODIFY `level_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;COMMIT;
+  MODIFY `level_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `room_module_subtopic`
+--
+ALTER TABLE `room_module_subtopic`
+  ADD CONSTRAINT `room_module_subtopic_ibfk_1` FOREIGN KEY (`topic_ID`) REFERENCES `room_module_topic` (`topic_ID`);
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

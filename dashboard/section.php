@@ -114,7 +114,7 @@
                                                               <td>
                                                                <h4><?php echo $section['section_Name']?></h4>
                                                                <?php echo $section['sy_year']?>
-                                                               <div class="btn btn-primary pull-right" onClick="window.open('room?sy_ID=<?php echo $section['sy_ID']?>');">VIEW</div>
+                                                               <a class="btn btn-primary pull-right" href="room?sy_ID=<?php echo $section['sy_ID']?>">VIEW</a>
                                                               </td>
                                                                </tr>
                                                               <?php

@@ -426,12 +426,35 @@ WHERE  sy_ID = $reqsy_ID";
                                                                  <div class="btn btn-danger pull-right delete_quiz" id="<?php echo $quiz_ID?>">DELETE</div>
                                                                  <div class="btn btn-info pull-right update_quiz"  id="<?php echo $quiz_ID?>">UPDATE</div>
                                                                   <div class="btn btn-primary pull-right view_quizqa"  id="<?php echo $quiz_ID?>">Q/A</div>
+                                                                   <div class="btn btn-warning pull-right view_qscoret"  id="<?php echo $quiz_ID?>">Scores</div>
                                                                  <?php
                                                                }
                                                               if ($login_level == 1) {
-                                                                ?>
-                                                                <div class="btn btn-primary pull-right" onclick="window.open('quiz?quiz_ID=<?php echo $quiz_ID?>')">TAKE</div>
-                                                                <?php
+                                        $sql = "SELECT * FROM `quiz_attemp` WHERE quiz_ID = $quiz_ID AND user_ID = $user_id";
+                                       
+                                        $result = mysqli_query($conn, $sql);
+                                        if (mysqli_num_rows($result) > 0) {
+                                         while($row = mysqli_fetch_assoc($result)) {
+                                               $b_count = $row['count'];                             
+                                            }
+
+                                        ?>
+                                          <div class="btn btn-primary pull-right view_qscore" id="<?php echo $quiz_ID?>">VIEW SCORE</div>
+                                        <?php
+                                          if ($b_count <= 0) {
+                                             
+                                            }
+                                            else{
+                                              ?>
+                                              <div class="btn btn-primary pull-right" onclick="window.open('quiz?quiz_ID=<?php echo $quiz_ID?>')">RETAKE</div>
+                                              <?php
+                                            }
+                                        }
+                                        else{
+                                          ?>
+                                           <div class="btn btn-primary pull-right" onclick="window.open('quiz?quiz_ID=<?php echo $quiz_ID?>')">TAKE</div>
+                                          <?php
+                                        }
                                                                }
                                                                ?>
                                                                
@@ -629,9 +652,23 @@ WHERE  sy_ID = $reqsy_ID";
                   </div>
               </div>
               <br>
+               <div class="row clearfix">
+                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                      <label for="q_Name">Time(min)</label>
+                  </div>
+                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                      <div class="form-group">
+                          <div class="form-line">
+                              <input type="number" class="form-control" id="q_Time" name="q_Time" placeholder="Time">
+                          </div> 
+                      </div>
+                  </div>
+              </div>
+              <br>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-success" value="submit_quiz" name="submit_quiz">Submit</button>
+        <input type="hidden" name="quiz_IDx" id="quiz_IDx" value="quiz_IDx">
+        <button type="submit" class="btn btn-success" value="submit_quiz" name="submit_quiz" id="submit_quiz">Submit</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </form>
@@ -754,6 +791,53 @@ WHERE  sy_ID = $reqsy_ID";
 
   </div>
 </div>
+
+<div id="view_qscore" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title qamod" id="mtitle-ann">Score</h4>
+      </div>
+     
+      <div class="modal-body qscore" id="mbody-qscore">
+      
+      </div>
+      <div class="modal-footer">
+    
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+<div id="view_qscoret" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title qamod" id="mtitle-ann">List of Scores</h4>
+      </div>
+     
+      <div class="modal-body qscore" id="mbody-qscoret">
+      
+      </div>
+      <div class="modal-footer">
+    
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+
+  </div>
+</div>
  
     <!-- Jquery Core Js -->
     <script src="../assets/plugins/jquery/jquery.min.js"></script>
@@ -836,7 +920,16 @@ WHERE  sy_ID = $reqsy_ID";
 
     $(document).on('click', '.delete_news', function(){
     var ann_ID = $(this).attr("id");
-    var sy_ID = <?php echo $_REQUEST['sy_ID']?>;
+    var sy_ID = <?php 
+    
+    if (isset($_REQUEST['sy_ID'])) {
+     echo $_REQUEST['sy_ID'];
+    }
+    else{
+      echo "blank";
+    }
+
+    ?>;
     if(confirm("Are you sure you want to delete this?"))
     {
     
@@ -929,7 +1022,7 @@ WHERE  sy_ID = $reqsy_ID";
     $('#submit_assignment').attr('name', 'update_assignment');
     $('#submit_assignment').attr('value', 'update_assignment');
     $('#ass_ID').val(ass_ID);
-    alert(ass_ID);
+    // alert(ass_ID);
      $('#submit_assignment').show();
         $.ajax({
       
@@ -959,7 +1052,16 @@ WHERE  sy_ID = $reqsy_ID";
   });
    $(document).on('click', '.delete_assignment', function(){
     var ass_ID = $(this).attr("id");  
-      var sy_ID = <?php echo $_REQUEST['sy_ID']?>;
+      var sy_ID = <?php 
+    
+    if (isset($_REQUEST['sy_ID'])) {
+     echo $_REQUEST['sy_ID'];
+    }
+    else{
+      echo "blank";
+    }
+
+    ?>;
     if(confirm("Are you sure you want to delete this?"))
     {
     
@@ -991,40 +1093,113 @@ WHERE  sy_ID = $reqsy_ID";
 
  $(document).on('click', '.view_quizqa', function(){
       var qz_ID = $(this).attr("id");  
-  
-       $('#view_quizqa').modal('show');
+    var sy_ID = <?php 
+    
+    if (isset($_REQUEST['sy_ID'])) {
+     echo $_REQUEST['sy_ID'];
+    }
+    else{
+      echo "blank";
+    }
+
+    ?>;
+       // $('#view_quizqa').modal('show');
+       window.location='quizmng?sy_ID='+sy_ID+'&quiz_ID='+qz_ID;
 
   }); 
   $(document).on('click', '.update_quiz', function(){
         var qz_ID = $(this).attr("id");  
-    $('#add_quiz').modal('show');
-         $('.modal-title#qtitle-ann').text('Update Quiz');
-      $('#submit_quiz').attr('name', 'update_quiz');
-      $('#submit_quiz').attr('value', 'update_quiz');
+
+     $('#add_quiz').modal('show');
+     
+
+       $.ajax({
+        url:"action.php",
+        type:"POST",
+        data:{get_quiz:qz_ID},
+        dataType:"json",
+        success:function(data)
+        {
+          $('.modal-title#qtitle-ann').text('Update Quiz');
+          $('#submit_quiz').attr('name', 'update_quiz');
+          $('#submit_qu  iz').attr('value', 'update_quiz');
+          $('#quiz_IDx').val(qz_ID);
+          $('#q_Time').val(data.time_allotted);
+          $('#q_Name').val(data.quiz_Name);
+          
+        }
+      });
+      
 
   }); 
   $(document).on('click', '.delete_quiz', function(){
           var qz_ID = $(this).attr("id");  
-      var sy_ID = <?php echo $_REQUEST['sy_ID']?>;
+      var sy_ID = <?php 
+    
+    if (isset($_REQUEST['sy_ID'])) {
+     echo $_REQUEST['sy_ID'];
+    }
+    else{
+      echo "blank";
+    }
+
+    ?>;
   if(confirm("Are you sure you want to delete this?"))
     {
     
-      // $.ajax({
-      //   url:"action.php",
-      //   type:"POST",
-      //   data:{delete_assignment:ass_ID},
-      //   success:function(data)
-      //   {
-      //     alert(data);
-      //    location.reload('room?sy_ID='+sy_ID)
-      //   }
-      // });
+      $.ajax({
+        url:"action.php",
+        type:"POST",
+        data:{delete_quiz:qz_ID},
+        success:function(data)
+        {
+          alert(data);
+         location.reload('room?sy_ID='+sy_ID)
+        }
+      });
     }
     else
     {
       return false; 
     }
   }); 
+
+  $(document).on('click', '.view_qscore', function(){
+     var qz_ID = $(this).attr("id");  
+ 
+       $('#view_qscore').modal('show');
+    
+        $.ajax({
+        url:"action.php",
+        type:"POST",
+        data:{get_score:qz_ID},
+        dataType:"html",
+        success:function(data)
+        {
+          $('#mbody-qscore').html(data);
+        }
+      });
+      
+  }); 
+
+  $(document).on('click', '.view_qscoret', function(){
+     var qz_ID = $(this).attr("id");  
+ 
+       $('#view_qscoret').modal('show');
+    
+        $.ajax({
+        url:"action.php",
+        type:"POST",
+        data:{get_scoret:qz_ID},
+        dataType:"html",
+        success:function(data)
+        {
+          $('#mbody-qscoret').html(data);
+        }
+      });
+      
+  }); 
+  
 
 
     </script>

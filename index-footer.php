@@ -10,7 +10,6 @@
 					<h3>Learning</h3>
 					<ul class="fh5co-footer-links">
 						<li><a href="subject">Subjects</a></li>
-						<li><a href="about">About</a></li>
 						<li><a href="contact">Contact</a></li>
 					</ul>
 				</div>

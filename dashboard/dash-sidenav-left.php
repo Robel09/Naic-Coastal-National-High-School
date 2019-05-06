@@ -77,7 +77,7 @@ function side_section(){
      >
          <a href="section">
              <i class="material-icons">class</i>
-             <span>Assign</span>
+             <span>Assigned</span>
          </a>
      </li>
     <?php
