@@ -13,6 +13,7 @@ if(isset($_POST["operation"]))
 		$student_lname = $_POST["student_lname"];
 		$student_suffix = $_POST["student_suffix"];
 		$student_sex = $_POST["student_sex"];
+		$ast_sy = $_POST["ast_sy"];
 
 		$sql = "SELECT * FROM `record_student_details` WHERE `rsd_StudNum`= :student_num;";
 		$statement = $connection->prepare($sql);
@@ -51,6 +52,17 @@ if(isset($_POST["operation"]))
 							':student_lname'	 		=>	$student_lname,
 							':student_suffix'	 		=>	$student_suffix,
 							':student_sex'	 			=>	$student_sex
+						)
+					);
+
+				$rsd_ID = mysqli_insert_id($connection);
+				$sql1 = "INSERT INTO `section_student` (`sstd_ID`, `rsd_ID`, `sy_ID`) VALUES (NULL, :rsd_ID, :ast_sy);";
+				$statement1 = $connection->prepare($sql1);
+				
+				$result1 = $statement1->execute(
+						array(
+							':ast_sy'				=>	$ast_sy,
+							':rsd_ID'	  		=>	$rsd_ID,
 						)
 					);
 				if(!empty($result))

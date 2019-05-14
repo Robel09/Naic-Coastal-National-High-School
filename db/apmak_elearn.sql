@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 06, 2019 at 11:50 PM
+-- Generation Time: May 14, 2019 at 11:52 PM
 -- Server version: 10.1.26-MariaDB
 -- PHP Version: 7.1.8
 
@@ -271,6 +271,27 @@ INSERT INTO `record_teacher_details` (`rtd_ID`, `user_ID`, `rtd_EmpID`, `rtd_FNa
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `ref_schoolyear`
+--
+
+CREATE TABLE `ref_schoolyear` (
+  `rsy_ID` int(11) UNSIGNED NOT NULL,
+  `rsy_syear` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `ref_schoolyear`
+--
+
+INSERT INTO `ref_schoolyear` (`rsy_ID`, `rsy_syear`) VALUES
+(1, '2016 - 2017'),
+(2, '2017 - 2018'),
+(3, '2018 - 2019'),
+(4, '2019 - 2021');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `ref_section`
 --
 
@@ -290,8 +311,8 @@ INSERT INTO `ref_section` (`section_ID`, `section_Name`) VALUES
 (4, 'section 4'),
 (5, 'Section 5'),
 (6, 'section 6'),
-(7, 'Section 6'),
-(8, 'Section 7');
+(7, 'Section 7'),
+(8, 'Section 8');
 
 -- --------------------------------------------------------
 
@@ -540,7 +561,8 @@ CREATE TABLE `schoolyear` (
 INSERT INTO `schoolyear` (`sy_ID`, `rtd_ID`, `sy_year`, `sy_stat`, `section_ID`) VALUES
 (1, 1, '2018 - 2019', 1, 1),
 (2, 2, '2017 - 2018', 0, 1),
-(3, 1, '2016 - 2017', 0, 2);
+(3, 1, '2016 - 2017', 0, 2),
+(5, 2, '2019 - 2021', 1, 5);
 
 -- --------------------------------------------------------
 
@@ -561,7 +583,8 @@ CREATE TABLE `section_student` (
 INSERT INTO `section_student` (`sstd_ID`, `rsd_ID`, `sy_ID`) VALUES
 (1, 1, 1),
 (2, 2, 2),
-(3, 3, 2);
+(3, 3, 2),
+(4, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -698,6 +721,13 @@ ALTER TABLE `record_teacher_details`
   ADD UNIQUE KEY `rtd_EmpID` (`rtd_EmpID`);
 
 --
+-- Indexes for table `ref_schoolyear`
+--
+ALTER TABLE `ref_schoolyear`
+  ADD PRIMARY KEY (`rsy_ID`),
+  ADD UNIQUE KEY `rsy_syear` (`rsy_syear`);
+
+--
 -- Indexes for table `ref_section`
 --
 ALTER TABLE `ref_section`
@@ -738,7 +768,8 @@ ALTER TABLE `room_module_topic`
 -- Indexes for table `schoolyear`
 --
 ALTER TABLE `schoolyear`
-  ADD PRIMARY KEY (`sy_ID`);
+  ADD PRIMARY KEY (`sy_ID`),
+  ADD KEY `sy_year` (`sy_year`);
 
 --
 -- Indexes for table `section_student`
@@ -789,7 +820,7 @@ ALTER TABLE `news`
 -- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `question_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `question_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `quiz`
 --
@@ -799,12 +830,12 @@ ALTER TABLE `quiz`
 -- AUTO_INCREMENT for table `quiz_attemp`
 --
 ALTER TABLE `quiz_attemp`
-  MODIFY `atmp_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `atmp_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `quiz_score`
 --
 ALTER TABLE `quiz_score`
-  MODIFY `score_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `score_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `record_student_details`
 --
@@ -816,10 +847,15 @@ ALTER TABLE `record_student_details`
 ALTER TABLE `record_teacher_details`
   MODIFY `rtd_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
+-- AUTO_INCREMENT for table `ref_schoolyear`
+--
+ALTER TABLE `ref_schoolyear`
+  MODIFY `rsy_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+--
 -- AUTO_INCREMENT for table `ref_section`
 --
 ALTER TABLE `ref_section`
-  MODIFY `section_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `section_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `ref_suffixname`
 --
@@ -844,12 +880,12 @@ ALTER TABLE `room_module_topic`
 -- AUTO_INCREMENT for table `schoolyear`
 --
 ALTER TABLE `schoolyear`
-  MODIFY `sy_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `sy_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `section_student`
 --
 ALTER TABLE `section_student`
-  MODIFY `sstd_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `sstd_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `test`
 --
@@ -874,6 +910,12 @@ ALTER TABLE `user_level`
 --
 ALTER TABLE `room_module_subtopic`
   ADD CONSTRAINT `room_module_subtopic_ibfk_1` FOREIGN KEY (`topic_ID`) REFERENCES `room_module_topic` (`topic_ID`);
+
+--
+-- Constraints for table `schoolyear`
+--
+ALTER TABLE `schoolyear`
+  ADD CONSTRAINT `schoolyear_ibfk_1` FOREIGN KEY (`sy_year`) REFERENCES `ref_schoolyear` (`rsy_syear`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

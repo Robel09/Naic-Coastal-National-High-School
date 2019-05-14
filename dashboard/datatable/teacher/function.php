@@ -9,6 +9,14 @@ function get_total_all_records()
 	$result = $statement->fetchAll();
 	return $statement->rowCount();
 }
+function get_total_all_records1()
+{
+	include('db.php');
+	$statement = $connection->prepare("SELECT * FROM `schoolyear`");
+	$statement->execute();
+	$result = $statement->fetchAll();
+	return $statement->rowCount();
+}
 
 
 

@@ -13,10 +13,7 @@
     if(isset($_SESSION['login_level']) )
     {      
         $login_level = $_SESSION['login_level'];
-        // if ($login_level != 3) {
-         
-        //   header('location: error404.php');
-        // }
+
          
     }
 

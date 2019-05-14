@@ -82,6 +82,59 @@ function side_section(){
      </li>
     <?php
 }
+function side_sectionmng(){
+    ?>
+    <li
+     <?php if ($GLOBALS['pagename'] == "Section Management"): ?>
+         class="active"
+     <?php else: ?>
+         
+     <?php endif ?>
+     
+     >
+         <a href="sectionmng">
+             <i class="material-icons">class</i>
+             <span>Section Management</span>
+         </a>
+     </li>
+    <?php
+}
+function side_schoolyear(){
+    ?>
+    <li
+     <?php if ($GLOBALS['pagename'] == "Schoolyear Management"): ?>
+         class="active"
+     <?php else: ?>
+         
+     <?php endif ?>
+     
+     >
+         <a href="schoolyear">
+             <i class="material-icons">class</i>
+             <span>Schoolyear Management</span>
+         </a>
+     </li>
+    <?php
+}
+function side_teacherAssign(){
+    ?>
+    <li
+     <?php if ($GLOBALS['pagename'] == "Assign Teacher"): ?>
+         class="active"
+     <?php else: ?>
+         
+     <?php endif ?>
+     
+     >
+         <a href="teacher_assign">
+             <i class="material-icons">list</i>
+             <span>Assigned Teacher</span>
+         </a>
+     </li>
+    <?php
+}
+
+
 function side_room(){
     
     ?>
@@ -125,25 +178,26 @@ function side_room(){
                     <?php 
                     //student
                     if ($login_level == 1) {
-                        side_dashboard();
+                        // side_dashboard();
                         side_room();
                        
                     }
                     //instructor
                     else if ($login_level == 2) {
-                        side_dashboard();
+                        // side_dashboard();
                         side_section();
                       
                     }
                     //admin
                     else if ($login_level == 3) {
                         
-                        side_dashboard();
+                        // side_dashboard();
                         side_accoutMngt();
                         side_studentMngt();
                         side_instrucMngt();
-                        // side_class();
-                        // side_query();
+                        side_sectionmng();
+                        side_schoolyear();
+                        side_teacherAssign();
                         
                     }
                     else{

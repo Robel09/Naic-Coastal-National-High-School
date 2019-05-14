@@ -63,7 +63,7 @@ if(isset($_POST["operation"]))
 					}
 				}
 				else{
-					echo 'Student Must Be';
+					echo 'Student Must Be Recorded';
 				}
 			   
 

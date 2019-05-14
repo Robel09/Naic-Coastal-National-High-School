@@ -73,6 +73,7 @@
                 <li  class="active"><a href="javascript:void(0);"><i class="material-icons ">account_box</i> Teacher Management</a></li>
             </ol>
             <div class="row clearfix">
+
                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                            <div class="card">
                                <div class="header">
@@ -279,6 +280,53 @@
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
     <!-- /add modal -->
+
+
+    <!-- add modal -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="assigned_section">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title"><span class="glyphicon glyphicon-plus-sign"></span> Assigned Section</h4>
+          </div>
+          
+          <form class="form-horizontal" action="#" method="POST" id="teacher_form" enctype="multipart/form-data">
+
+          <div class="modal-body as_bod">
+             
+                         
+                             
+                                   <div class="btn-group pull-right">
+                                   <button type="button" class="btn btn-success waves-effect add" data-toggle="modal" data-target="#teacher_modal">ADD TEACHER</button>
+                                   </div>
+                                   <br>
+                               <br>
+                               
+                                   <div class="table-responsive" style="overflow-x: hidden;">
+                                          <table id="asteacher_data" class="table table-bordered table-striped">
+                                            <thead>
+                                              <tr>
+                                                <th width="5%">ID</th>
+                                                <th >Teacher</th>
+                                                <th width="15%">School Year</th>
+                                                <th width="15%">Section</th>
+                                                <th width="10%">Action</th>
+                                              </tr>
+                                            </thead>
+                                          </table>
+                                       
+                                   </div>
+                               
+                       </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+          </form> 
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <!-- /add modal -->
     <!-- Jquery Core Js -->
     <script src="../assets/plugins/jquery/jquery.min.js"></script>
 
@@ -354,6 +402,24 @@ $(document).ready(function(){
     ],
 
   });
+   var dataTable1 = $('#asteacher_data').DataTable({
+    "processing":true,
+    "serverSide":true,
+    "order":[],
+    "ajax":{
+      url:"datatable/teacher/fetch_assigned.php",
+      type:"POST"
+    },
+    "columnDefs":[
+      {
+        "targets":[0],
+        "orderable":false,
+      },
+    ],
+
+  });
+
+  
 
   $(document).on('submit', '#teacher_form', function(event){
     event.preventDefault();
@@ -451,6 +517,12 @@ $(document).ready(function(){
     }
   });
   
+  $(document).on('click', '.assigned_section', function(){
+    var rtd_ID = $(this).attr("id");
+   
+    $('#assigned_section').modal('show');
+  });
+
   
 });
 </script>
