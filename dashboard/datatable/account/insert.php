@@ -1,208 +1,127 @@
 <?php
-include('db.php');
-include('function.php');
+require_once('../class.function.php');
+$account = new DTFunction(); 
 if(isset($_POST["operation"]))
 {
 
-	if($_POST["operation"] == "Add")
-	{
-		
-		$username = $_POST["username"];
-		$level = $_POST["level"];
-		$email = $_POST["email"];
-		$pass = $_POST["pass"];
-		$con_pass = $_POST["con_pass"];
-		$status = $_POST["status"];
-		
- 		if ($level == 1) {
- 			$sql = "SELECT * FROM `user_accounts` WHERE `user_Name`= :user_Name;";
-			$statement = $connection->prepare($sql);
-			$statement->bindParam(':user_Name', $username, PDO::PARAM_STR);
-			$result = $statement->execute();
-			$resultrows = $statement->rowCount();
-			if (empty($resultrows)) { 
-				$sql ="SELECT * FROM `record_student_details` WHERE rsd_StudNum =  :username;";
-			
-				$statement = $connection->prepare($sql);
-				$statement->bindParam(':username', $username, PDO::PARAM_STR);
-				$result1 = $statement->execute();
+	if($_POST["operation"] == "submit_account")
+	{	
+		try
+		{
+			$acc_username = $_POST["acc_username"];
+			$acc_name = $_POST["acc_name"];
+			$acc_lvl = $_POST["acc_lvl"];
+			$acc_email = $_POST["acc_email"];
+			$acc_pass = $_POST["acc_pass"];
+			$acc_cpass = $_POST["acc_cpass"];
+			$acc_address = $_POST["acc_add"];
 
-				if(!empty($result1))
-				{
-					$result1 = $statement->fetchAll();
-					foreach($result1 as $row)
-					{
-
-						$rsd_ID = $row["rsd_ID"];
-					
-					}
-
-					$sql = "INSERT INTO `user_accounts` (`user_ID`, `level_ID`, `user_Name`, `user_Pass`, `user_Email`, `user_Registered`, `user_status`) VALUES (NULL, :level, :user_Name, :encrypted_pass, :email, CURRENT_TIMESTAMP, :status);";
-					$statement = $connection->prepare($sql);
-					
-					$result = $statement->execute(
-						array(
-							':level'			=>	$level,
-							':user_Name'		=>	$username,
-							':encrypted_pass' 	=>	encryptIt($pass),
-							':email'	  		=>	$email,
-							':status'	 		=>	$status
-						)
-					);
-					$last_id = $connection->lastInsertId();
-					$sql ="UPDATE `record_student_details` SET `user_ID` = '$last_id' WHERE `record_student_details`.`rsd_ID` = $rsd_ID;";
-		
-					$statement = $connection->prepare($sql);
-					$result = $statement->execute();
-					if(!empty($result))
-					{
-						echo 'Successfully User Added';
-					}
-					else{
-						echo 'Student Must Be Recorded';
-					}
-				}
-				else{
-					echo 'Student Must Be Recorded';
-				}
-			   
-
-			} else {
-			   // if username is not available
-				echo 'Username is Already Use';
-
+			if ($acc_pass != $acc_cpass) {
+				echo "Password not match";
 			}
- 		}
- 		else if ($level == 2) {
- 			$sql = "SELECT * FROM `user_accounts` WHERE `user_Name`= :user_Name;";
-			$statement = $connection->prepare($sql);
-			$statement->bindParam(':user_Name', $username, PDO::PARAM_STR);
-			$result = $statement->execute();
-			$resultrows = $statement->rowCount();
-			if (empty($resultrows)) { 
-				$sql ="SELECT * FROM `record_teacher_details` WHERE rtd_EmpID =  :username;";
-			
-				$statement = $connection->prepare($sql);
-				$statement->bindParam(':username', $username, PDO::PARAM_STR);
-				$result1 = $statement->execute();
-
-				if(!empty($result1))
-				{
-
-					$result1 = $statement->fetchAll();
-					foreach($result1 as $row)
-					{
-
-						$rtd_ID = $row["rtd_ID"];
-					}
-					if (isset($rtd_ID)) {
-						$sql = "INSERT INTO `user_accounts` (`user_ID`, `level_ID`, `user_Name`, `user_Pass`, `user_Email`, `user_Registered`, `user_status`) VALUES (NULL, :level, :user_Name, :encrypted_pass, :email, CURRENT_TIMESTAMP, :status);";
-						$statement = $connection->prepare($sql);
-						
-						$result = $statement->execute(
-							array(
-								':level'			=>	$level,
-								':user_Name'		=>	$username,
-								':encrypted_pass' 	=>	encryptIt($pass),
-								':email'	  		=>	$email,
-								':status'	 		=>	$status
-							)
-						);
-						$last_id = $connection->lastInsertId();
-						$sql ="UPDATE `record_teacher_details` SET `user_ID` = '$last_id' WHERE `record_teacher_details`.`rtd_ID` = $rtd_ID;";
-
-			
-						$statement = $connection->prepare($sql);
-						$result = $statement->execute();
-						if(!empty($result))
-						{
-							echo 'Successfully User Added';
-						}
-					}
-					else{
-						echo 'Teacher Must Be Recorded';
-					}
-				}
-				else{
-					echo 'Teacher Must Be';
-				}
-			   
-
-			} else {
-			   // if username is not available
-				echo 'Username is Already Use';
-
-			}
- 		}
- 		else{
- 			$sql = "SELECT * FROM `user_accounts` WHERE `user_Name`= :user_Name;";
-			$statement = $connection->prepare($sql);
-			$statement->bindParam(':user_Name', $username, PDO::PARAM_STR);
-			$result = $statement->execute();
-			$resultrows = $statement->rowCount();
-
-			if (empty($resultrows)) { 
-			   // if username is available
-
-				$sql = "INSERT INTO `user_accounts` (`user_ID`, `level_ID`, `user_Name`, `user_Pass`, `user_Email`, `user_Registered`, `user_status`) VALUES (NULL, :level, :user_Name, :encrypted_pass, :email, CURRENT_TIMESTAMP, :status);";
-				$statement = $connection->prepare($sql);
-				
+			else{
+				$newpass = $account->encryptIt($acc_pass);
+				$sql = "INSERT INTO `user` (
+				`user_ID`,
+				`lvl_ID`,
+				`user_img`,
+				`user_Name`,
+				`user_Pass`,
+				`user_Email`,
+				`user_Address`,
+				`user_Registered`)
+				VALUES (
+				NULL,
+				:acc_lvl,
+				NULL,
+				:acc_username,
+				:acc_pass,
+				:acc_email,
+				:acc_address,
+				CURRENT_TIMESTAMP);";
+				$statement = $account->runQuery($sql);
+					
 				$result = $statement->execute(
-					array(
-						':level'			=>	$level,
-						':user_Name'		=>	$username,
-						':encrypted_pass' 	=>	encryptIt($pass),
-						':email'	  		=>	$email,
-						':status'	 		=>	$status
+				array(
+
+						':acc_lvl'		=>	$acc_lvl ,
+						':acc_username'		=>	$acc_username ,
+						':acc_pass'			=>	$newpass ,
+						':acc_email'		=>	$acc_email ,
+						':acc_address'			=>	$acc_address ,
 					)
 				);
-
 				if(!empty($result))
 				{
-					echo 'Successfully User Added';
+					echo 'Successfully Added';
 				}
-
-			} else {
-			   // if username is not available
-				echo 'Username is Already Use';
-
 			}
- 		}
+
+		}
+		catch (PDOException $e)
+		{
+		    echo "There is some problem in connection: " . $e->getMessage();
+		}
+		
+	}
+
+	if($_POST["operation"] == "account_edit")
+	{
 		
 		
 
+		$account_ID = $_POST["account_ID"];
+		$acc_name = $_POST["acc_name"];
+		$acc_lvl = $_POST["acc_lvl"];
+		$acc_email = $_POST["acc_email"];
+		$acc_pass = $_POST["acc_pass"];
+		$acc_cpass = $_POST["acc_cpass"];
+		$acc_address = $_POST["acc_add"];
+
+		if ($acc_pass != $acc_cpass) {
+			echo "Password not match";
+		}
+		else{
+			$newpass = $account->encryptIt($acc_pass);
+			$sql = "UPDATE `usezr` SET `lvl_ID` = :acc_lvl,  `user_Pass` = :acc_pass, `user_Email` = :acc_email, `user_Address` = :acc_address WHERE `user`.`user_ID` = :account_ID;";
+			$statement = $account->runQuery($sql);
+				
+			$result = $statement->execute(
+			array(
+
+					':account_ID'		=>	$account_ID ,
+					':acc_lvl'		=>	$acc_lvl ,
+					':acc_email'		=>	$acc_email ,
+					':acc_pass'			=>	$newpass ,
+					':acc_address'			=>	$acc_address ,
+				)
+			);
+			if(!empty($result))
+			{
+				echo 'Successfully Updated';
+			}
+		}
 	
 	}
 
-	if($_POST["operation"] == "Edit")
+	if($_POST["operation"] == "delete_account")
 	{
-		
-		$user_ID = $_POST["user_ID"];
-		
-		$level = $_POST["level"];
-		$email = $_POST["email"];
-		$pass = $_POST["pass"];
-		$con_pass = $_POST["con_pass"];
-		$status = $_POST["status"];
-		
-		 $sql ="UPDATE `user_accounts` SET `level_ID` = :level,`user_Pass` = :encrypted_pass,`user_Email` = :email,`user_status` = :status WHERE `user_accounts`.`user_ID` = :user_ID;";
-		
-		$statement = $connection->prepare($sql);
-		
+		$statement = $account->runQuery(
+			"DELETE FROM `user` WHERE `user`.`user_ID` = :user_ID"
+		);
 		$result = $statement->execute(
-				array(
-					':user_ID'			=>	$user_ID,
-					':level'			=>	$level,
-					':encrypted_pass' 	=>	encryptIt($pass),
-					':email'	  		=>	$email,
-					':status'	 		=>	$status
-				)
-			);
+			array(
+				':user_ID'	=>	$_POST["account_ID"]
+			)
+		);
+		
 		if(!empty($result))
 		{
-			echo 'Data Updated';
+			echo 'Successfully Deleted';
 		}
+		
+	
 	}
 }
-
 ?>
+

@@ -1,460 +1,452 @@
 <?php 
-    include('../session.php');
-    include('dash-global-function.php');
+include('../session.php');
 
-   
-    $pagename = "Student Management";
-    
-    $username = $_SESSION['user_Name'];
-    $user_id = $_SESSION['login_id'];
-    $user_img = $_SESSION['user_img'];
-    $user_email = $_SESSION['user_Email'];
-    $script_for_specific_page = "";
-    if(isset($_SESSION['login_level']) )
-    {      
-        $login_level = $_SESSION['login_level'];
-        if ($login_level != 3) {
-         
-          header('location: error404.php');
+
+require_once("../class.user.php");
+
+  
+$auth_user = new USER();
+// $page_level = 3;
+// $auth_user->check_accesslevel($page_level);
+$pageTitle = "Manage Student";
+?>
+<!doctype html>
+<html lang="en">
+  <head>
+    <?php 
+      include('x-meta.php');
+    ?>
+
+
+  <?php 
+  include('x-css.php');
+  ?>
+ 
+
+
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
         }
-         
-    }
+      }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="../assets/css/dashboard.css" rel="stylesheet">
+  </head>
+  <body>
+<?php 
+include('x-nav.php');
 ?>
 
-<!DOCTYPE html>
-<html>
-
- <?php
-    include("dash-head.php");
+<div class="container-fluid">
+  <div class="row">
+      <?php 
+    include('x-sidenav.php');
     ?>
 
-<body class="theme-red ">
-    <!-- Page Loader -->
-    <div class="page-loader-wrapper">
-        <div class="loader">
-            <div class="preloader">
-                <div class="spinner-layer pl-red">
-                    <div class="circle-clipper left">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="circle-clipper right">
-                        <div class="circle"></div>
-                    </div>
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Manage Student Record</h1>
+        
+      </div>
+      <nav aria-label="breadcrumb" >
+        <ol class="breadcrumb bcrum">
+          <li class="breadcrumb-item "><a href="index" class="bcrum_i_a">Dashboard</a></li>
+          <li class="breadcrumb-item  active bcrum_i_ac" aria-current="page">Student Record Management</li>
+        </ol>
+      </nav>
+      <div class="table-responsive">
+          <button type="button" class="btn btn-sm btn-success add" >
+            Add 
+          </button>
+         <br><br>
+        <table class="table table-striped table-sm" id="student_data">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>LRN ID</th>
+              <th>Name</th>
+              <th>Sex</th>
+              <th>Marital</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+     
+          </tbody>
+        </table>
+
+
+<!--modal student -->
+<div class="modal fade" id="student_modal" tabindex="-1" role="dialog" aria-labelledby="student_modal_title" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="student_modal_title">Add Attendance</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="post" id="student_form" enctype="multipart/form-data">
+      <div class="modal-body" id="product_modal_content">
+            <div class="form-row">
+               
+                <div class="form-group col-md-4">
+                  <img id="s_img" src="../assets/img/users/default.jpg" alt="Student Image"  runat="server"  height="125" width="125" class="img-thumbnail" style="border:1px solid; border-color: #4caf50; min-width:125px; min-height:125px; max-width:125px; max-height:125px; background-size:cover;"/>
+                  <br><br>
+                  <input type="file" class="form-control" id="student_img" name="student_img" placeholder="" value="" >
                 </div>
-            </div>
-            <p>Please wait...</p>
+                <div class="form-group col-md-4">
+                  
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="student_lrn">LRN ID<span class="text-danger">*</span></label>
+                  <input type="number" class="form-control" id="student_lrn" name="student_lrn" placeholder="" value="" required="">
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="student_fname">First Name<span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="student_fname" name="student_fname" placeholder="" value="" required="">
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="student_mname">Middle Name<span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="student_mname" name="student_mname" placeholder="" value="" required="">
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="student_lname">Last Name<span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="student_lname" name="student_lname" placeholder="" value="" required="">
+                </div>
+                  <div class="form-group col-md-3">
+                  <label for="student_suffix">Suffix<span class="text-danger">*</span></label>
+                  <select class="form-control" id="student_suffix" name="student_suffix">
+                  <?php 
+                   $auth_user->user_suffix_option();
+                  ?>
+                </select>
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="student_bday">Birthday<span class="text-danger">*</span></label>
+                  <input type="date" class="form-control" id="student_bday" name="student_bday" placeholder="" value="" required="">
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="student_sex">Sex<span class="text-danger">*</span></label>
+                  <select class="form-control" id="student_sex" name="student_sex" required="">
+                  <?php 
+                   $auth_user->user_sex_option();
+                  ?>
+                </select>
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="student_marital">Marital<span class="text-danger">*</span></label>
+                  <select class="form-control" id="student_marital" name="student_marital" required="">
+                  <?php 
+                   $auth_user->user_marital_option();
+                  ?>
+                </select>
+                </div>
+                 <div class="form-group col-md-12">
+                  <label for="student_email">Email<span class="text-danger">*</span></label>
+                  <input type="email" class="form-control" id="student_email" name="student_email" placeholder="" value="" required="">
+                </div>
+                <div class="form-group col-md-12">
+                  <label for="student_address">Address<span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="student_address" name="student_address" placeholder="" value="" required="">
+                </div>
+            
+      </div>
+      </div>
+      <div class="modal-footer">
+          <input type="hidden" name="student_ID" id="student_ID" />
+          <input type="hidden" name="operation" id="operation" />
+        <div class="btn-group" id='sbtng'>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary submit" id="submit_input" value="submit_student">Submit</button>
         </div>
+      </div>
+      </form>
     </div>
-    <!-- #END# Page Loader -->
-    <!-- Overlay For Sidebars -->
-    <div class="overlay"></div>
-    <!-- #END# Overlay For Sidebars -->
-    <?php 
-        include('dash-topnav.php');
-    ?>
-    <section>
-        <?php 
-        include("dash-sidenav-left.php");
-        ?>
+  </div>
+</div>
+<!--/modal student -->
 
-    </section>
-
-    <section class="content">
-        <div class="container-fluid">
-            <div class="block-header">
-                <h2>
-                    Student Management
-                </h2>
-            </div>
-
-            <ol class="breadcrumb breadcrumb-bg-blue">
-                <li><a href="index"><i class="material-icons">home</i> Home</a></li>
-                <li  class="active"><a href="javascript:void(0);"><i class="material-icons ">account_box</i> Student Management</a></li>
-            </ol>
-            <div class="row clearfix">
-                       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                           <div class="card">
-                               <div class="header">
-                                   <h2>LIST OF STUDENT</h2>
-                                   <div class="btn-group pull-right">
-                                   <button type="button" class="btn btn-success waves-effect add" data-toggle="modal" data-target="#student_modal">ADD STUDENT</button>
-                                   </div>
-                                   <br>
-                               </div>
-                               <div class="body">
-                                   <div class="table-responsive" style="overflow-x: hidden;">
-                                          <table id="student_data" class="table table-bordered table-striped">
-                                            <thead>
-                                              <tr>
-                                                <th width="5%">ID</th>
-                                                <th width="5%">Student Number</th>
-                                                <th >Name</th>
-                                                <th width="10%">Sex</th>
-                                                <th width="10%">Section</th>
-                                                <th width="10%">Action</th>
-                                              </tr>
-                                            </thead>
-                                          </table>
-                                   </div>
-                               </div>
-                           </div>
-                    </div>
-            </div>   
-          <!--    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="card">
-                        <iframe src="map/user-map.php" style=" display:block; width:100%; height: 800px;"></iframe>
-                    </div>
-                </div> -->
-          
+<!--delete modal -->
+<div class="modal fade" id="delstudent_modal" tabindex="-1" role="dialog" aria-labelledby="student_modal_title" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="student_modal_title">Delete this Student</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+        <div class="btn-group">
+        <button type="submit" class="btn btn-danger" id="student_delform">Delete</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
         </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div><!--/delete modal -->
 
-    </section>
 
+      </div>
+    </main>
+  </div>
+</div>
 
-
- <!-- add modal -->
-    <div class="modal fade" tabindex="-1" role="dialog" id="student_modal">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title"><span class="glyphicon glyphicon-plus-sign"></span> Add Student Info</h4>
-          </div>
+<?php 
+include('x-script.php');
+?>
+        <script type="text/javascript">
+   
+          function readURL(input) {
+          if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+              $('#s_img').attr('src', e.target.result);
+            }
           
-          <form class="form-horizontal" action="#" method="POST" id="student_form" enctype="multipart/form-data">
+            reader.readAsDataURL(input.files[0]);
+          }
+         }
 
-          <div class="modal-body">
-            <div class="messages"></div>
-              <div class="row clearfix">
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                      <label for="student_num">Student Number</label>
-                  </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                      <div class="form-group">
-                          <div class="form-line">
-                              <input type="text" class="form-control" id="student_num" name="student_num" placeholder="Student Number" onkeyup="numberInputOnly(this);">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <br>
-              <div class="row clearfix">
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                      <label for="student_fname">First Name </label>
-                  </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                      <div class="form-group">
-                          <div class="form-line">
-                              <input type="text" class="form-control" id="student_fname" name="student_fname" placeholder="Student First Name" >
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <br>
-              <div class="row clearfix">
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                      <label for="student_mname">Middle Name</label>
-                  </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                      <div class="form-group">
-                          <div class="form-line">
-                              <input type="text" class="form-control" id="student_mname" name="student_mname" placeholder="Student Middle Name">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <br>
-              <div class="row clearfix">
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                      <label for="student_lname">Last Name</label>
-                  </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                      <div class="form-group">
-                          <div class="form-line">
-                              <input type="text" class="form-control" id="student_lname" name="student_lname" placeholder="Student Last Name">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <br>
-              <div class="row clearfix">
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                      <label for="student_suffix">Suffix</label>
-                  </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                      <div class="form-group">
-                          <div class="form-line">
-                               <select class="form-control" name="student_suffix" id="student_suffix" >
-                                <option value="">~~SELECT~~</option>
-                              <?php 
-
-                              $sql = "SELECT * FROM `ref_suffixname`";
-                              $query = mysqli_query($conn,$sql);
-                                             
-                                               
-                                if (mysqli_num_rows($query) > 0) {
-                                      // output data of each row
-
-                                    while($rsn = mysqli_fetch_assoc($query)) 
-                                    {
-                                    ?>
-                                    <option value="<?php echo $rsn['suffix_ID']; ?>"><?php echo $rsn['suffix']; ?></option>
-                                    <?php
-                                    }
-                                   }
-                              ?>
-                              </select>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <br>
-              <div class="row clearfix">
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                      <label for="student_sex">Sex</label>
-                  </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                      <div class="form-group">
-                          <div class="form-line">
-                               <select class="form-control" name="student_sex" id="student_sex" >
-                                <option value="">~~SELECT~~</option>
-                              <?php 
-
-                              $sql = "SELECT * FROM `ref_sex`";
-                              $query = mysqli_query($conn,$sql);
-                                             
-                                               
-                                if (mysqli_num_rows($query) > 0) {
-                                      // output data of each row
-
-                                    while($rsn = mysqli_fetch_assoc($query)) 
-                                    {
-                                    ?>
-                                    <option value="<?php echo $rsn['sex_ID']; ?>"><?php echo $rsn['sex_Name']; ?></option>
-                                    <?php
-                                    }
-                                   }
-                              ?>
-                              </select>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <br>
-              <div class="row clearfix">
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                      <label for="status">Room</label>
-                  </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                      <div class="form-group">
-                          <div class="form-line">
-                               <select class="form-control" name="ast_sy" id="ast_sy" >
-                                <option value="">~~SELECT~~</option>
-                                <?php 
-                                  $sql1 = "SELECT DISTINCT(sy.section_ID),rs.section_Name,sy.sy_year,sy.sy_ID,rtd.rtd_FName,rtd.rtd_MName,rtd.rtd_LName FROM `schoolyear` `sy`
-                                      LEFT JOIN `record_teacher_details` `rtd` ON `sy`.`rtd_ID` = `rtd`.`rtd_ID`
-                                      LEFT JOIN `ref_section` rs ON `sy`.`section_ID` = `rs`.`section_ID` 
-                                      WHERE `sy`.`sy_stat` = 1";
-                                  $result = mysqli_query($conn, $sql1);
-                                   while($row = mysqli_fetch_assoc($result)) {
-                                    $fn = $row["rtd_FName"].' '.$row["rtd_MName"].' '.$row["rtd_LName"];
-                                    ?><option value="<?php echo $row ["sy_ID"]?>"><?php echo $row["section_Name"].' handle by '.$fn?> (<?php echo $row ["sy_year"]?>)</option>
-                                    <?php
-                                   }
-
-                                ?>
-                              </select>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <br> 
-
-                                 
-
-          </div>
-          <div class="modal-footer">
-          <input type="hidden" name="rsd_ID" id="rsd_ID" />
-          <input type="hidden" name="operation" id="operation" value="Add" />
-          <input type="submit" name="action" id="action" class="btn btn-success" value="Submit" />
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
-          </form> 
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-    <!-- /add modal -->
-    <!-- Jquery Core Js -->
-    <script src="../assets/plugins/jquery/jquery.min.js"></script>
-
-    <!-- Bootstrap Core Js -->
-    <script src="../assets/plugins/bootstrap/js/bootstrap.js"></script>
-
-    <!-- Select Plugin Js -->
-    <script src="../assets/plugins/bootstrap-select/js/bootstrap-select.js"></script>
-
-    <!-- Slimscroll Plugin Js -->
-    <script src="../assets/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
-
-    <!-- Waves Effect Plugin Js -->
-    <script src="../assets/plugins/node-waves/waves.js"></script>
-
-    <!-- Jquery DataTable Plugin Js -->
-    <script src="../assets/plugins/jquery-datatable/jquery.dataTables.js"></script>
-    <script src="../assets/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/buttons.flash.min.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/jszip.min.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/pdfmake.min.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
-
-    <!-- Custom Js -->
-    <script src="../assets/js/admin.js"></script>
-    <script src="../assets/js/pages/tables/jquery-datatable.js"></script>
-
-    <!-- Demo Js -->
-    <script src="../assets/js/demo.js"></script>
-    <script type="text/javascript" language="javascript" >
-       //NUMBER ONLY
-  function numberInputOnly(elem) {
-      var validChars = /[0-9]/;
-      var strIn = elem.value;
-      var strOut = '';
-      for(var i=0; i < strIn.length; i++) {
-        strOut += (validChars.test(strIn.charAt(i)))? strIn.charAt(i) : '';
-      }
-      elem.value = strOut;
-  }
-$(document).ready(function(){
-
-  //select specific dropdown when updating 1 data
-  function setSelectedValue(dropDownList, valueToSet) {
-    var option = dropDownList.firstChild;
-    for (var i = 0; i < dropDownList.length; i++) {
-        if (option.text.trim().toLowerCase() == valueToSet.trim().toLowerCase()) {
-            option.selected = true;
-            return;
-        }
-        option = option.nextElementSibling;
-    }
-}
-
-
-
-  var dataTable = $('#student_data').DataTable({
-    "processing":true,
-    "serverSide":true,
-    "order":[],
-    "ajax":{
-      url:"datatable/student/fetch.php",
-      type:"POST"
-    },
-    "columnDefs":[
-      {
-        "targets":[0],
-        "orderable":false,
-      },
-    ],
-
-  });
-
-  $(document).on('submit', '#student_form', function(event){
-    event.preventDefault();
-    var student_num = $('#student_num').val();
-    var student_fname = $('#student_fname').val();
-    var student_mname = $('#student_mname').val();
-    var student_lname = $('#student_lname').val();
-    var student_suffix = $('#student_suffix').val();
-    var student_sex = $('#student_sex').val();
-    if(student_num != '' && student_fname != '' && student_mname != '' && student_lname != '' && student_suffix != '' && student_sex != '')
-    {
-            $.ajax({
-              url:"datatable/student/insert.php",
-              method:'POST',
-              data:new FormData(this),
-              contentType:false,
-              processData:false,
-              success:function(data)
+          $("#student_img").change(function() {
+           readURL(this);
+          });
+          $(document).ready(function() {
+             
+            var student_dataTable = $('#student_data').DataTable({
+            "processing":true,
+            "serverSide":true,
+            "order":[],
+            "ajax":{
+              url:"datatable/student/fetch.php",
+              type:"POST"
+            },
+            "columnDefs":[
               {
-                $('#action').val("Add");
-                $('#operation').val("Add");
+                "targets":[0],
+                "orderable":false,
+              },
+            ],
 
-                alert(data);
-                $('#student_form')[0].reset();
-                $('#student_modal').modal('hide');
-                dataTable.ajax.reload();
-              }
+          });
+
+
+
+          $(document).on('submit', '#student_form', function(event){
+            event.preventDefault();
+
+              $.ajax({
+                url:"datatable/student/insert.php",
+                method:'POST',
+                data:new FormData(this),
+                contentType:false,
+                processData:false,
+                success:function(data)
+                {
+                  alertify.alert(data).setHeader('Student Record');
+                  $('#student_form')[0].reset();
+                  $('#student_modal').modal('hide');
+                  student_dataTable.ajax.reload();
+                }
+              });
+           
+          });
+
+          $(document).on('click', '.add', function(){
+            $('#student_modal_title').text('Add New Student');
+            $('#student_modal').modal('show');
+            $('#student_form')[0].reset();
+
+            var btng = document.getElementById("sbtng");
+            btng.className = btng.className.replace(/\btng_null\b/g, "");
+            btng.classList.add("btn-group");
+
+            $('#s_img').attr('src', "../assets/img/users/default.jpg");
+            $("#student_lrn").prop("disabled", false);
+            $("#student_fname").prop("disabled", false);
+            $("#student_mname").prop("disabled", false);
+            $("#student_lname").prop("disabled", false);
+            $("#student_suffix").prop("disabled", false);
+            $("#student_bday").prop("disabled", false);
+            $("#student_sex").prop("disabled", false);
+            $("#student_marital").prop("disabled", false);
+            $("#student_email").prop("disabled", false);
+            $("#student_address").prop("disabled", false);
+
+
+            $("#student_img").show();
+            $('#submit_input').show();
+
+            $('#submit_input').text('Submit');
+            $('#submit_input').val('submit_student');
+            $('#operation').val("submit_student");
+          });
+
+          $(document).on('click', '.view', function(){
+            var student_ID = $(this).attr("id");
+            $('#student_modal_title').text('View Student');
+            $('#student_modal').modal('show');
+            
+
+            $('#submit_input').hide();
+            var btng = document.getElementById("sbtng");
+            btng.className = btng.className.replace(/\bbtn-group\b/g, "");
+            btng.classList.add("btng_null");
+
+                
+                $("#student_img").hide();
+                
+             $.ajax({
+                url:"datatable/student/fetch_single.php",
+                method:'POST',
+                data:{action:"student_view",student_ID:student_ID},
+                dataType    :   'json',
+                success:function(data)
+                {
+                  $("#student_lrn").prop("disabled", true);
+                  $("#student_fname").prop("disabled", true);
+                  $("#student_mname").prop("disabled", true);
+                  $("#student_lname").prop("disabled", true);
+                  $("#student_suffix").prop("disabled", true);
+                  $("#student_bday").prop("disabled", true);
+                  $("#student_sex").prop("disabled", true);
+                  $("#student_marital").prop("disabled", true);
+                  $("#student_email").prop("disabled", true);
+                  $("#student_address").prop("disabled", true);
+                  
+
+                  $('#s_img').attr('src', data.student_img);
+                  $('#student_lrn').val(data.student_lrn);
+                  $('#student_fname').val(data.student_fname);
+                  $('#student_mname').val(data.student_mname);
+                  $('#student_lname').val(data.student_lname);
+                  $('#student_suffix').val(data.student_suffix).change();
+                  $('#student_bday').val(data.student_bday);
+                  $('#student_sex').val(data.student_sex).change();
+                  $('#student_marital').val(data.student_marital).change();
+                  $('#student_email').val(data.student_email);
+                  $('#student_address').val(data.student_address);
+
+                  $('#submit_input').hide();
+                  $('#student_ID').val(student_ID);
+                  $('#submit_input').text('Update');
+                  $('#submit_input').val('student_view');
+                  $('#operation').val("student_view");
+                  
+                }
+              });
+
+
             });
-      
-    
-    }
-    else
-    {
-      alert("Fields are Required");
-    }
-  });
- $(document).on('click', '.add', function () {
-      
-       $('#action').text("Add");
-       $('#operation').val("Add");
-       $('.modal-title').text("Add Student Info");
-       $('#student_suffix').val('').change();
-       $('#student_sex').val('').change();
-       document.getElementById('student_form').reset();
-      
-  });
-  $(document).on('click', '.update', function(){
-    var rsd_ID = $(this).attr("id");
-    
-    $.ajax({
-      url:"datatable/student/fetch_single.php",
-      method:"POST",
-      data:{rsd_ID:rsd_ID},
-      dataType:"json",
-      success:function(data)
-      {
-        $('#student_modal').modal('show');
-        $('#student_num').val(data.student_num);
-        $('#student_fname').val(data.student_fname);
-        $('#student_mname').val(data.student_mname);
-        $('#student_lname').val(data.student_lname);
-        $('#student_suffix').val(data.student_suffix).change();
-        $('#student_sex').val(data.student_sex).change();
-        $('#action').val("Update");
-        $('#operation').val("Edit");
-        $('.modal-title').text("Edit Student Info");
-        $('#rsd_ID').val(rsd_ID);
-      }
-    })
-  });
-  
-  $(document).on('click', '.delete', function(){
-    var rsd_ID = $(this).attr("id");
-    if(confirm("Are you sure you want to delete this?"))
-    {
-      $.ajax({
-        url:"datatable/student/delete.php",
-        method:"POST",
-        data:{rsd_ID:rsd_ID},
-        success:function(data)
-        {
-          alert(data);
-          dataTable.ajax.reload();
-        }
-      });
-    }
-    else
-    {
-      return false; 
-    }
-  });
- 
-  
-  
-});
-</script>
-</body>
+
+
+            $(document).on('click', '.edit', function(){
+            var student_ID = $(this).attr("id");
+            $('#student_modal_title').text('View Student');
+            $('#student_modal').modal('show');
+            
+
+            var btng = document.getElementById("sbtng");
+            btng.className = btng.className.replace(/\btng_null\b/g, "");
+            btng.classList.add("btn-group");
+
+                
+                $("#student_img").show();
+                
+             $.ajax({
+                url:"datatable/student/fetch_single.php",
+                method:'POST',
+                data:{action:"student_update",student_ID:student_ID},
+                dataType    :   'json',
+                success:function(data)
+                {
+                  $("#student_lrn").prop("disabled", false);
+                  $("#student_fname").prop("disabled", false);
+                  $("#student_mname").prop("disabled", false);
+                  $("#student_lname").prop("disabled", false);
+                  $("#student_suffix").prop("disabled", false);
+                  $("#student_bday").prop("disabled", false);
+                  $("#student_sex").prop("disabled", false);
+                  $("#student_marital").prop("disabled", false);
+                  $("#student_email").prop("disabled", false);
+                  $("#student_address").prop("disabled", false);
+                  
+
+                  $('#s_img').attr('src', data.student_img);
+                  $('#student_lrn').val(data.student_lrn);
+                  $('#student_fname').val(data.student_fname);
+                  $('#student_mname').val(data.student_mname);
+                  $('#student_lname').val(data.student_lname);
+                  $('#student_suffix').val(data.student_suffix).change();
+                  $('#student_bday').val(data.student_bday);
+                  $('#student_sex').val(data.student_sex).change();
+                  $('#student_marital').val(data.student_marital).change();
+                  $('#student_email').val(data.student_email);
+                  $('#student_address').val(data.student_address);
+
+                  $('#submit_input').show();
+                  $('#student_ID').val(student_ID);
+                  $('#submit_input').text('Update');
+                  $('#submit_input').val('student_update');
+                  $('#operation').val("student_update");
+                  
+                }
+              });
+
+
+            });
+   
+            $(document).on('click', '.delete', function(){
+            var student_ID = $(this).attr("id");
+             $('#delstudent_modal').modal('show');
+             // $('.submit').hide();
+             
+             $('#student_ID').val(student_ID);
+            });
+
+           
+
+
+          $(document).on('click', '#student_delform', function(event){
+             var student_ID =  $('#student_ID').val();
+            $.ajax({
+             type        :   'POST',
+             url:"datatable/student/insert.php",
+             data        :   {operation:"delete_student",student_ID:student_ID},
+             dataType    :   'json',
+             complete     :   function(data) {
+               $('#delstudent_modal').modal('hide');
+               alertify.alert(data.responseText).setHeader('Delete this Student');
+               student_dataTable.ajax.reload();
+                
+             }
+            })
+           
+          });
+          
+          } );
+
+
+        </script>
+        </body>
 
 </html>

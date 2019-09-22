@@ -1,103 +1,184 @@
-﻿ <?php 
-    include('../session.php');
-    include('dash-global-function.php');
+<?php 
+include('../session.php');
 
-   
-    $pagename = "Dashboard";
-    $username = $_SESSION['user_Name'];
-    $user_id = $_SESSION['login_id'];
-    $user_img = $_SESSION['user_img'];
-    $user_email = $_SESSION['user_Email'];
-    $script_for_specific_page = "index";
-    if(isset($_SESSION['login_level']) )
-    {      
-    echo $login_level = $_SESSION['login_level'];
-       
-         
-    }
+
+require_once("../class.user.php");
+
+  
+$auth_user = new USER();
+// $page_level = 3;
+// $auth_user->check_accesslevel($page_level);
+$pageTitle = "Dashboard";
 ?>
-<!DOCTYPE html>
-<html>
- <?php
-    include("dash-head.php");
+<!doctype html>
+<html lang="en">
+  <head>
+    <?php 
+      include('x-meta.php');
     ?>
-<body class="theme-red">
-    <!-- Page Loader -->
-    <div class="page-loader-wrapper">
-        <div class="loader">
-            <div class="preloader">
-                <div class="spinner-layer pl-red">
-                    <div class="circle-clipper left">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="circle-clipper right">
-                        <div class="circle"></div>
-                    </div>
+
+
+    <!-- Bootstrap core CSS -->
+    <link href="../assets/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="../assets/css/icomoon/styles.css" rel="stylesheet" type="text/css">
+
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="../assets/css/dashboard.css" rel="stylesheet">
+  </head>
+  <body>
+<?php 
+include('x-nav.php');
+?>
+
+<div class="container-fluid">
+  <div class="row">
+    <?php 
+    include('x-sidenav.php');
+    ?>
+
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+     <!--    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">Dashboard</h1> 
+      </div>-->
+
+    <div class="row">
+                 <div class="col-sm-12 text-center " style="min-height: 100px;">
+                     <img src="../assets/img/logo/logo.png" height="80" style="margin-left: -625px;"> <H3 style="margin-top: -50px;">NAIC COSTAL NATIONAL HIGH SCHOOL</H3>
                 </div>
             </div>
-            <p>Please wait...</p>
-        </div>
-    </div>
-    <!-- #END# Page Loader -->
-    <!-- Overlay For Sidebars -->
-    <div class="overlay"></div>
-    <!-- #END# Overlay For Sidebars -->
-    
-    <?php 
-        include('dash-topnav.php');
-    ?>
-    <section>
-        <?php 
-        include("dash-sidenav-left.php");
-        ?>
-
-    </section>
-
-    <section class="content">
-        <div class="container-fluid">
-            <div class="block-header">
-                <h2>DASHBOARD</h2>
-            </div>
-            <ol class="breadcrumb breadcrumb-bg-light-blue">
-                <li><a href="javascript:void(0);"><i class="material-icons">home</i> Home</a></li>
-            </ol>
-
-             
-            <div class="row">
-                <div class="col-sm-12 text-center " style="min-height: 100px;">
-                     <img src="../assets/images/logo.png" height="80" style="margin-left: -550px;"> <H3 style="margin-top: -50px;">NAIC COSTAL NATIONAL HIGH SCHOOL</H3>
+            <div class="row" >
+              <?php if($auth_user->admin_level() ){ ?>
+             <div class="col-6 col-sm-6">
+                <div class="card ">
+                  <div class="card-header text-center" style=" border-bottom: 5px solid ;">
+                   <strong>Student Enrolled</strong>
+                  </div>
+                  <div class="card-body text-center"  style="min-height: 250px">
+                    
+                  <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+                  </div>
                 </div>
+              </div>
+              <div class="col-6 col-sm-6">
+                <div class="card ">
+                  <div class="card-header text-center" style=" border-bottom: 5px solid ;">
+                    <strong>Student Enrolled Per Section</strong>
+                  </div>
+                  <div class="card-body text-center"  style="min-height: 250px">
+                    
+                  <div id="chartContainer1" style="height: 300px; width: 100%;"></div>
+                  </div>
+                </div>
+              </div>
+              <?php } ?>
+              <?php  if($auth_user->student_level()) { ?>
+              <div class="col-12 col-sm-12" style="padding-bottom:5px;">
+                <div class="card ">
+                  <div class="card-header bg-primary text-white" style=" border-bottom: 5px solid #adb5bd ;">
+                    <strong>Basic Information</strong>
+                  </div>
+                  <div class="card-body "  style="min-height: 250px">
+                    <div class="row">
+                      <div class="col-lg-4">
+                        <img src="<?php $auth_user->getUserPic();?>"  height="125" width="125"  class="rounded-circle"  style="border:1px solid; border-color: #4caf50;">
+                      </div>
+
+                      <div class="col-lg-8">
+                        <h3><b>Name:</b> <?php  $auth_user->profile_name()?> </h3>
+                        <h3><b>LRN:</b> <?php  $auth_user->profile_school_id()?></h3>
+                        <h3><b>Sex:</b> <?php  $auth_user->profile_sex()?></h3>
+                        
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+              <?php } ?>
+              
+              <?php  if($auth_user->instructor_level() ) { ?>
+              <!-- INSTRUCTOR -->
+            
+                 <div class="col-12 col-sm-12" style="padding-bottom:5px;">
+                <div class="card ">
+                  <div class="card-header bg-primary text-white" style=" border-bottom: 5px solid #adb5bd ;">
+                    <strong>Basic Information</strong>
+                  </div>
+                  <div class="card-body "  style="min-height: 250px">
+                    <div class="row">
+                      <div class="col-lg-4">
+                        <img src="<?php $auth_user->getUserPic();?>"  height="125" width="125"  class="rounded-circle"  style="border:1px solid; border-color: #4caf50;">
+                      </div>
+
+                      <div class="col-lg-8">
+                        <h3><b>Name:</b> <?php  $auth_user->profile_name()?> </h3>
+                        <h3><b>Goverment ID:</b> <?php  $auth_user->profile_school_id()?></h3>
+                        <h3><b>Sex:</b> <?php  $auth_user->profile_sex()?></h3>
+                        
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+                   <div class="col-12 col-sm-12" style="padding-bottom:5px;">
+                <div class="card ">
+                  <div class="card-header bg-primary text-center text-white" style=" border-bottom: 5px solid #adb5bd ;">
+                    <strong>Access your information quickly</strong>
+                  </div>
+                  <div class="card-body text-center"  style="min-height: 250px">
+                    <div class="row">
+                    <div class="col-lg-6 text-center">
+                      <i class="icon-book" style="font-size: 100px;" data-toggle="modal" data-target="#advisory_section"></i>
+                      <span data-feather="user" data-toggle="modal" data-target="#advisory_section"></span>
+                      <br>
+                      <h3>Advisory Section</h3>
+                    </div>
+                    <div class="col-lg-6 text-center">
+                      <i class="icon-clipboard" style="font-size: 100px;" data-toggle="modal" data-target="#handle_section"></i>
+                      <br>
+                      <h3>Handle Section</h3>
+                    </div>
+                  </div>
+
+                  </div>
+                </div>
+              </div>
+              <?php } ?>
+
             </div>
-          
-             <div class="row">
-                <div class="col-sm-6">
-                     <div class="panel panel-default"  style="min-height: 250px">
-                         <div class="panel-heading  text-center" style=" border-bottom: 5px solid ;"><strong> MISSION</strong></div>
-                         <div class="panel-body text-center">
-                          MISSION MISSION   MISSION MISSION   MISSION MISSION  MISSION MISSION
-                         </div>
-                     </div>
-                 </div>
-                 <div class="col-sm-6">
-                     <div class="panel panel-default"  style="min-height: 250px">
-                         <div class="panel-heading text-center" style="border-bottom: 5px solid ;"><strong> VISION</strong></div>
-                         <div class="panel-body text-center">
-                           VISION VISION VISION VISION VISION VISION VISION VISION
-                           
-                         </div>
-                     </div>
-                 </div>
-                 
-             </div>
-         
-        </div>
-    </section>
-
-    <?php 
-        include("dash-js.php");
-    ?>
 
 
-</body>
 
+
+
+
+    </main>
+  </div>
+</div>
+<?php 
+include('x-script.php');
+?>
+
+  
+      </body>
 </html>

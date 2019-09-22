@@ -1,531 +1,489 @@
 <?php 
-    include('../session.php');
-    include('dash-global-function.php');
+include('../session.php');
 
-   
-    $pagename = "Teacher Management";
-    
-    $username = $_SESSION['user_Name'];
-    $user_id = $_SESSION['login_id'];
-    $user_img = $_SESSION['user_img'];
-    $user_email = $_SESSION['user_Email'];
-    $script_for_specific_page = "";
-    if(isset($_SESSION['login_level']) )
-    {      
-        $login_level = $_SESSION['login_level'];
-        if ($login_level != 3) {
-         
-          header('location: error404.php');
-        }
-         
-    }
 
+require_once("../class.user.php");
+
+  
+$auth_user = new USER();
+// $page_level = 3;
+// $auth_user->check_accesslevel($page_level);
+$pageTitle = "Manage Teacher";
 ?>
-
-<!DOCTYPE html>
-<html>
-
- <?php
-    include("dash-head.php");
-    ?>
-
-<body class="theme-red ">
-    <!-- Page Loader -->
-    <div class="page-loader-wrapper">
-        <div class="loader">
-            <div class="preloader">
-                <div class="spinner-layer pl-red">
-                    <div class="circle-clipper left">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="circle-clipper right">
-                        <div class="circle"></div>
-                    </div>
-                </div>
-            </div>
-            <p>Please wait...</p>
-        </div>
-    </div>
-    <!-- #END# Page Loader -->
-    <!-- Overlay For Sidebars -->
-    <div class="overlay"></div>
-    <!-- #END# Overlay For Sidebars -->
+<!doctype html>
+<html lang="en">
+  <head>
     <?php 
-        include('dash-topnav.php');
+      include('x-meta.php');
     ?>
-    <section>
-        <?php 
-        include("dash-sidenav-left.php");
-        ?>
 
-    </section>
 
-    <section class="content">
-        <div class="container-fluid">
-            <div class="block-header">
-                <h2>
-                    Teacher Management
-                </h2>
-            </div>
-
-            <ol class="breadcrumb breadcrumb-bg-blue">
-                <li><a href="index"><i class="material-icons">home</i> Home</a></li>
-                <li  class="active"><a href="javascript:void(0);"><i class="material-icons ">account_box</i> Teacher Management</a></li>
-            </ol>
-            <div class="row clearfix">
-
-                       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                           <div class="card">
-                               <div class="header">
-                                   <h2>LIST OF TEACHER</h2>
-                                   <div class="btn-group pull-right">
-                                   <button type="button" class="btn btn-success waves-effect add" data-toggle="modal" data-target="#teacher_modal">ADD TEACHER</button>
-                                   </div>
-                                   <br>
-                               </div>
-                               <div class="body">
-                                   <div class="table-responsive" style="overflow-x: hidden;">
-                                          <table id="teacher_data" class="table table-bordered table-striped">
-                                            <thead>
-                                              <tr>
-                                                <th width="5%">ID</th>
-                                                <th width="5%">Teacher ID</th>
-                                                <th >Name</th>
-                                                <th width="10%">Sex</th>
-                                                <th width="10%">Action</th>
-                                              </tr>
-                                            </thead>
-                                          </table>
-                                       
-                                   </div>
-                               </div>
-                           </div>
-                    </div>
-            </div>   
-          <!--    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="card">
-                        <iframe src="map/user-map.php" style=" display:block; width:100%; height: 800px;"></iframe>
-                    </div>
-                </div> -->
-          
-        </div>
-
-    </section>
-
+  <?php 
+  include('x-css.php');
+  ?>
  
 
- <!-- add modal -->
-    <div class="modal fade" tabindex="-1" role="dialog" id="teacher_modal">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title"><span class="glyphicon glyphicon-plus-sign"></span> Add Teacher Detail</h4>
-          </div>
-          
-          <form class="form-horizontal" action="#" method="POST" id="teacher_form" enctype="multipart/form-data">
-
-          <div class="modal-body">
-              <div class="row clearfix">
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                      <label for="teacherID">Teacher Number</label>
-                  </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                      <div class="form-group">
-                          <div class="form-line">
-                              <input type="text" class="form-control" id="teacherID" name="teacherID" placeholder="Teacher ID Number" onkeyup="numberInputOnly(this);">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <br>
-              <div class="row clearfix">
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                      <label for="firstname">First Name </label>
-                  </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                      <div class="form-group">
-                          <div class="form-line">
-                              <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Teacher First Name" >
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <br>
-              <div class="row clearfix">
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                      <label for="middlename">Middle Name</label>
-                  </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                      <div class="form-group">
-                          <div class="form-line">
-                              <input type="text" class="form-control" id="middlename" name="middlename" placeholder="Teacher Middle Name">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <br>
-              <div class="row clearfix">
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                      <label for="lastname">Last Name</label>
-                  </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                      <div class="form-group">
-                          <div class="form-line">
-                              <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Teacher Last Name">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <br>
-              <div class="row clearfix">
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                      <label for="suffix">Suffix</label>
-                  </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                      <div class="form-group">
-                          <div class="form-line">
-                               <select class="form-control" name="suffix" id="suffix" >
-                                <option value="">~~SELECT~~</option>
-                              <?php 
-
-                              $sql = "SELECT * FROM `ref_suffixname`";
-                              $query = mysqli_query($conn,$sql);
-                                             
-                                               
-                                if (mysqli_num_rows($query) > 0) {
-                                      // output data of each row
-
-                                    while($rsn = mysqli_fetch_assoc($query)) 
-                                    {
-                                    ?>
-                                    <option value="<?php echo $rsn['suffix_ID']; ?>"><?php echo $rsn['suffix']; ?></option>
-                                    <?php
-                                    }
-                                   }
-                              ?>
-                              </select>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <br>
-              <div class="row clearfix">
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                      <label for="sex">Sex</label>
-                  </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                      <div class="form-group">
-                          <div class="form-line">
-                               <select class="form-control" name="sex" id="sex" >
-                                <option value="">~~SELECT~~</option>
-                              <?php 
-
-                              $sql = "SELECT * FROM `ref_sex`";
-                              $query = mysqli_query($conn,$sql);
-                                             
-                                               
-                                if (mysqli_num_rows($query) > 0) {
-                                      // output data of each row
-
-                                    while($rsn = mysqli_fetch_assoc($query)) 
-                                    {
-                                    ?>
-                                    <option value="<?php echo $rsn['sex_ID']; ?>"><?php echo $rsn['sex_Name']; ?></option>
-                                    <?php
-                                    }
-                                   }
-                              ?>
-                              </select>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <br>
-               <div class="row clearfix">
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                      <label for="contact">Contact</label>
-                  </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                      <div class="form-group">
-                          <div class="form-line">
-                              <input type="text" class="form-control" id="contact" name="contact" placeholder="Teacher Contact">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <br>                  
-               <div class="row clearfix">
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                      <label for="address">Address</label>
-                  </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                      <div class="form-group">
-                          <div class="form-line">
-                              <input type="text" class="form-control" id="address" name="address" placeholder="Address">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <br> 
-          </div>
-          <div class="modal-footer">
-          <input type="hidden" name="rtd_ID" id="rtd_ID" />
-          <input type="hidden" name="operation" id="operation" value="Add" />
-          <input type="submit" name="action" id="action" class="btn btn-success" value="Submit" />
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
-          </form> 
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-    <!-- /add modal -->
 
 
-    <!-- add modal -->
-    <div class="modal fade" tabindex="-1" role="dialog" id="assigned_section">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title"><span class="glyphicon glyphicon-plus-sign"></span> Assigned Section</h4>
-          </div>
-          
-          <form class="form-horizontal" action="#" method="POST" id="teacher_form" enctype="multipart/form-data">
-
-          <div class="modal-body as_bod">
-             
-                         
-                             
-                                   <div class="btn-group pull-right">
-                                   <button type="button" class="btn btn-success waves-effect add" data-toggle="modal" data-target="#teacher_modal">ADD TEACHER</button>
-                                   </div>
-                                   <br>
-                               <br>
-                               
-                                   <div class="table-responsive" style="overflow-x: hidden;">
-                                          <table id="asteacher_data" class="table table-bordered table-striped">
-                                            <thead>
-                                              <tr>
-                                                <th width="5%">ID</th>
-                                                <th >Teacher</th>
-                                                <th width="15%">School Year</th>
-                                                <th width="15%">Section</th>
-                                                <th width="10%">Action</th>
-                                              </tr>
-                                            </thead>
-                                          </table>
-                                       
-                                   </div>
-                               
-                       </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
-          </form> 
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-    <!-- /add modal -->
-    <!-- Jquery Core Js -->
-    <script src="../assets/plugins/jquery/jquery.min.js"></script>
-
-    <!-- Bootstrap Core Js -->
-    <script src="../assets/plugins/bootstrap/js/bootstrap.js"></script>
-
-    <!-- Select Plugin Js -->
-    <script src="../assets/plugins/bootstrap-select/js/bootstrap-select.js"></script>
-
-    <!-- Slimscroll Plugin Js -->
-    <script src="../assets/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
-
-    <!-- Waves Effect Plugin Js -->
-    <script src="../assets/plugins/node-waves/waves.js"></script>
-
-    <!-- Jquery DataTable Plugin Js -->
-    <script src="../assets/plugins/jquery-datatable/jquery.dataTables.js"></script>
-    <script src="../assets/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/buttons.flash.min.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/jszip.min.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/pdfmake.min.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
-
-    <!-- Custom Js -->
-    <script src="../assets/js/admin.js"></script>
-    <script src="../assets/js/pages/tables/jquery-datatable.js"></script>
-
-    <!-- Demo Js -->
-    <script src="../assets/js/demo.js"></script>
-    <script type="text/javascript" language="javascript" >
-             //NUMBER ONLY
-  function numberInputOnly(elem) {
-      var validChars = /[0-9]/;
-      var strIn = elem.value;
-      var strOut = '';
-      for(var i=0; i < strIn.length; i++) {
-        strOut += (validChars.test(strIn.charAt(i)))? strIn.charAt(i) : '';
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
       }
-      elem.value = strOut;
-  }
-$(document).ready(function(){
 
-  //select specific dropdown when updating 1 data
-  function setSelectedValue(dropDownList, valueToSet) {
-    var option = dropDownList.firstChild;
-    for (var i = 0; i < dropDownList.length; i++) {
-        if (option.text.trim().toLowerCase() == valueToSet.trim().toLowerCase()) {
-            option.selected = true;
-            return;
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
         }
-        option = option.nextElementSibling;
-    }
-}
-
-
-
-  var dataTable = $('#teacher_data').DataTable({
-    "processing":true,
-    "serverSide":true,
-    "order":[],
-    "ajax":{
-      url:"datatable/teacher/fetch.php",
-      type:"POST"
-    },
-    "columnDefs":[
-      {
-        "targets":[0],
-        "orderable":false,
-      },
-    ],
-
-  });
-   var dataTable1 = $('#asteacher_data').DataTable({
-    "processing":true,
-    "serverSide":true,
-    "order":[],
-    "ajax":{
-      url:"datatable/teacher/fetch_assigned.php",
-      type:"POST"
-    },
-    "columnDefs":[
-      {
-        "targets":[0],
-        "orderable":false,
-      },
-    ],
-
-  });
-
-  
-
-  $(document).on('submit', '#teacher_form', function(event){
-    event.preventDefault();
-    var teacherID = $('#teacherID').val();
-    var firstname = $('#firstname').val();
-    var middlename = $('#middlename').val();
-    var lastname = $('#lastname').val();
-    var suffix = $('#suffix').val();
-    var contact = $('#contact').val();
-    var address = $('#address').val();
-    var sex = $('#sex').val();
-    if(teacherID != '' && firstname != '' && middlename != '' && lastname != '' && suffix != '' && sex != ''  && address != ''  && contact != '')
-    {
-            $.ajax({
-              url:"datatable/teacher/insert.php",
-              method:'POST',
-              data:new FormData(this),
-              contentType:false,
-              processData:false,
-              success:function(data)
-              {
-                $('#action').val("Add");
-                $('#operation').val("Add");
-
-                alert(data);
-                $('#teacher_form')[0].reset();
-                $('#teacher_modal').modal('hide');
-                dataTable.ajax.reload();
-              }
-            });
-      
-    
-    }
-    else
-    {
-      alert("Fields are Required");
-    }
-  });
-
-   $(document).on('click', '.add', function () {
-      
-       $('#action').text("Add");
-       $('#operation').val("Add");
-       $('.modal-title').text("Add Teacher Info");
-       $('#suffix').val('').change();
-       $('#sex').val('').change();
-       document.getElementById('teacher_form').reset();
-      
-  });
-  $(document).on('click', '.update', function(){
-    var rtd_ID = $(this).attr("id");
-    
-    $.ajax({
-      url:"datatable/teacher/fetch_single.php",
-      method:"POST",
-      data:{rtd_ID:rtd_ID},
-      dataType:"json",
-      success:function(data)
-      {
-        $('#teacher_modal').modal('show');
-        $('#teacherID').val(data.teacherID);
-        $('#firstname').val(data.firstname);
-        $('#middlename').val(data.middlename);
-        $('#lastname').val(data.lastname);
-        $('#suffix').val(data.suffix).change();
-        $('#sex').val(data.sex).change();
-        $('#contact').val(data.contact);
-        $('#address').val(data.address);
-        $('#action').val("Update");
-        $('#operation').val("Edit");
-        $('.modal-title').text("Edit Teacher Info");
-        $('#rtd_ID').val(rtd_ID);
       }
-    })
-  });
-  
-  $(document).on('click', '.delete', function(){
-    var rtd_ID = $(this).attr("id");
-    if(confirm("Are you sure you want to delete this?"))
-    {
-      $.ajax({
-        url:"datatable/teacher/delete.php",
-        method:"POST",
-        data:{rtd_ID:rtd_ID},
-        success:function(data)
-        {
-          alert(data);
-          dataTable.ajax.reload();
-        }
-      });
-    }
-    else
-    {
-      return false; 
-    }
-  });
-  
-  $(document).on('click', '.assigned_section', function(){
-    var rtd_ID = $(this).attr("id");
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="../assets/css/dashboard.css" rel="stylesheet">
+  </head>
+  <body>
+<?php 
+include('x-nav.php');
+?>
+
+<div class="container-fluid">
+  <div class="row">
+      <?php 
+    include('x-sidenav.php');
+    ?>
+
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Manage Teacher Record</h1>
+        
+      </div>
+      <nav aria-label="breadcrumb" >
+        <ol class="breadcrumb bcrum">
+          <li class="breadcrumb-item "><a href="index" class="bcrum_i_a">Dashboard</a></li>
+          <li class="breadcrumb-item  active bcrum_i_ac" aria-current="page">Teacher Record Management</li>
+        </ol>
+      </nav>
+      <div class="table-responsive">
+          <button type="button" class="btn btn-sm btn-success add" >
+            Add 
+          </button>
+         <br><br>
+        <table class="table table-striped table-sm" id="teacher_data">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Government ID</th>
+              <th>Name</th>
+              <th>Sex</th>
+              <th>Marital</th>
+              <th>Account Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+     
+          </tbody>
+        </table>
+
+<!--modal teacher -->
+<div class="modal fade" id="teacher_modal" tabindex="-1" role="dialog" aria-labelledby="teacher_modal_title" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="teacher_modal_title">Add Attendance</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="post" id="teacher_form" enctype="multipart/form-data">
+      <div class="modal-body" id="product_modal_content">
+            <div class="form-row">
+               
+                <div class="form-group col-md-4">
+                  <img id="s_img" src="../assets/img/users/default.jpg" alt="teacher Image"  runat="server"  height="125" width="125" class="img-thumbnail" style="border:1px solid; border-color: #4caf50; min-width:125px; min-height:125px; max-width:125px; max-height:125px; background-size:cover;"/>
+                  <br><br>
+                  <input type="file" class="form-control" id="teacher_img" name="teacher_img" placeholder="" value="" >
+                </div>
+                <div class="form-group col-md-4">
+                  
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="teacher_EmpID">Government ID<span class="text-danger">*</span></label>
+                  <input type="number" class="form-control" id="teacher_EmpID" name="teacher_EmpID" placeholder="" value="" required="">
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="teacher_fname">First Name<span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="teacher_fname" name="teacher_fname" placeholder="" value="" required="">
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="teacher_mname">Middle Name<span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="teacher_mname" name="teacher_mname" placeholder="" value="" required="">
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="teacher_lname">Last Name<span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="teacher_lname" name="teacher_lname" placeholder="" value="" required="">
+                </div>
+                  <div class="form-group col-md-3">
+                  <label for="teacher_suffix">Suffix<span class="text-danger">*</span></label>
+                  <select class="form-control" id="teacher_suffix" name="teacher_suffix">
+                  <?php 
+                   $auth_user->user_suffix_option();
+                  ?>
+                </select>
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="teacher_bday">Birthday<span class="text-danger">*</span></label>
+                  <input type="date" class="form-control" id="teacher_bday" name="teacher_bday" placeholder="" value="" required="">
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="teacher_sex">Sex<span class="text-danger">*</span></label>
+                  <select class="form-control" id="teacher_sex" name="teacher_sex" required="">
+                  <?php 
+                   $auth_user->user_sex_option();
+                  ?>
+                </select>
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="teacher_marital">Marital<span class="text-danger">*</span></label>
+                  <select class="form-control" id="teacher_marital" name="teacher_marital" required="">
+                  <?php 
+                   $auth_user->user_marital_option();
+                  ?>
+                </select>
+                </div>
+                 <div class="form-group col-md-12">
+                  <label for="teacher_email">Email<span class="text-danger">*</span></label>
+                  <input type="email" class="form-control" id="teacher_email" name="teacher_email" placeholder="" value="" required="">
+                </div>
+                <div class="form-group col-md-12">
+                  <label for="teacher_address">Address<span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="teacher_address" name="teacher_address" placeholder="" value="" required="">
+                </div>
+            
+          </div>
+      </div>
+      <div class="modal-footer">
+          <input type="hidden" name="teacher_ID" id="teacher_ID" />
+          <input type="hidden" name="operation" id="operation" />
+        <div class="btn-group" id='sbtng'>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary submit" id="submit_input" value="submit_teacher">Submit</button>
+        </div>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--/modal teacher -->
+
+<!--delete modal -->
+<div class="modal fade" id="delteacher_modal" tabindex="-1" role="dialog" aria-labelledby="teacher_modal_title" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="teacher_modal_title">Delete this Teacher</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+        <div class="btn-group">
+        <button type="submit" class="btn btn-danger" id="teacher_delform">Delete</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div><!--/delete modal -->
+
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<?php 
+include('x-script.php');
+?>
+        <script type="text/javascript">
    
-    $('#assigned_section').modal('show');
-  });
+          function readURL(input) {
+          if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+              $('#s_img').attr('src', e.target.result);
+            }
+          
+            reader.readAsDataURL(input.files[0]);
+          }
+         }
 
-  
-});
-</script>
-</body>
+          $("#teacher_img").change(function() {
+           readURL(this);
+          });
+          $(document).ready(function() {
+             
+            var teacher_dataTable = $('#teacher_data').DataTable({
+            "processing":true,
+            "serverSide":true,
+            "order":[],
+            "ajax":{
+              url:"datatable/teacher/fetch.php",
+              type:"POST"
+            },
+            "columnDefs":[
+              {
+                "targets":[0],
+                "orderable":false,
+              },
+            ],
+
+          });
+
+
+
+          $(document).on('submit', '#teacher_form', function(event){
+            event.preventDefault();
+
+              $.ajax({
+                url:"datatable/teacher/insert.php",
+                method:'POST',
+                data:new FormData(this),
+                contentType:false,
+                processData:false,
+                success:function(data)
+                {
+                  alertify.alert(data).setHeader('teacher Record');
+                  $('#teacher_form')[0].reset();
+                  $('#teacher_modal').modal('hide');
+                  teacher_dataTable.ajax.reload();
+                }
+              });
+           
+          });
+
+          $(document).on('click', '.add', function(){
+            $('#teacher_modal_title').text('Add New teacher');
+            $('#teacher_modal').modal('show');
+            $('#teacher_form')[0].reset();
+
+            var btng = document.getElementById("sbtng");
+            btng.className = btng.className.replace(/\btng_null\b/g, "");
+            btng.classList.add("btn-group");
+
+            $('#s_img').attr('src', "../assets/img/users/default.jpg");
+            $("#teacher_EmpID").prop("disabled", false);
+            $("#teacher_fname").prop("disabled", false);
+            $("#teacher_mname").prop("disabled", false);
+            $("#teacher_lname").prop("disabled", false);
+            $("#teacher_suffix").prop("disabled", false);
+            $("#teacher_bday").prop("disabled", false);
+            $("#teacher_sex").prop("disabled", false);
+            $("#teacher_marital").prop("disabled", false);
+            $("#teacher_email").prop("disabled", false);
+            $("#teacher_address").prop("disabled", false);
+
+
+            $("#teacher_img").show();
+            $('#submit_input').show();
+
+            $('#submit_input').text('Submit');
+            $('#submit_input').val('submit_teacher');
+            $('#operation').val("submit_teacher");
+          });
+
+          $(document).on('click', '.view', function(){
+            var teacher_ID = $(this).attr("id");
+         
+            
+            $('#teacher_modal_title').text('View Teacher');
+            $('#teacher_modal').modal('show');
+            
+
+            $('#submit_input').hide();
+            var btng = document.getElementById("sbtng");
+            btng.className = btng.className.replace(/\bbtn-group\b/g, "");
+            btng.classList.add("btng_null");
+
+                
+                $("#teacher_img").hide();
+                
+             $.ajax({
+                url:"datatable/teacher/fetch_single.php",
+                method:'POST',
+                data:{action:"teacher_view",teacher_ID:teacher_ID},
+                dataType    :   'json',
+                success:function(data)
+                {
+                  $("#teacher_EmpID").prop("disabled", true);
+                  $("#teacher_fname").prop("disabled", true);
+                  $("#teacher_mname").prop("disabled", true);
+                  $("#teacher_lname").prop("disabled", true);
+                  $("#teacher_suffix").prop("disabled", true);
+                  $("#teacher_bday").prop("disabled", true);
+                  $("#teacher_sex").prop("disabled", true);
+                  $("#teacher_marital").prop("disabled", true);
+                  $("#teacher_email").prop("disabled", true);
+                  $("#teacher_address").prop("disabled", true);
+                  
+                  
+
+                   $('#s_img').attr('src', data.teacher_img);
+                  $('#teacher_EmpID').val(data.teacher_EmpID);
+                  $('#teacher_fname').val(data.teacher_fname);
+                  $('#teacher_mname').val(data.teacher_mname);
+                  $('#teacher_lname').val(data.teacher_lname);
+                  $('#teacher_suffix').val(data.teacher_suffix).change();
+                  $('#teacher_bday').val(data.teacher_bday);
+                  $('#teacher_sex').val(data.teacher_sex).change();
+                  $('#teacher_marital').val(data.teacher_marital).change();
+                  $('#teacher_email').val(data.teacher_email);
+                  $('#teacher_address').val(data.teacher_address);
+
+                  $('#submit_input').hide();
+                  $('#teacher_ID').val(teacher_ID);
+                  $('#submit_input').text('Update');
+                  $('#submit_input').val('teacher_view');
+                  $('#operation').val("teacher_view");
+                  
+                }
+              });
+
+
+            });
+
+
+            $(document).on('click', '.edit', function(){
+            var teacher_ID = $(this).attr("id");
+            var acreg = $(this).attr("acreg");
+            $('#teacher_modal_title').text('View teacher');
+            $('#teacher_modal').modal('show');
+            
+
+            var btng = document.getElementById("sbtng");
+            btng.className = btng.className.replace(/\btng_null\b/g, "");
+            btng.classList.add("btn-group");
+
+                
+                $("#teacher_img").show();
+                
+             $.ajax({
+                url:"datatable/teacher/fetch_single.php",
+                method:'POST',
+                data:{action:"teacher_update",teacher_ID:teacher_ID},
+                dataType    :   'json',
+                success:function(data)
+                {
+                  if (acreg == "UN"){
+                      $("#teacher_EmpID").prop("disabled", false);
+                  }
+                  else{
+                      $("#teacher_EmpID").prop("disabled", true);
+                      
+                  }
+                  $("#teacher_fname").prop("disabled", false);
+                  $("#teacher_mname").prop("disabled", false);
+                  $("#teacher_lname").prop("disabled", false);
+                  $("#teacher_suffix").prop("disabled", false);
+                  $("#teacher_bday").prop("disabled", false);
+                  $("#teacher_sex").prop("disabled", false);
+                  $("#teacher_marital").prop("disabled", false);
+                  $("#teacher_email").prop("disabled", false);
+                  $("#teacher_address").prop("disabled", false);
+                  
+
+                  $('#s_img').attr('src', data.teacher_img);
+                  $('#teacher_EmpID').val(data.teacher_EmpID);
+                  $('#teacher_fname').val(data.teacher_fname);
+                  $('#teacher_mname').val(data.teacher_mname);
+                  $('#teacher_lname').val(data.teacher_lname);
+                  $('#teacher_suffix').val(data.teacher_suffix).change();
+                  $('#teacher_bday').val(data.teacher_bday);
+                  $('#teacher_sex').val(data.teacher_sex).change();
+                  $('#teacher_marital').val(data.teacher_marital).change();
+                  $('#teacher_email').val(data.teacher_email);
+                  $('#teacher_address').val(data.teacher_address);
+
+                  $('#submit_input').show();
+                  $('#teacher_ID').val(teacher_ID);
+                  $('#submit_input').text('Update');
+                  $('#submit_input').val('teacher_update');
+                  $('#operation').val("teacher_update");
+                  
+                }
+              });
+
+
+            });
+   
+            $(document).on('click', '.delete', function(){
+            var teacher_ID = $(this).attr("id");
+             $('#delteacher_modal').modal('show');
+             // $('.submit').hide();
+             
+             $('#teacher_ID').val(teacher_ID);
+            });
+
+           
+
+
+          $(document).on('click', '#teacher_delform', function(event){
+             var teacher_ID =  $('#teacher_ID').val();
+            $.ajax({
+             type        :   'POST',
+             url:"datatable/teacher/insert.php",
+             data        :   {operation:"delete_teacher",teacher_ID:teacher_ID},
+             dataType    :   'json',
+             complete     :   function(data) {
+               $('#delteacher_modal').modal('hide');
+               alertify.alert(data.responseText).setHeader('Delete this teacher');
+               teacher_dataTable.ajax.reload();
+                
+             }
+            })
+           
+          });
+
+          $(document).on('click', '.gen_account', function(event){
+             var teacher_ID = $(this).attr("id");
+             alertify.confirm('Are you sure you want to create this person account?', 
+            function(){
+              $.ajax({
+               type        :   'POST',
+               url:"datatable/teacher/insert.php",
+               data        :   {operation:"gen_account",teacher_ID:teacher_ID},
+               dataType    :   'json',
+               complete     :   function(data) {
+                 alertify.alert(data.responseText).setHeader('Generated Account');
+                 teacher_dataTable.ajax.reload();
+                  
+               }
+              })
+
+               teacher_dataTable.ajax.reload();
+               alertify.success('Ok') 
+             },
+            function(){ 
+              alertify.error('Cancel')
+            }).setHeader('Generate Account');
+           
+          });
+
+          
+          
+          } );
+
+
+        </script>
+        </body>
 
 </html>

@@ -1,7 +1,18 @@
 <?php
-session_start();
-if(session_destroy()) // Destroying All Sessions
-{
-header("Location: index.php"); // Redirecting To Home Page
-}
-?>
+	session_start();
+	require_once('class.user.php');
+
+	$user_logout = new USER();
+	
+	if($user_logout->is_loggedin()!="")
+	{
+		$user_logout->redirect('index');
+	}
+	if(isset($_GET['logout']) && $_GET['logout']=="true")
+	{
+		$user_logout->doLogout();
+		$user_logout->redirect('index');
+	}
+
+
+

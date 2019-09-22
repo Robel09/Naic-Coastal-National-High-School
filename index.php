@@ -1,187 +1,158 @@
-<!-- /**
- * @package    DEVELOPMENT OF AN E-LEARNING SYSTEM FOR MGA AKDANG PAMPANITIKANG MEDITERRANEAN AT KANLURANIN
- *
- * @copyright  Copyright (C) 2019, All rights reserved.
- * @license    MIT License version or later; see licensing/LICENSE.txt
- */ -->
-<!DOCTYPE HTML>
-<html>
-	<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Home</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="Free HTML5 Website Template by freehtml5.co" />
-	<meta name="keywords" content="free website templates, free html5, free template, free bootstrap, free website template, html5, css3, mobile first, responsive" />
-	<meta name="author" content="freehtml5.co" />
-
-	<!-- 
-	//////////////////////////////////////////////////////
-
-	FREE HTML5 TEMPLATE 
-	DESIGNED & DEVELOPED by FreeHTML5.co
-		
-	Website: 		http://freehtml5.co/
-	Email: 			info@freehtml5.co
-	Twitter: 		http://twitter.com/fh5co
-	Facebook: 		https://www.facebook.com/fh5co
-
-	//////////////////////////////////////////////////////
-	 -->
-
-  	<!-- Facebook and Twitter integration -->
-	<meta property="og:title" content=""/>
-	<meta property="og:image" content=""/>
-	<meta property="og:url" content=""/>
-	<meta property="og:site_name" content=""/>
-	<meta property="og:description" content=""/>
-	<meta name="twitter:title" content="" />
-	<meta name="twitter:image" content="" />
-	<meta name="twitter:url" content="" />
-	<meta name="twitter:card" content="" />
-
-	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Roboto+Slab:300,400" rel="stylesheet">
-	
-	<link rel="icon" href="assets/images/logo.ico" type="image/x-icon">
-	<!-- Animate.css -->
-	<link rel="stylesheet" href="front/css/animate.css">
-	<!-- Icomoon Icon Fonts-->
-	<link rel="stylesheet" href="front/css/icomoon.css">
-	<!-- Bootstrap  -->
-	<link rel="stylesheet" href="front/css/bootstrap.css">
-
-	<!-- Magnific Popup -->
-	<link rel="stylesheet" href="front/css/magnific-popup.css">
-
-	<!-- Owl Carousel  -->
-	<link rel="stylesheet" href="front/css/owl.carousel.min.css">
-	<link rel="stylesheet" href="front/css/owl.theme.default.min.css">
-
-	<!-- Flexslider  -->
-	<link rel="stylesheet" href="front/css/flexslider.css">
-
-	<!-- Pricing -->
-	<link rel="stylesheet" href="front/css/pricing.css">
-
-	<!-- Theme style  -->
-	<link rel="stylesheet" href="front/css/style.css">
-
-	<!-- Modernizr JS -->
-	<script src="front/js/modernizr-2.6.2.min.js"></script>
-	<!-- FOR IE9 below -->
-	<!--[if lt IE 9]>
-	<script src="js/respond.min.js"></script>
-	<![endif]-->
-
-	</head>
-	<body>
-		
-	<div class="fh5co-loader"></div>
-	
-	<div id="page">
 <?php 
-include("index-mainnav.php");
+session_start();
+require_once("class.user.php");
+$auth_user = new USER();
+
+//if user's logged in redirect to dashboard
+if ($auth_user->is_loggedin() !="") {
+
+   $auth_user->redirect_dashboard();
+}
 ?>
-	
-	<aside id="fh5co-hero">
-		<div class="flexslider">
-			<ul class="slides">
-		   	<li style="background-image: url(front/images/img_bg_1.jpg);">
-		   		<div class="overlay-gradient"></div>
-		   		<div class="container">
-		   			<div class="row">
-			   			<div class="col-md-8 col-md-offset-2 text-center slider-text">
-			   				<div class="slider-text-inner">
-			   					<h1>Ang Mga Pangunahing Kaalaman ng Pag-aaral ay Masakit, Ngunit ang Prutas ay Matamis</h1>
-									<p><a class="btn btn-primary btn-lg" href="#">Simulan ang Pag-aaral Ngayon!</a></p>
-			   				</div>
-			   			</div>
-			   		</div>
-		   		</div>
-		   	</li>
-		   	<li style="background-image: url(front/images/img_bg_2.jpg);">
-		   		<div class="overlay-gradient"></div>
-		   		<div class="container">
-		   			<div class="row">
-			   			<div class="col-md-8 col-md-offset-2 text-center slider-text">
-			   				<div class="slider-text-inner">
-			   					<h1>Ang Mahusay na Layunin ng Edukasyon ay hindi Kaalaman, Ngunit Pagkilos</h1>
-									<p><a class="btn btn-primary btn-lg btn-learn" href="#">Simulan ang Pag-aaral Ngayon!</a></p>
-			   				</div>
-			   			</div>
-			   		</div>
-		   		</div>
-		   	</li>
-		   	<li style="background-image: url(front/images/img_bg_3.jpg);">
-		   		<div class="overlay-gradient"></div>
-		   		<div class="container">
-		   			<div class="row">
-			   			<div class="col-md-8 col-md-offset-2 text-center slider-text">
-			   				<div class="slider-text-inner">
-			   					<h1>Tinutulungan namin kayong Matuto ng Mga Bagong Bagay</h1>
-									<p><a class="btn btn-primary btn-lg btn-learn" href="#">Simulan ang Pag-aaral Ngayon!</a></p>
-			   				</div>
-			   			</div>
-			   		</div>
-		   		</div>
-		   	</li>		   	
-		  	</ul>
-	  	</div>
-	</aside>
+<!doctype html>
+<html lang="en">
+<?php 
+  include ('x-head.php')
+?>
+ <body>
+   <?php 
+      include('x-header.php');
+      ?>
+   <div class="container">
+      <div class="row">
+         <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card card-signin my-5 ">
+               <h5 class="card-title text-center" id="f_text" style="background-color: #eb0506; padding: 15px; color: white; border-radius: 5px 5px 0px 0px;" >Sign In</h5>
+               <div class="card-body">
+                  <hr style="margin-top: -30px;">
+                  <div class="text-center msg">
+                     <img src="assets/img/logo/logo.png" alt="Naic Logo" style="width: 100px;">
+                     <h5>Naic Coastal National High School</h5>
+                     <h3>E-Learning System</h3>
+                     <small id="f_stext">Login here using your username and password</small>
+                  </div>
+                  <div id="f_login">
+                     <form class="form-signin" id="login_form" method="POST">
+                        <div class="form-label-group">
+                           <input type="text" id="inputUsername" class="form-control" placeholder="Username" name="login_user" required autofocus>
+                           <label for="inputUsername">Username</label>
+                        </div>
+                        <div class="form-label-group">
+                           <input type="password" id="inputPassword" class="form-control" placeholder="Password" name="login_password" required>
+                           <label for="inputPassword">Password</label>
+                        </div>
+                        <input type="hidden" name="operation" value="submit_login">
+                        <button class="btn btn-lg btn-primary btn-block" type="submit" style="background-color: #e91e63;border: none !important;" name="submit_login">Sign in</button>
+                        <div class="text-center">
+                           Don't have an account? <a href="#" id="a_sign" >Sign up</a>
+                        </div>
+                     </form>
+                  </div>
+                  <div id="f_register">
+                     <form class="form-signin" id="register_form" method="POST">
+                        <div class="form-label-group">
+                           <input type="password" id="reg_studentnum" class="form-control" placeholder="Student Number" name="reg_studentnum" required>
+                           <label for="acc_username">LRN Number</label>
+                        </div>
+                        <div class="form-row">
+                        <div class="form-label-group col-md-6">
+                           <input type="password" id="reg_password" class="form-control" placeholder="Password" name="reg_password" required>
+                           <label for="acc_password">Password</label>
+                        </div>
+                        <div class="form-label-group col-md-6">
+                           <input type="password" id="reg_cpassword" class="form-control" placeholder="Confirm Password" name="reg_cpassword" required>
+                           <label for="acc_cpassword">Confirm Password</label>
+                        </div>
+                      </div>
+                        <div class="form-label-group">
+                           <input type="email" id="reg_email" class="form-control" placeholder="Email" name="reg_email" required>
+                           <label for="acc_email">Email</label>
+                        </div>
+                        
+                        <input type="hidden" name="operation" value="submit_register">
+                        <button class="btn btn-lg btn-primary btn-block" type="submit" style="background-color: #e91e63;border: none !important;" name="submit_register">Register</button>
+                        <div class="text-center">
+                           Already have an account? <a href="#" id="a_login">Login</a>
+                        </div>
+                     </form>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</body>
+<?php 
+include('x-script.php');
+?>
+<script type="text/javascript">
+
+ $('#f_register').hide();
+
+   $(document).on('submit', '#login_form', function(event){
+            event.preventDefault();
+
+              $.ajax({
+                url:"data-action.php",
+                method:'POST',
+                data:new FormData(this),
+                contentType:false,
+                processData:false,
+                type:  'html',
+                success:function(data)
+                {
+                  var newdata = JSON.parse(data);
+                  if (newdata.success) {
+                      alertify.alert(newdata.success).setHeader('Login Success');
+                     window.location.assign("dashboard/");
+                  }
+                  else{
+                    alertify.alert(newdata.error).setHeader('Error Login');
+                  }
+                }
+              });
+           
+          });
+    $(document).on('submit', '#register_form', function(event){
+            event.preventDefault();
+
+              $.ajax({
+                url:"data-action.php",
+                method:'POST',
+                data:new FormData(this),
+                contentType:false,
+                processData:false,
+                type:  'html',
+                success:function(data)
+                {
+                  var newdata = JSON.parse(data);
+                  if (newdata.success) {
+                     alertify.alert(newdata.success).setHeader('Register Success');
+                     $('#f_register').hide();
+                    $('#f_login').show();
+                  }
+                  else{
+                    alertify.alert(newdata.error).setHeader('Error Register');
+                  }
+                }
+              });
+           
+          });
+     $(document).on('click', '#a_sign', function(){
+    
+       $('#f_text').text('Register');
+       $('#f_stext').text('Fill-up to register');
+
+        $('#f_login').hide();
+        $('#f_register').show();
+    });
+  $(document).on('click', '#a_login', function(){
+     $('#f_text').text('Login');
+       $('#f_stext').text('Login here using your username and password');
+        $('#f_login').show();
+        $('#f_register').hide();
+    });
 
 
-	
-
-	<div id="fh5co-testimonial" style="background-image: url(images/school.jpg);">
-		<div class="overlay"></div>
-		<div class="container">
-			<div class="row animate-box">
-				<div class="col-md-6 col-md-offset-3 text-center fh5co-heading">
-					<h2><span>QUOTES</span></h2>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-10 col-md-offset-1">
-					<div class="row animate-box">
-						<div class="owl-carousel owl-carousel-fullwidth">
-							<div class="item">
-								<div class="testimony-slide active text-center">
-									<div class="user" style="background-image: url(front/images/person1.jpg);"></div>
-									<span>TER LEX<br><small>Students</small></span>
-									<blockquote>
-										<p>&ldquo;Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.&rdquo;</p>
-									</blockquote>
-								</div>
-							</div>
-							<div class="item">
-								<div class="testimony-slide active text-center">
-									<div class="user" style="background-image: url(front/images/person2.jpg);"></div>
-									<span>LIM ZYRELL<br><small>Students</small></span>
-									<blockquote>
-										<p>&ldquo;Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.&rdquo;</p>
-									</blockquote>
-								</div>
-							</div>
-							<div class="item">
-								<div class="testimony-slide active text-center">
-									<div class="user" style="background-image: url(front/images/person3.jpg);"></div>
-									<span>GEO SANGGALANG<br><small>Teacher</small></span>
-									<blockquote>
-										<p>&ldquo;Far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.&rdquo;</p>
-									</blockquote>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<?php 
-	include('index-footer.php');
-	?>
-	</body>
+</script>
 </html>
-

@@ -1,406 +1,333 @@
-﻿<?php 
-    include('../session.php');
-    include('dash-global-function.php');
+<?php 
+include('../session.php');
 
-   
-    $pagename = "Account Management";
 
-    $username = $_SESSION['user_Name'];
-    $user_id = $_SESSION['login_id'];
-    $user_img = $_SESSION['user_img'];
-    $user_email = $_SESSION['user_Email'];
-    $script_for_specific_page = "";
-    if(isset($_SESSION['login_level']) )
-    {      
-        $login_level = $_SESSION['login_level'];
-        if ($login_level != 3) {
-         
-          header('location: error404.php');
+require_once("../class.user.php");
+
+  
+$auth_user = new USER();
+// $page_level = 3;
+// $auth_user->check_accesslevel($page_level);
+$pageTitle = "Manage Account";
+?>
+<!doctype html>
+<html lang="en">
+  <head>
+    <?php 
+      include('x-meta.php');
+    ?>
+
+
+  <?php 
+  include('x-css.php');
+  ?>
+ 
+
+
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
         }
-         
-    }
-
+      }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="../assets/css/dashboard.css" rel="stylesheet">
+  </head>
+  <body>
+<?php 
+include('x-nav.php');
 ?>
 
-<!DOCTYPE html>
-<html>
-
- <?php
-    include("dash-head.php");
+<div class="container-fluid">
+  <div class="row">
+      <?php 
+    include('x-sidenav.php');
     ?>
 
-<body class="theme-red ">
-    <!-- Page Loader -->
-    <div class="page-loader-wrapper">
-        <div class="loader">
-            <div class="preloader">
-                <div class="spinner-layer pl-red">
-                    <div class="circle-clipper left">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="circle-clipper right">
-                        <div class="circle"></div>
-                    </div>
-                </div>
-            </div>
-            <p>Please wait...</p>
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Manage Account</h1>
+        
+      </div>
+      <nav aria-label="breadcrumb" >
+        <ol class="breadcrumb bcrum">
+          <li class="breadcrumb-item "><a href="index" class="bcrum_i_a">Dashboard</a></li>
+          <li class="breadcrumb-item  active bcrum_i_ac" aria-current="page">Account Management</li>
+        </ol>
+      </nav>
+      <div class="table-responsive">
+         <div class="btn-group">
+          <button type="button" class="btn btn-sm btn-success add dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Add 
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item"  data-toggle="modal" data-target="#account_modal_admin">Admin</a>
+            <a class="dropdown-item"   data-toggle="modal" data-target="#account_modal_instructor">Instructor</a>
+            <a class="dropdown-item"  data-toggle="modal" data-target="#account_modal_student">Student</a>
+          </div>
         </div>
-    </div>
-    <!-- #END# Page Loader -->
-    <!-- Overlay For Sidebars -->
-    <div class="overlay"></div>
-    <!-- #END# Overlay For Sidebars -->
-    <?php 
-        include('dash-topnav.php');
-    ?>
-    <section>
-        <?php 
-        include("dash-sidenav-left.php");
-        ?>
-
-    </section>
-
-    <section class="content">
-        <div class="container-fluid">
-            <div class="block-header">
-                <h2>
-                    Account Management
-                </h2>
-            </div>
-
-            <ol class="breadcrumb breadcrumb-bg-blue">
-                <li><a href="index"><i class="material-icons">home</i> Home</a></li>
-                <li  class="active"><a href="javascript:void(0);"><i class="material-icons ">account_box</i> Account Management</a></li>
-            </ol>
-            <div class="row clearfix">
-                       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                           <div class="card">
-                               <div class="header">
-                                   <h2>LIST OF ACCOUNT</h2>
-                                   <div class="btn-group pull-right">
-                                   <button type="button" class="btn btn-success waves-effect add" data-toggle="modal" data-target="#account_modal">ADD ACCOUNT</button>
-                                   </div>
-                                   <br>
-                               </div>
-                               <div class="body">
-                                   <div class="table-responsive" style="overflow-x: hidden;">
-                                          <table id="account_data" class="table table-bordered table-striped">
-                                            <thead>
-                                              <tr>
-                                                <th width="10%">ID</th>
-                                                <th width="10%">Level</th>
-                                                <th width="10%">Username</th>
-                                                <th width="10%">Status</th>
-                                                <th width="10%">Register</th>
-                                                <th width="10%">Action</th>
-                                              </tr>
-                                            </thead>
-                                          </table>
-                                       
-                                   </div>
-                               </div>
-                           </div>
-                    </div>
-            </div>   
-          <!--    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="card">
-                        <iframe src="map/user-map.php" style=" display:block; width:100%; height: 800px;"></iframe>
-                    </div>
-                </div> -->
-          
-        </div>
-
-    </section>
+         <br><br>
+        <table class="table table-striped table-sm" id="account_data">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Student Name</th>
+              <th>Grade</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+     
+          </tbody>
+        </table>
 
 
-
- <!-- add modal -->
-    <div class="modal fade" tabindex="-1" role="dialog" id="account_modal">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title"><span class="glyphicon glyphicon-plus-sign"></span> Add Account</h4>
-          </div>
-          
-          <form class="form-horizontal" action="php_action/create.php" method="POST" id="account_form" enctype="multipart/form-data">
-
-          <div class="modal-body">
-            <div class="messages"></div>
-              <div class="row clearfix">
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                      <label for="username">Username</label>
-                  </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                      <div class="form-group">
-                          <div class="form-line">
-                              <input type="text" class="form-control" id="username" name="username" placeholder="username">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <br>
-              <div class="row clearfix">
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                      <label for="level">Level</label>
-                  </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                      <div class="form-group">
-                          <div class="form-line">
-                               <select class="form-control" name="level" id="level" >
-                                <option value="">~~SELECT~~</option>
-                                <option value="1">Student</option>
-                                <option value="2">Teacher</option>
-                                <option value="3">Admin</option>
-                              </select>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <br>
-               <div class="row clearfix">
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                      <label for="email">Email</label>
-                  </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                      <div class="form-group">
-                          <div class="form-line">
-                              <input type="text" class="form-control" id="email" name="email" placeholder="Email">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <br>
-               <div class="row clearfix">
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                      <label for="pass">Password</label>
-                  </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                      <div class="form-group">
-                          <div class="form-line">
-                              <input type="password" class="form-control" id="pass" name="pass" placeholder="Password">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <br>
-               <div class="row clearfix">
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                      <label for="con_pass">Retype</label>
-                  </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                      <div class="form-group">
-                          <div class="form-line">
-                              <input type="password" class="form-control" id="con_pass" name="con_pass" placeholder="Confirm Your Password">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <br>
-              <div class="row clearfix">
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                      <label for="status">Active</label>
-                  </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                      <div class="form-group">
-                          <div class="form-line">
-                               <select class="form-control" name="status" id="status" >
-                                <option value="">~~SELECT~~</option>
-                                <option value="1">Activate</option>
-                                <option value="0">Deactivate</option>
-                                <option value="2">Ban</option>
-                              </select>
-                          </div>
-                      </div>
-                  </div>
-              </div>  
-              <br>                 
-
-          </div>
-          <div class="modal-footer">
-          <input type="hidden" name="user_ID" id="user_ID" />
-          <input type="hidden" name="operation" id="operation" value="Add" />
-          <input type="submit" name="action" id="action" class="btn btn-success" value="Submit" />
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
-          </form> 
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-    <!-- /add modal -->
-    <!-- Jquery Core Js -->
-    <script src="../assets/plugins/jquery/jquery.min.js"></script>
-
-    <!-- Bootstrap Core Js -->
-    <script src="../assets/plugins/bootstrap/js/bootstrap.js"></script>
-
-    <!-- Select Plugin Js -->
-    <script src="../assets/plugins/bootstrap-select/js/bootstrap-select.js"></script>
-
-    <!-- Slimscroll Plugin Js -->
-    <script src="../assets/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
-
-    <!-- Waves Effect Plugin Js -->
-    <script src="../assets/plugins/node-waves/waves.js"></script>
-
-    <!-- Jquery DataTable Plugin Js -->
-    <script src="../assets/plugins/jquery-datatable/jquery.dataTables.js"></script>
-    <script src="../assets/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/buttons.flash.min.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/jszip.min.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/pdfmake.min.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
-
-    <!-- Custom Js -->
-    <script src="../assets/js/admin.js"></script>
-    <script src="../assets/js/pages/tables/jquery-datatable.js"></script>
-
-    <!-- Demo Js -->
-    <script src="../assets/js/demo.js"></script>
-    <script type="text/javascript" language="javascript" >
-$(document).ready(function(){
-
-  //select specific dropdown when updating 1 data
-  function setSelectedValue(dropDownList, valueToSet) {
-    var option = dropDownList.firstChild;
-    for (var i = 0; i < dropDownList.length; i++) {
-        if (option.text.trim().toLowerCase() == valueToSet.trim().toLowerCase()) {
-            option.selected = true;
-            return;
-        }
-        option = option.nextElementSibling;
-    }
-}
-
-
-
-  var dataTable = $('#account_data').DataTable({
-    "processing":true,
-    "serverSide":true,
-    "order":[],
-    "ajax":{
-      url:"datatable/account/fetch.php",
-      type:"POST"
-    },
-    "columnDefs":[
-      {
-        "targets":[0],
-        "orderable":false,
-      },
-    ],
-
-  });
-
-  $(document).on('submit', '#account_form', function(event){
-    event.preventDefault();
-   $('#username').prop("disabled", false);
-    var username = $('#username').val();
-    var level = $('#level').val();
-    var email = $('#email').val();
-    var pass = $('#pass').val();
-    var con_pass = $('#con_pass').val();
-    var status = $('#status').val();
-    if(username != '' && level != '' && email != '' && pass != '' && con_pass != '' && status != '')
-    {
-
-
-      if (pass == con_pass) 
-        {
-
-          if (pass.length > 6) {
-            $.ajax({
-              url:"datatable/account/insert.php",
-              method:'POST',
-              data:new FormData(this),
-              contentType:false,
-              processData:false,
-              success:function(data)
-              {
-                $('#action').val("Add");
-                $('#operation').val("Add");
-
-                alert(data);
-                $('#account_form')[0].reset();
-                $('#account_modal').modal('hide');
-                dataTable.ajax.reload();
-              }
-            });
-          } 
-          else {
-            alert("Minumum Password Length is 6 Character");
-          }
-        } 
-        else {
-          alert("Password not match");
-        }
-    }
-    else
-    {
-      alert("Fields are Required");
-    }
-  });
-  $(document).on('click', '.add', function () {
-       $('#username').prop("disabled", false);
-       $('#action').text("Add");
-       $('#operation').val("Add");
-       $('.modal-title').text("Add Account Info");
-       document.getElementById('account_form').reset();
-       $('#level').val('').change();
-       $('#status').val('').change();
-  });
-  $(document).on('click', '.update', function(){
-    var user_ID = $(this).attr("id");
+<div class="modal fade" id="account_modal" tabindex="-1" role="dialog" aria-labelledby="product_modal_title" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="account_modal_title">Add </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="product_modal_content">
     
-    $.ajax({
-      url:"datatable/account/fetch_single.php",
-      method:"POST",
-      data:{user_ID:user_ID},
-      dataType:"json",
-      success:function(data)
-      {
-        $('#account_modal').modal('show');
-        $("#username").prop("disabled", true);
-        $('#username').val(data.user_Name);
-        $('#email').val(data.user_Email);
-        $('#pass').val(data.user_Pass);
-        $('#con_pass').val(data.user_Pass);
-        var val_level = $('#status').val(data.level_ID);
-        var val_stat = $('#status').val(data.user_status);
-        $('#action').val("Edit");
-        $('#operation').val("Edit");
-        $('.modal-title').text("Edit Account Info");
-        $('#user_ID').val(user_ID);
-      }
-    })
-  });
-  
-  $(document).on('click', '.delete', function(){
-    var user_ID = $(this).attr("id");
-    if(confirm("Are you sure you want to delete this?"))
-    {
-      $.ajax({
-        url:"datatable/account/delete.php",
-        method:"POST",
-        data:{user_ID:user_ID},
-        success:function(data)
-        {
-          alert(data);
-          dataTable.ajax.reload();
-        }
-      });
-    }
-    else
-    {
-      return false; 
-    }
-  });
-  
-  
-});
-</script>
-</body>
+     
+      </div>
+      <div class="modal-footer">
+        <input type="hidden" name="account_ID" id="account_ID" />
+        <input type="hidden" name="operation" id="operation" />
+        <div class="btn-group">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary submit" id="submit_input" value="submit_account">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="delaccount_modal" tabindex="-1" role="dialog" aria-labelledby="product_modal_title" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="account_modal_title">Delete this Account</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+        <div class="btn-group">
+        <button type="submit" class="btn btn-danger" id="account_delform">Delete</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<?php 
+include('x-script.php');
+?>
+        <script type="text/javascript">
+   
+
+
+          $(document).ready(function() {
+             
+            var dataTable = $('#account_data').DataTable({
+            "processing":true,
+            "serverSide":true,
+            "order":[],
+            "ajax":{
+              url:"datatable/account/fetch.php",
+              type:"POST"
+            },
+            "columnDefs":[
+              {
+                "targets":[0],
+                "orderable":false,
+              },
+            ],
+
+          });
+
+
+
+          $(document).on('submit', '#account_form', function(event){
+            event.preventDefault();
+
+              $.ajax({
+                url:"datatable/account/insert.php",
+                method:'POST',
+                data:new FormData(this),
+                contentType:false,
+                processData:false,
+                success:function(data)
+                {
+                  alertify.alert(data).setHeader('Account');
+                  $('#account_form')[0].reset();
+                  $('#account_modal').modal('hide');
+                  dataTable.ajax.reload();
+                }
+              });
+           
+          });
+
+          $(document).on('click', '.add', function(){
+            $('#account_modal_title').text('Add New Account');
+            $("#acc_username").prop("disabled", false);
+            $('#account_form')[0].reset();
+            $('#submit_input').show();
+            $('#submit_input').text('Submit');
+            $('#submit_input').val('submit_account');
+            $('#operation').val("submit_account");
+          });
+
+          $(document).on('click', '.view', function(){
+            var account_ID = $(this).attr("id");
+            $('#account_modal_title').text('View Account');
+            $('#account_modal').modal('show');
+            $("#acc_pass").hide();
+            $("#acc_cpass").hide();
+            $("#l_acc_pass").hide();
+            $("#l_acc_cpass").hide();
+            
+             $.ajax({
+                url:"datatable/account/fetch_single.php",
+                method:'POST',
+                data:{action:"account_view",account_ID:account_ID},
+                dataType    :   'json',
+                success:function(data)
+                {
+
+                $("#acc_username").prop("disabled", true);
+                $("#acc_email").prop("disabled", true);
+                $("#acc_name").prop("disabled", true);
+                $("#acc_lvl").prop("disabled", true);
+                $("#acc_add").prop("disabled", true);
+
+                  $('#acc_username').val(data.user_Name);
+                  $('#acc_email').val(data.user_Email);
+                  $('#acc_name').val(data.user_Fullname);
+                  $('#acc_pass').val(data.user_Pass);
+                  $('#acc_lvl').val(data.lvl_ID).change();
+                  
+                  $('#acc_cpass').val(data.user_Pass);
+                  $('#acc_add').val(data.user_Address);
+
+                  $('#submit_input').hide();
+                  $('#account_ID').val(account_ID);
+                  $('#submit_input').text('Update');
+                  $('#submit_input').val('account_edit');
+                  $('#operation').val("account_edit");
+                  
+                }
+              });
+
+
+            });
+          $(document).on('click', '.edit', function(){
+            var account_ID = $(this).attr("id");
+            $('#account_modal_title').text('Edit Account');
+            $('#account_modal').modal('show');
+          
+            $("#acc_pass").show();
+            $("#acc_cpass").show();
+            $("#l_acc_pass").show();
+            $("#l_acc_cpass").show();
+
+            
+             $.ajax({
+                url:"datatable/account/fetch_single.php",
+                method:'POST',
+                data:{action:"account_view",account_ID:account_ID},
+                dataType    :   'json',
+                success:function(data)
+                {
+                  $("#acc_username").prop("disabled", true);
+                  $("#acc_email").prop("disabled", false);
+                  $("#acc_name").prop("disabled", false);
+                  $("#acc_lvl").prop("disabled", false);
+                  $("#acc_add").prop("disabled", false);
+                  $("#acc_pass").prop("disabled", false);
+                  $("#acc_cpass").prop("disabled", false);
+
+                  $('#acc_username').val(data.user_Name);
+                  $('#acc_email').val(data.user_Email);
+                  $('#acc_name').val(data.user_Fullname);
+                  $('#acc_pass').val(data.user_Pass);
+                  $('#acc_lvl').val(data.lvl_ID).change();
+                  
+                  $('#acc_cpass').val(data.user_Pass);
+                  $('#acc_add').val(data.user_Address);
+
+                  $('#submit_input').show();
+                  $('#account_ID').val(account_ID);
+                  $('#submit_input').text('Update');
+                  $('#submit_input').val('account_update');
+                  $('#operation').val("account_edit");
+                  
+                }
+              });
+
+
+            });
+            $(document).on('click', '.delete', function(){
+            var account_ID = $(this).attr("id");
+             $('#delaccount_modal').modal('show');
+             $('.submit').hide();
+             
+             $('#account_ID').val(account_ID);
+            });
+
+           
+
+
+          $(document).on('click', '#account_delform', function(event){
+             var account_ID =  $('#account_ID').val();
+            $.ajax({
+             type        :   'POST',
+             url:"datatable/account/insert.php",
+             data        :   {operation:"delete_account",account_ID:account_ID},
+             dataType    :   'json',
+             complete     :   function(data) {
+               $('#delaccount_modal').modal('hide');
+               alertify.alert(data.responseText).setHeader('Delete this Account');
+               dataTable.ajax.reload();
+               dataTable_product_data.ajax.reload();
+                
+             }
+            })
+           
+          });
+          
+          } );
+
+
+        </script>
+        </body>
 
 </html>

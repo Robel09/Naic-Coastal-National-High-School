@@ -1,222 +1,300 @@
-﻿<?php 
-    include('../session.php');
-    include('dash-global-function.php');
+<?php 
+include('../session.php');
 
-   
-    $pagename = "MGA AKDANG PAMPANITIKANG MEDITERRANEAN AT KANLURANIN";
 
-    $username = $_SESSION['user_Name'];
-    $user_id = $_SESSION['login_id'];
-    $user_img = $_SESSION['user_img'];
-    $user_email = $_SESSION['user_Email'];
-    $script_for_specific_page = "";
-    if(isset($_SESSION['login_level']) )
-    {      
-        $login_level = $_SESSION['login_level'];
+require_once("../class.user.php");
 
-         
-    }
+  
+$auth_user = new USER();
+// $page_level = 3;
+// $auth_user->check_accesslevel($page_level);
+$pageTitle = "Manage Section";
+?>
+<!doctype html>
+<html lang="en">
+  <head>
+    <?php 
+      include('x-meta.php');
+    ?>
 
+
+  <?php 
+  include('x-css.php');
+  ?>
+ 
+
+
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="../assets/css/dashboard.css" rel="stylesheet">
+  </head>
+  <body>
+<?php 
+include('x-nav.php');
 ?>
 
-<!DOCTYPE html>
-<html>
-
- <?php
-    include("dash-head.php");
+<div class="container-fluid">
+  <div class="row">
+      <?php 
+    include('x-sidenav.php');
     ?>
 
-<body class="theme-red ">
-    <!-- Page Loader -->
-    <div class="page-loader-wrapper">
-        <div class="loader">
-            <div class="preloader">
-                <div class="spinner-layer pl-red">
-                    <div class="circle-clipper left">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="circle-clipper right">
-                        <div class="circle"></div>
-                    </div>
-                </div>
-            </div>
-            <p>Please wait...</p>
-        </div>
-    </div>
-    <!-- #END# Page Loader -->
-    <!-- Overlay For Sidebars -->
-    <div class="overlay"></div>
-    <!-- #END# Overlay For Sidebars -->
-    <?php 
-        include('dash-topnav.php');
-    ?>
-    <section>
-        <?php 
-        include("dash-sidenav-left.php");
-        ?>
-
-    </section>
-
-    <section class="content">
-        <div class="container-fluid">
-            <div class="block-header">
-                <h2>
-                   
-                </h2>
-            </div>
-
-            <ol class="breadcrumb breadcrumb-bg-blue">
-                <li><a href="index"><i class="material-icons">home</i> Home</a></li>
-                <li  class="active"><a href="javascript:void(0);"><i class="material-icons ">account_box</i> Section</a></li>
-            </ol>
-            <div class="row clearfix">
-                       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                           <div class="card">
-                               <div class="header">
-                                   <h2 class="text-center"> MGA AKDANG PAMPANITIKANG MEDITERRANEAN AT KANLURANIN</h2>
-                                   
-                                   <br>
-                               </div>
-                               <div class="body">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                      <div class="panel bg-grey">
-                                          <div class="panel-heading text-center" style="border-bottom-style: groove;
-                                              border-bottom-color: coral;
-                                              border-bottom-width: 7px;">
-                                              <h4>SECTION ASSIGN</h4>
-                                          </div>
-                                          <div class="panel-body" style="min-height: 100px;">
-                                              
-                                              <table class="table table-bordered">
-                                                  <tbody>
-                                                    
-                                                        <?php 
-
-                                                        $sql = "SELECT rtd.user_ID,rtd.rtd_FName,rtd.rtd_MName,rtd.rtd_LName,rsn.suffix,sy.*, rs.* FROM `schoolyear` sy
-                                                        LEFT JOIN record_teacher_details rtd ON sy.rtd_ID = rtd.rtd_ID
-                                                        LEFT JOIN ref_section rs ON sy.section_ID = rs.section_ID
-                                                        LEFT JOIN ref_suffixname rsn ON rtd.suffix_ID = rsn.suffix_ID
-                                                        WHERE `rtd`.`user_ID` = '$user_id'";
-                                                        $query = mysqli_query($conn,$sql);
-                                                                       
-                                                                         
-                                                          if (mysqli_num_rows($query) > 0) {
-                                                                // output data of each row
-                                                             
-                                                              while($section = mysqli_fetch_assoc($query)) 
-                                                              {
-                                                              ?>
-                                                                <tr>
-                                                              <td>
-                                                               <h4><?php echo $section['section_Name']?></h4>
-                                                               <?php echo $section['sy_year']?>
-                                                               <a class="btn btn-primary pull-right" href="room?sy_ID=<?php echo $section['sy_ID']?>">VIEW</a>
-                                                              </td>
-                                                               </tr>
-                                                              <?php
-                                                              }
-                                                             }
-                                                        ?>
-                                                          
-                                                      
-                                                  </tbody>
-                                              </table>
-                                            
-                                            </div>
-                                          </div>
-                                      </div>
-                                    </div>
-                                </div>
-                           </div>
-                    </div>
-            </div>   
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Manage Section</h1>
         
-        </div>
+      </div>
 
-    </section>
+      <div class="table-responsive">
+         <button type="button" class="btn btn-sm btn-success add" >
+            Add 
+          </button>
+         <br><br>
+        <table class="table table-striped table-sm" id="section_data">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Title</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+     
+          </tbody>
+        </table>
 
-<!-- Modal -->
-<div id="view_modal" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-lg">
 
-    <!-- Modal content-->
+<div class="modal fade" id="section_modal" tabindex="-1" role="dialog" aria-labelledby="product_modal_title" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title" id="mtitle-ann">Modal Header</h4>
+        <h5 class="modal-title" id="section_modal_title">Add Section</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-      <div class="modal-body" id="mbody-ann">
-        <p>Some text in the modal.</p>
+      <div class="modal-body" id="product_modal_content">
+    
+      <form method="post" id="section_form" enctype="multipart/form-data">
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label for="section_title">Title<span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="section_title" name="section_title" placeholder="" value="" required="">
+                </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <input type="hidden" name="section_ID" id="section_ID" />
+        <input type="hidden" name="operation" id="operation" />
+        <div class="">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary submit" id="submit_input" value="submit_section">Submit</button>
+        </div>
       </div>
+       </form>
     </div>
-
   </div>
 </div>
 
- 
-    <!-- Jquery Core Js -->
-    <script src="../assets/plugins/jquery/jquery.min.js"></script>
 
-    <!-- Bootstrap Core Js -->
-    <script src="../assets/plugins/bootstrap/js/bootstrap.js"></script>
+      </div>
 
-    <!-- Select Plugin Js -->
-    <script src="../assets/plugins/bootstrap-select/js/bootstrap-select.js"></script>
+<div class="modal fade" id="delsection_modal" tabindex="-1" role="dialog" aria-labelledby="product_modal_title" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="section_modal_title">Delete this Section</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+        <div class="btn-group">
+        <button type="submit" class="btn btn-danger" id="Section_delform">Delete</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <!-- Slimscroll Plugin Js -->
-    <script src="../assets/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+    </main>
+  </div>
+</div>
 
-    <!-- Waves Effect Plugin Js -->
-    <script src="../assets/plugins/node-waves/waves.js"></script>
-
-    <!-- Jquery DataTable Plugin Js -->
-    <script src="../assets/plugins/jquery-datatable/jquery.dataTables.js"></script>
-    <script src="../assets/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/buttons.flash.min.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/jszip.min.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/pdfmake.min.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
-    <script src="../assets/plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
-
-    <!-- Custom Js -->
-    <script src="../assets/js/admin.js"></script>
-    <script src="../assets/js/pages/tables/jquery-datatable.js"></script>
-
-    <!-- Demo Js -->
-    <script src="../assets/js/demo.js"></script>
-    <script type="text/javascript">
+<?php 
+include('x-script.php');
+?>
+        <script type="text/javascript">
    
 
-    function view($var){
-    var news_ID = $var;
-    $('#view_modal').modal('show');
-      $.ajax({
-          url:"module-topic-content.php",
-          type:"POST",
-          data:{news_ID:news_ID},
-          dataType:"json",
-          success:function(data)
-          {
-            $('.modal-title').html(data.news_Title);
-            $('.modal-body').html(data.news_Content);
+
+          $(document).ready(function() {
+             
+            var dataTable = $('#section_data').DataTable({
+            "processing":true,
+            "serverSide":true,
+            "order":[],
+            "ajax":{
+              url:"datatable/section/fetch.php",
+              type:"POST"
+            },
+            "columnDefs":[
+              {
+                "targets":[0],
+                "orderable":false,
+              },
+            ],
+
+          });
+
+
+
+          $(document).on('submit', '#section_form', function(event){
+            event.preventDefault();
+
+              $.ajax({
+                url:"datatable/section/insert.php",
+                method:'POST',
+                data:new FormData(this),
+                contentType:false,
+                processData:false,
+                success:function(data)
+                {
+                  alertify.alert(data).setHeader('Section');
+                  $('#section_form')[0].reset();
+                  $('#section_modal').modal('hide');
+                  dataTable.ajax.reload();
+                }
+              });
+           
+          });
+
+          $(document).on('click', '.add', function(){
+            $('#section_modal_title').text('Add Section');
+            $("#section_title").prop("disabled", false);
+            $('#section_form')[0].reset();
+            $('#section_modal').modal('show');
+            $('#submit_input').show();
+            $('#submit_input').text('Submit');
+            $('#submit_input').val('submit_section');
+            $('#operation').val("submit_section");
+          });
+
+          $(document).on('click', '.view', function(){
+            var section_ID = $(this).attr("id");
+            $('#section_modal_title').text('View News');
+            $('#section_modal').modal('show');
+            $("#submit_input").hide();
             
-          },
-          error:function(data) {
-            alert(JSON.stringify(data));
-          }
-        });
-  
+             $.ajax({
+                url:"datatable/section/fetch_single.php",
+                method:'POST',
+                data:{action:"section_view",section_ID:section_ID},
+                dataType    :   'json',
+                success:function(data)
+                {
 
-    }
+                $("#section_title").prop("disabled", true);
+
+                  $('#section_title').val(data.section_Name);
+
+                  $('#submit_input').hide();
+                  $('#section_ID').val(section_ID);
+                  $('#submit_input').text('View');
+                  $('#submit_input').val('section_view');
+                  $('#operation').val("section_view");
+                  
+                }
+              });
 
 
-    </script>
-</body>
+            });
+          $(document).on('click', '.edit', function(){
+            var section_ID = $(this).attr("id");
+            $('#section_modal_title').text('Edit Section');
+            $('#section_modal').modal('show');
+            $("#submit_input").show();
+
+            
+             $.ajax({
+                url:"datatable/section/fetch_single.php",
+                method:'POST',
+                data:{action:"section_view",section_ID:section_ID},
+                dataType    :   'json',
+                success:function(data)
+                {
+
+                  
+                $("#section_title").prop("disabled", false);
+
+                  $('#section_title').val(data.section_Name);
+
+                  $('#submit_input').show();
+                  $('#section_ID').val(section_ID);
+                  $('#submit_input').text('Update');
+                  $('#submit_input').val('section_update');
+                  $('#operation').val("section_edit");
+                  
+                }
+              });
+
+
+            });
+            $(document).on('click', '.delete', function(){
+            var section_ID = $(this).attr("id");
+             $('#delsection_modal').modal('show');
+             $('.submit').hide();
+             
+             $('#section_ID').val(section_ID);
+            });
+
+           
+
+
+          $(document).on('click', '#Section_delform', function(event){
+             var section_ID =  $('#section_ID').val();
+            $.ajax({
+             type        :   'POST',
+             url:"datatable/section/insert.php",
+             data        :   {operation:"delete_section",section_ID:section_ID},
+             dataType    :   'json',
+             complete     :   function(data) {
+               $('#delsection_modal').modal('hide');
+               alertify.alert(data.responseText).setHeader('Delete this Section');
+               dataTable.ajax.reload();
+               dataTable_product_data.ajax.reload();
+                
+             }
+            })
+           
+          });
+          
+          } );
+
+
+        </script>
+        </body>
 
 </html>

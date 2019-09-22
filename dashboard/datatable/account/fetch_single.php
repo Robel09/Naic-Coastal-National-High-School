@@ -1,26 +1,44 @@
 <?php
-include('db.php');
-include('function.php');
-if(isset($_POST["user_ID"]))
-{
+require_once('../class.function.php');
+$account = new DTFunction(); 
+
+if (isset($_POST['action'])) {
+	
 	$output = array();
-	$statement = $connection->prepare(
-		"SELECT * FROM `user_accounts`
-		WHERE user_ID = '".$_POST["user_ID"]."' 
-		LIMIT 1"
-	);
-	$statement->execute();
-	$result = $statement->fetchAll();
+	$stmt = $account->runQuery("SELECT * FROM `user_account` WHERE user_ID  = '".$_POST["account_ID"]."' 
+			LIMIT 1");
+	$stmt->execute();
+	$result = $stmt->fetchAll();
 	foreach($result as $row)
 	{
 
-		$output["level_ID"] = $row["level_ID"];
+		if (!empty($row['user_img'])) {
+				
+			 $output["ac_Img"] = 'data:image/jpeg;base64,'.base64_encode($row['user_img']);
+			}
+			else{
+			  $output["ac_Img"] = "../assets/img/uploads/blank.png";
+			}
+		
+		$output["lvl_ID"] = $row["lvl_ID"];
 		$output["user_Name"] = $row["user_Name"];
-		$output["user_Pass"] = decryptIt($row["user_Pass"]);
 		$output["user_Email"] = $row["user_Email"];
-		$output["user_status"] = $row["user_status"];
+		$output["user_Address"] = $row["user_Address"];
 	
 	}
+	
 	echo json_encode($output);
+	
 }
+
+
+
+
+
+
+
+
+
+ 
+
 ?>
