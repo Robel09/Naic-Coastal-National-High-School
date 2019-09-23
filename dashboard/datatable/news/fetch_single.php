@@ -1,11 +1,11 @@
 <?php
 require_once('../class.function.php');
-$account = new DTFunction(); 
+$news = new DTFunction(); 
 
 if (isset($_POST['action'])) {
 	
 	$output = array();
-	$stmt = $account->runQuery("SELECT * FROM `news` WHERE news_ID  = '".$_POST["news_ID"]."' 
+	$stmt = $news->runQuery("SELECT * FROM `news` WHERE news_ID  = '".$_POST["news_ID"]."' 
 			LIMIT 1");
 	$stmt->execute();
 	$result = $stmt->fetchAll();

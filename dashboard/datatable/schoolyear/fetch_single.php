@@ -1,11 +1,11 @@
 <?php
 require_once('../class.function.php');
-$account = new DTFunction(); 
+$schoolyear = new DTFunction(); 
 
 if (isset($_POST['action'])) {
 	
 	$output = array();
-	$stmt = $account->runQuery("SELECT * FROM `user_account` WHERE user_ID  = '".$_POST["account_ID"]."' 
+	$stmt = $schoolyear->runQuery("SELECT * FROM `user_account` WHERE user_ID  = '".$_POST["account_ID"]."' 
 			LIMIT 1");
 	$stmt->execute();
 	$result = $stmt->fetchAll();

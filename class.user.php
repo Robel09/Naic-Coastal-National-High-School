@@ -171,6 +171,18 @@ class USER
 		}
 		
 	}
+	public function ref_test_type()
+	{
+		$query ="SELECT * FROM `ref_test_type`";
+		$stmt = $this->conn->prepare($query);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		
+		foreach($result as $row)
+		{
+			echo '<option value="'.$row["tstt_ID"].'">'.$row["tstt_Name"].'</option>';
+		}
+	}
 		public function ref_status()
 	{
 		$query ="SELECT * FROM `ref_status`";

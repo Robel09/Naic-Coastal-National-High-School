@@ -1,6 +1,6 @@
 <?php
 require_once('../class.function.php');
-$account = new DTFunction(); 
+$yearlevel = new DTFunction(); 
 if(isset($_POST["operation"]))
 {
 
@@ -13,7 +13,7 @@ if(isset($_POST["operation"]))
 			(`yl_ID`, `yl_Name`) 
 			VALUES 
 			(NULL, :yearlevel_name);";
-				$statement = $account->runQuery($sql);
+				$statement = $yearlevel->runQuery($sql);
 					
 				$result = $statement->execute(
 				array(
@@ -42,7 +42,7 @@ if(isset($_POST["operation"]))
 		$yearlevel_name = $_POST["yearlevel_name"];
 
 		$sql = "UPDATE `ref_year_level` SET `yl_Name` = :yearlevel_name WHERE `yl_ID` =  :yl_ID;";
-		$statement = $account->runQuery($sql);
+		$statement = $yearlevel->runQuery($sql);
 			
 		$result = $statement->execute(
 		array(
@@ -59,7 +59,7 @@ if(isset($_POST["operation"]))
 
 	if($_POST["operation"] == "delete_yearlevel")
 	{
-		$statement = $account->runQuery(
+		$statement = $yearlevel->runQuery(
 			"DELETE FROM `ref_year_level` WHERE `yl_ID` = :yl_ID"
 		);
 		$result = $statement->execute(

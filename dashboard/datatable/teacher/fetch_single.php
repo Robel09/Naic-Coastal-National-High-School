@@ -1,11 +1,11 @@
 <?php
 require_once('../class.function.php');
-$account = new DTFunction(); 
+$teacher = new DTFunction(); 
 
 if (isset($_POST['action'])) {
 	
 	$output = array();
-	$stmt = $account->runQuery("SELECT 
+	$stmt = $teacher->runQuery("SELECT 
 `rid`.`rid_ID`,
 `rid`.`rid_Img`,
 `rid`.`rid_EmpID`,

@@ -1,11 +1,11 @@
 <?php
 require_once('../class.function.php');
-$account = new DTFunction(); 
+$room = new DTFunction(); 
 
 if (isset($_POST['action'])) {
 	
 	$output = array();
-	$stmt = $account->runQuery("SELECT * FROM `ref_section` WHERE section_ID  = '".$_POST["section_ID"]."' 
+	$stmt = $room->runQuery("SELECT * FROM `ref_section` WHERE section_ID  = '".$_POST["section_ID"]."' 
 			LIMIT 1");
 	$stmt->execute();
 	$result = $stmt->fetchAll();

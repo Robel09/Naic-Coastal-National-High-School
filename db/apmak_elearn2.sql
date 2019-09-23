@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 21, 2019 at 11:14 PM
+-- Generation Time: Sep 23, 2019 at 05:33 AM
 -- Server version: 10.1.26-MariaDB
 -- PHP Version: 7.1.8
 
@@ -393,7 +393,8 @@ CREATE TABLE `room` (
 --
 
 INSERT INTO `room` (`room_ID`, `rid_ID`, `section_ID`, `status_ID`, `sem_ID`) VALUES
-(1, 3, 1, 1, 3);
+(1, 3, 1, 1, 3),
+(8, 1, 8, 1, 3);
 
 -- --------------------------------------------------------
 
@@ -925,7 +926,7 @@ ALTER TABLE `record_instructor_details`
 -- AUTO_INCREMENT for table `record_student_details`
 --
 ALTER TABLE `record_student_details`
-  MODIFY `rsd_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `rsd_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `ref_marital`
 --
@@ -970,7 +971,7 @@ ALTER TABLE `ref_year_level`
 -- AUTO_INCREMENT for table `room`
 --
 ALTER TABLE `room`
-  MODIFY `room_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `room_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `room_assignment`
 --
@@ -1005,7 +1006,7 @@ ALTER TABLE `room_post`
 -- AUTO_INCREMENT for table `room_student`
 --
 ALTER TABLE `room_student`
-  MODIFY `res_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'room enrolled student ID', AUTO_INCREMENT=17;
+  MODIFY `res_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'room enrolled student ID', AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `room_test`
 --

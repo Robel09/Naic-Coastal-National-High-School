@@ -43,14 +43,20 @@ foreach($result as $row)
 	
 		$sub_array = array();
 	
-		
+		if ($row["status_Name"] === "Disable"){
+			$zxc = '<div class="btn btn-sm btn-danger" style="min-width:65;">Disable</div>';
+		}
+		else{
+			$zxc = '<div class="btn btn-sm btn-success" style="min-width:65;">Enable</div>';
+		}
 		$sub_array[] = $i;
 		$sub_array[] = $row["test_Name"];
 		$sub_array[] = $row["test_Added"];
 		$sub_array[] = $row["test_Expired"];
 		$sub_array[] = $row["test_Timer"];
 		$sub_array[] = $row["tstt_Name"];
-		$sub_array[] = $row["status_Name"];
+
+		$sub_array[] = $zxc;
 
 		$sub_array[] = '
 		<div class="btn-group">

@@ -1,6 +1,6 @@
 <?php
 require_once('../class.function.php');
-$account = new DTFunction(); 
+$news = new DTFunction(); 
 if(isset($_POST["operation"]))
 {
 
@@ -34,7 +34,7 @@ if(isset($_POST["operation"]))
 				 :news_title,
 				  :news_content,
 				   CURRENT_TIMESTAMP);";
-				$statement = $account->runQuery($sql);
+				$statement = $news->runQuery($sql);
 					
 				$result = $statement->execute(
 				array(
@@ -82,7 +82,7 @@ if(isset($_POST["operation"]))
 		`news_Content` = :news_content 
 		WHERE 
 		`news_ID` = :news_ID;";
-		$statement = $account->runQuery($sql);
+		$statement = $news->runQuery($sql);
 			
 		$result = $statement->execute(
 		array(
@@ -100,7 +100,7 @@ if(isset($_POST["operation"]))
 
 	if($_POST["operation"] == "delete_News")
 	{
-		$statement = $account->runQuery(
+		$statement = $news->runQuery(
 			"DELETE FROM `news` WHERE `news_ID` = :news_ID"
 		);
 		$result = $statement->execute(

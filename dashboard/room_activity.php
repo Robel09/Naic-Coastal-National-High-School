@@ -127,30 +127,55 @@ include('x-nav.php');
 
 
 
-<div class="modal fade" id="section_modal" tabindex="-1" role="dialog" aria-labelledby="product_modal_title" aria-hidden="true">
+<div class="modal fade" id="test_modal" tabindex="-1" role="dialog" aria-labelledby="product_modal_title" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="section_modal_title">Add Section</h5>
+        <h5 class="modal-title" id="test_modal_title">Add Activity</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body" id="product_modal_content">
     
-      <form method="post" id="section_form" enctype="multipart/form-data">
+        <form method="post" id="test_form" enctype="multipart/form-data">
             <div class="form-row">
                 <div class="form-group col-md-12">
-                  <label for="section_title">Title<span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="section_title" name="section_title" placeholder="" value="" required="">
+                  <label for="test_name">Name</label>
+                  <input type="text" class="form-control" id="test_name" name="test_name" placeholder="" value=""  required="">
                 </div>
+                <div class="form-group col-md-6">
+                  <label for="test_expired">Expired</label>
+                  <input type="datetime-local" class="form-control" id="test_expired" name="test_expired"  value=""  required="">
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="test_timer">Timer(Min):</label>
+                  <input type="text" class="form-control" id="test_timer" name="test_timer" placeholder="00" value="" maxlength="4" minlength="1"required="">
+                </div>
+              </div>  
+
+                <div class="form-group">
+                <label for="prod_category">Type</label>
+                <select class="form-control" id="test_type" name="test_type">
+                  <?php 
+                   $auth_user->ref_test_type();
+                  ?>
+                </select>
+                <label for="prod_category">Status</label>
+                <select class="form-control" id="test_status" name="test_status">
+                  <?php 
+                   $auth_user->ref_status();
+                  ?>
+                </select>
+              </div>
       </div>
       <div class="modal-footer">
-        <input type="hidden" name="section_ID" id="section_ID" />
+
+        <input type="hidden" name="test_ID" id="test_ID" />
         <input type="hidden" name="operation" id="operation" />
-        <div class="">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary submit" id="submit_input" value="submit_section">Submit</button>
+        <div class="btn-group">
+          <button type="submit" class="btn btn-primary submit" id="submit_input" value="test_account">Submit</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </div>
       </div>
        </form>
@@ -161,11 +186,11 @@ include('x-nav.php');
 
       </div>
 
-<div class="modal fade" id="delsection_modal" tabindex="-1" role="dialog" aria-labelledby="product_modal_title" aria-hidden="true">
+<div class="modal fade" id="deltest_modal" tabindex="-1" role="dialog" aria-labelledby="product_modal_title" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="section_modal_title">Delete this Section</h5>
+        <h5 class="modal-title" id="test_modal_title">Delete this Activity</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -217,7 +242,7 @@ include('x-script.php');
 
 
 
-          $(document).on('submit', '#section_form', function(event){
+          $(document).on('submit', '#test_form', function(event){
             event.preventDefault();
 
               $.ajax({
@@ -228,9 +253,9 @@ include('x-script.php');
                 processData:false,
                 success:function(data)
                 {
-                  alertify.alert(data).setHeader('Section');
-                  $('#section_form')[0].reset();
-                  $('#section_modal').modal('hide');
+                  alertify.alert(data).setHeader('Activity');
+                  $('#test_form')[0].reset();
+                  $('#test_modal').modal('hide');
                   dataTable.ajax.reload();
                 }
               });
@@ -238,39 +263,50 @@ include('x-script.php');
           });
 
           $(document).on('click', '.add', function(){
-            $('#section_modal_title').text('Add Section');
-            $("#section_title").prop("disabled", false);
-            $('#section_form')[0].reset();
-            $('#section_modal').modal('show');
+            $('#test_modal_title').text('Add Activity');
+       
+            $('#test_form')[0].reset();
+            $('#test_modal').modal('show');
             $('#submit_input').show();
             $('#submit_input').text('Submit');
             $('#submit_input').val('submit_section');
             $('#operation').val("submit_section");
           });
 
-          $(document).on('click', '.view', function(){
-            var section_ID = $(this).attr("id");
-            $('#section_modal_title').text('View News');
-            $('#section_modal').modal('show');
-            $("#submit_input").hide();
+                   $(document).on('click', '.view', function(){
+            var test_ID = $(this).attr("id");
+            $('#test_modal_title').text('View Test');
+            $('#test_modal').modal('show');
+            $("#acc_pass").hide();
+            $("#acc_cpass").hide();
+            $("#l_acc_pass").hide();
+            $("#l_acc_cpass").hide();
             
              $.ajax({
-                url:"datatable/section/fetch_single.php",
+                url:"datatable/room/fetch_single_test.php",
                 method:'POST',
-                data:{action:"section_view",section_ID:section_ID},
+                data:{action:"test_view",test_ID:test_ID},
                 dataType    :   'json',
                 success:function(data)
                 {
 
-                $("#section_title").prop("disabled", true);
+                $("#test_name").prop("disabled", true);
+                $("#test_expired").prop("disabled", true);
+                $("#test_timer").prop("disabled", true);
+                $("#test_type").prop("disabled", true);
+                $("#test_status").prop("disabled", true);
 
-                  $('#section_title').val(data.section_Name);
+                  $('#test_name').val(data.test_Name);
+                  $('#test_expired').val(data.test_Expired).change();
+                  $('#test_timer').val(data.test_Timer);
+                  $('#test_type').val(data.tstt_ID).change();
+                  $('#test_status').val(data.status_ID).change();
 
                   $('#submit_input').hide();
-                  $('#section_ID').val(section_ID);
-                  $('#submit_input').text('View');
-                  $('#submit_input').val('section_view');
-                  $('#operation').val("section_view");
+                  $('#test_ID').val(test_ID);
+                  $('#submit_input').text('Update');
+                  $('#submit_input').val('test_edit');
+                  $('#operation').val("test_edit");
                   
                 }
               });
@@ -278,30 +314,40 @@ include('x-script.php');
 
             });
           $(document).on('click', '.edit', function(){
-            var section_ID = $(this).attr("id");
-            $('#section_modal_title').text('Edit Section');
-            $('#section_modal').modal('show');
-            $("#submit_input").show();
+            var test_ID = $(this).attr("id");
+            $('#test_modal_title').text('Edit Account');
+            $('#test_modal').modal('show');
+          
+            $("#acc_pass").show();
+            $("#acc_cpass").show();
+            $("#l_acc_pass").show();
+            $("#l_acc_cpass").show();
 
             
              $.ajax({
-                url:"datatable/section/fetch_single.php",
+                url:"datatable/room/fetch_single_test.php",
                 method:'POST',
-                data:{action:"section_view",section_ID:section_ID},
+                data:{action:"test_view",test_ID:test_ID},
                 dataType    :   'json',
                 success:function(data)
                 {
+                  $("#test_name").prop("disabled", false);
+                $("#test_expired").prop("disabled", false);
+                $("#test_timer").prop("disabled", false);
+                $("#test_type").prop("disabled", false);
+                $("#test_status").prop("disabled", false);
 
-                  
-                $("#section_title").prop("disabled", false);
-
-                  $('#section_title').val(data.section_Name);
+                  $('#test_name').val(data.test_Name);
+                  $('#test_expired').val(data.test_Expired);
+                  $('#test_timer').val(data.test_Timer);
+                  $('#test_type').val(data.tstt_ID).change();
+                  $('#test_status').val(data.status_ID).change();
 
                   $('#submit_input').show();
-                  $('#section_ID').val(section_ID);
+                  $('#test_ID').val(test_ID);
                   $('#submit_input').text('Update');
-                  $('#submit_input').val('section_update');
-                  $('#operation').val("section_edit");
+                  $('#submit_input').val('test_update');
+                  $('#operation').val("test_edit");
                   
                 }
               });
@@ -310,7 +356,7 @@ include('x-script.php');
             });
             $(document).on('click', '.delete', function(){
             var section_ID = $(this).attr("id");
-             $('#delsection_modal').modal('show');
+             $('#deltest_modal').modal('show');
              $('.submit').hide();
              
              $('#section_ID').val(section_ID);
@@ -327,7 +373,7 @@ include('x-script.php');
              data        :   {operation:"delete_section",section_ID:section_ID},
              dataType    :   'json',
              complete     :   function(data) {
-               $('#delsection_modal').modal('hide');
+               $('#deltest_modal').modal('hide');
                alertify.alert(data.responseText).setHeader('Delete this Section');
                dataTable.ajax.reload();
                dataTable_product_data.ajax.reload();

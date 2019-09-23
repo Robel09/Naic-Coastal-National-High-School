@@ -1,6 +1,6 @@
 <?php
 require_once('../class.function.php');
-$account = new DTFunction(); 
+$subject = new DTFunction(); 
 if(isset($_POST["operation"]))
 {
 
@@ -29,14 +29,14 @@ if(isset($_POST["operation"]))
 			$subject_title = $_POST["subject_title"];
 			$subject_abbreviation = $_POST["subject_abbreviation"];
 
-			$last_id = $account->insert_subject($subject_title,$subject_abbreviation);
+			$last_id = $subject->insert_subject($subject_title,$subject_abbreviation);
 			$y = date("Y");
 	        $m = date("m");
 	        $d = date("d");
 	        $subject_Code = $y.$m."0".$d+$last_id;
 
 	        $sql ="SELECT * FROM `ref_subject`";
-	        $smtp = $account->runQuery($sql);
+	        $smtp = $subject->runQuery($sql);
 			$smtp->execute();
 			$chk_result = $smtp->fetchAll();
 			$sCode = array();
@@ -49,7 +49,7 @@ if(isset($_POST["operation"]))
 		
 			
 			$sql = "UPDATE `ref_subject` SET `subject_Code` = '".$unique_value."' WHERE `ref_subject`.`subject_ID` =".$last_id;
-			$smtp1 = $account->runQuery($sql);
+			$smtp1 = $subject->runQuery($sql);
 			$update_result = $smtp1->execute();
 			if(!empty($update_result))
 			{
@@ -74,7 +74,7 @@ if(isset($_POST["operation"]))
 		$subject_abbreviation = $_POST["subject_abbreviation"];
 
 		$sql = "UPDATE `ref_subject` SET `subject_Title` = :subject_title,`Abbreviation` = :subject_abbreviation WHERE `subject_ID` =  :subject_ID;";
-		$statement = $account->runQuery($sql);
+		$statement = $subject->runQuery($sql);
 			
 		$result = $statement->execute(
 		array(
@@ -92,7 +92,7 @@ if(isset($_POST["operation"]))
 
 	if($_POST["operation"] == "delete_subject")
 	{
-		$statement = $account->runQuery(
+		$statement = $subject->runQuery(
 			"DELETE FROM `ref_subject` WHERE `subject_ID` = :subject_ID"
 		);
 		$result = $statement->execute(

@@ -1,6 +1,6 @@
 <?php
 require_once('../class.function.php');
-$account = new DTFunction(); 
+$section = new DTFunction(); 
 if(isset($_POST["operation"]))
 {
 
@@ -14,7 +14,7 @@ if(isset($_POST["operation"]))
 			(`section_ID`, `section_Name`) 
 			VALUES 
 			(NULL, :section_title);";
-				$statement = $account->runQuery($sql);
+				$statement = $section->runQuery($sql);
 					
 				$result = $statement->execute(
 				array(
@@ -43,7 +43,7 @@ if(isset($_POST["operation"]))
 		$section_title = $_POST["section_title"];
 
 		$sql = "UPDATE `ref_section` SET `section_Name` = :section_title WHERE `ref_section`.`section_ID` =  :section_ID;";
-		$statement = $account->runQuery($sql);
+		$statement = $section->runQuery($sql);
 			
 		$result = $statement->execute(
 		array(
@@ -60,7 +60,7 @@ if(isset($_POST["operation"]))
 
 	if($_POST["operation"] == "delete_section")
 	{
-		$statement = $account->runQuery(
+		$statement = $section->runQuery(
 			"DELETE FROM `ref_section` WHERE `section_ID` = :section_ID"
 		);
 		$result = $statement->execute(
