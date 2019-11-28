@@ -1,18 +1,19 @@
 <?php
 require_once('../class.function.php');
-$account = new DTFunction();  		 // Create new connection by passing in your configuration array
+$student = new DTFunction();  		 // Create new connection by passing in your configuration array
 
 
 $query = '';
 $output = array();
-$query .= "SELECT *";
-$query .= "FROM `user_account` ua
-LEFT JOIN `user_level` `ul` ON `ua`.`lvl_ID` = `ul`.`lvl_ID`";
+$query .= " 
+SELECT *
+";
+$query .= " FROM `user_account` `ua`
+LEFT JOIN `user_level` `ul` ON `ul`.`lvl_ID` = `ua`.`lvl_ID`";
 if(isset($_POST["search"]["value"]))
 {
  $query .= 'WHERE user_ID LIKE "%'.$_POST["search"]["value"].'%" ';
     $query .= 'OR user_Name LIKE "%'.$_POST["search"]["value"].'%" ';
-    $query .= 'OR lvl_Name LIKE "%'.$_POST["search"]["value"].'%" ';
 }
 
 
@@ -28,7 +29,7 @@ if($_POST["length"] != -1)
 {
 	$query .= 'LIMIT ' . $_POST['start'] . ', ' . $_POST['length'];
 }
-$statement = $account->runQuery($query);
+$statement = $student->runQuery($query);
 $statement->execute();
 $result = $statement->fetchAll();
 $data = array();
@@ -37,29 +38,33 @@ foreach($result as $row)
 {
 	
 
-	$sub_array = array();
-	$sub_array[] = $row["user_ID"];
-	$sub_array[] = $account->check_user_level($row["lvl_ID"]);
-	$sub_array[] = $row["user_Name"];
-	$sub_array[] = $row["user_Registered"];
 
+	$sub_array = array();
+	
+		if($row["lvl_Name"] == "Instructor"){
+			$lvlname = "Teacher";
+		}
+		else{
+			$lvlname =$row["lvl_Name"] ;
+		}
+		$sub_array[] = $row["user_ID"];
+		$sub_array[] =  $lvlname;
+		$sub_array[] =  $row["user_Name"];
+		$sub_array[] =  $row["user_Registered"];
 		$sub_array[] = '
-<div class="btn-group">
-  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Action
-  </button>
-  <div class="dropdown-menu">
-    <a class="dropdown-item view"  id="'.$row["user_ID"].'">View</a>
-    <a class="dropdown-item edit"  id="'.$row["user_ID"].'">Edit</a>
-     <div class="dropdown-divider"></div>
-    <a class="dropdown-item delete" id="'.$row["user_ID"].'">Delete</a>
-  </div>
-</div>';
+
+		<div class="btn-group">
+		  <button type="button" class="btn btn-primary btn-sm change" id="'.$row["user_ID"].'" >
+		    Change Pass
+		  </button>
+		</div>';
+		// <div class="dropdown-divider"></div>
+		 // <a class="dropdown-item delete" id="'.$row["rad_ID"].'">Delete</a>
 	$data[] = $sub_array;
 }
 
 $q = "SELECT * FROM `user_account`";
-$filtered_rec = $account->get_total_all_records($q);
+$filtered_rec = $student->get_total_all_records($q);
 
 $output = array(
 	"draw"				=>	intval($_POST["draw"]),

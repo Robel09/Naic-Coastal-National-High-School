@@ -76,7 +76,7 @@ class DTFunction
         } 
     }
 
-    public function generate_account($id,$user_type){
+     public function generate_account($id,$user_type){
         try{
         $user_type_acro = "";
 
@@ -84,16 +84,19 @@ class DTFunction
         {
             $user_type_acro = "rsd";
              $sc_id = "rsd_StudNum";
+             $slvl = 1;
         }
         if ($user_type == "instructor")
         {
             $user_type_acro = "rid";
             $sc_id = "rid_EmpID";
+            $slvl = 2;
         }
         if ($user_type == "admin")
         {
             $user_type_acro = "rad";
             $sc_id = "rad_EmpID";
+            $slvl = 3;
 
         }
             $q1 ="SELECT * FROM `record_".$user_type."_details` WHERE ".$user_type_acro."_ID = '$id'";
@@ -115,21 +118,21 @@ class DTFunction
 
             $n_pass = password_hash($ac_pass, PASSWORD_DEFAULT);
 
-            $q2 ="INSERT INTO `user_account` (`user_ID`, `lvl_ID`, `user_Img`, `user_Name`, `user_Pass`, `user_Registered`) VALUES (NULL, '2', NULL, '$ac_user', '$n_pass', CURRENT_TIMESTAMP);";
+            $q2 ="INSERT INTO `user_account` (`user_ID`, `lvl_ID`, `user_Img`, `user_Name`, `user_Pass`, `user_Registered`) VALUES (NULL, '$slvl', NULL, '$ac_user', '$n_pass', CURRENT_TIMESTAMP);";
             $stmt2 = $this->conn->prepare($q2);
             $stmt2->execute();
             $last_id = $this->conn->lastInsertId();
 
 
 
-            $q3  = "UPDATE `record_instructor_details` SET `user_ID` = '$last_id' WHERE `record_instructor_details`.`rid_ID` = '$id'";
+            $q3  = "UPDATE `record_".$user_type."_details` SET `user_ID` = '$last_id' WHERE `".$user_type_acro."_ID` = '$id'";
             $stmt3 = $this->conn->prepare($q3);
             $r3 = $stmt3->execute();
 
             if(!empty($r3))
             {
                 echo '<div class="text-center"><strong>Username:</strong>'.$ac_user.'<br>';
-                echo '<strong>assword:</strong>'.$ac_pass.'<br>';
+                echo '<strong>Password:</strong>'.$ac_pass.'<br>';
                 echo 'Account Successfully Created</div>';
             }
             
@@ -166,6 +169,193 @@ class DTFunction
             echo $e->getMessage();
         } 
     }
+    public function insert_choice($question_ID,$is_correct,$choice)
+    {
+        try
+        { 
+            $sql = " INSERT INTO `room_test_choices` 
+            (`choice_ID`, `question_ID`, `is_correct`, `choice`)
+             VALUES (NULL, '$question_ID', '$is_correct', '$choice');";
+            $statement = $this->runQuery($sql);
+            $result = $statement->execute();
+            
+            return $last_id = $this->conn->lastInsertId();
+        }
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
+        } 
+    }
+    public function insert_question($question,$test_ID,$xtype)
+    {
+       
+        try
+        { 
+            $sql = " INSERT INTO `room_test_questions` (`question_ID`, `test_ID`, `question`,`type`) 
+            VALUES (NULL, $test_ID, '$question','$xtype');";
+            $statement = $this->runQuery($sql);
+            $result = $statement->execute();
+            
+            return $last_id = $this->conn->lastInsertId();
+        }
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
+        } 
+    }
+    public function  setnewChoice($choice_ID,$newChoice)
+       {
+       
+        try
+        { 
+            $sql = "UPDATE `room_test_choices` SET `choice` = '$newChoice' WHERE `room_test_choices`.`choice_ID` = $choice_ID;";
+            $statement = $this->runQuery($sql);
+            $result = $statement->execute();
+            return $result;
+        }
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
+        } 
+    }
+     public function check_choice($choice_ID)
+    {
+           
+        try
+        { 
+            $sql = " SELECT is_correct FROM `room_test_choices` WHERE choice_ID =  $choice_ID and is_correct = 1;";
+            $statement = $this->runQuery($sql);
+            $statement->execute();
+            $result = $statement->rowCount();
+            return $result;
+        }
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
+        } 
+    }
+    public function test_score($score,$user_ID,$test_ID){
+         try
+        { 
+            $sql = "INSERT INTO `room_test_score` 
+            (`score_ID`, `test_ID`, `score`, `user_ID`) 
+            VALUES (NULL, '$test_ID', '$score', '$user_ID');";
+            $statement = $this->runQuery($sql);
+            $statement->execute();
+            
+            return $last_id = $this->conn->lastInsertId();
+        }
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
+        } 
+
+    }
+    public function atmp_count($user_ID,$test_ID){
+         try
+        { 
+            $sql = "SELECT `count` atmp_count FROM 
+            `room_test_attemp` 
+            WHERE user_ID = '$user_ID' and test_ID = '$test_ID'";
+            $statement = $this->runQuery($sql);
+            $statement->execute();
+            
+            $result = $statement->fetchAll();
+            
+            $atmp_count = 0;
+            foreach($result as $row)
+            {
+                $atmp_count = $row["atmp_count"];
+            }
+            return $atmp_count;
+        }
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
+        } 
+
+    }
+       public function  student_level()
+    {
+        if ($_SESSION['lvl_ID'] == "1")
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    public function  instructor_level()
+    {
+        if ($_SESSION['lvl_ID'] == "2")
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }   
+    }
+    public function  admin_level()
+    {
+        if ($_SESSION['lvl_ID'] == "3")
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function subtopic($mtopic){
+       
+        try
+        { 
+            $sql = " SELECT * FROM `room_module_subtopic` WHERE mtopic_ID = '$mtopic'";
+            $statement = $this->runQuery($sql);
+            $statement->execute();
+            
+            $result = $statement->fetchAll();
+            
+            $atmp_count = 0;
+            $li = "";
+            
+            foreach($result as $row)
+            {
+                if($this->student_level()){
+                    $btn="";
+                }
+                else{
+                    $btn=' <div class="btn-group float-right"  style="margin-top:-25px;">
+                  <button type="button" class="btn btn-secondary btn-sm edit_subtopic" sub-topic="'.$row["submtop_ID"].'">Edit</button>
+                  <button type="button" class="btn btn-secondary btn-sm delete_subtopic" sub-topic="'.$row["submtop_ID"].'">Delete</button> </div>';
+                }
+                $li .=  '
+                <li class="list-group-item " >
+                <div class="view_subtopic" sub-topic="'.$row["submtop_ID"].'">'.$row["submtop_Title"].' </div>
+                
+                 '.$btn.'
+               
+                
+                </li> 
+              
+                ';
+            }
+            return $li;
+            
+        }
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
+        } 
+    }
+
+
+   
+
+
 }
 
 

@@ -21,7 +21,7 @@ $header = new USER();
 
     <div class="w-100 bg-dark text-center" style="padding:5px;">
       <center class="text-white">
-          Naic Costal National High School - E-Learning System<br>
+          Naic Costal National High School - Information System<br>
 All Rights Reserved<br>Copyright &copy; 2019 <?php 
                         if (date('Y') !== "2019") 
                         {

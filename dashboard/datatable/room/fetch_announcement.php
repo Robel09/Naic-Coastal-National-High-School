@@ -1,6 +1,6 @@
 <?php
 require_once('../class.function.php');
-$account = new DTFunction();  		 // Create new connection by passing in your configuration array
+$room = new DTFunction();  		 // Create new connection by passing in your configuration array
 
 session_start();
 $query = '';
@@ -41,7 +41,7 @@ if($_POST["length"] != -1)
 {
 	$query .= 'LIMIT ' . $_POST['start'] . ', ' . $_POST['length'];
 }
-$statement = $account->runQuery($query);
+$statement = $room->runQuery($query);
 $statement->execute();
 $result = $statement->fetchAll();
 $data = array();
@@ -58,29 +58,37 @@ foreach($result as $row)
 		$sub_array[] = $row["post_Date"];
 		
 		if($_SESSION['user_ID'] === $row["user_ID"]){
-			$edit_by_user_who_posted = '<a class="dropdown-item edit" user-id="'.$row["user_ID"].'" id="'.$row["post_ID"].'">Edit</a>';
+			// <a class="dropdown-item edit" user-id="'.$row["user_ID"].'" id="'.$row["post_ID"].'">Edit</a>
+			$edit_by_user_who_posted = '
+			<button type="button" class="btn btn-secondary edit" user-id="'.$row["user_ID"].'" id="'.$row["post_ID"].'">Edit</button>
+			';
 		}
 		else{
 			$edit_by_user_who_posted='';
 		}
 		$sub_array[] = '
-		<div class="btn-group">
-		  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		    Action
-		  </button>
-		  <div class="dropdown-menu">
-		    <a class="dropdown-item view"  id="'.$row["post_ID"].'">View</a>
-			'.$edit_by_user_who_posted.'
-		    <div class="dropdown-divider"></div>
-		    <a class="dropdown-item delete" id="'.$row["post_ID"].'">Delete</a>
-		  </div>
+		<div class="btn-group" role="group" aria-label="Basic example">
+		  <button type="button" class="btn btn-secondary view"  id="'.$row["post_ID"].'">View</button>
+		  '.$edit_by_user_who_posted.'
+		  <button type="button" class="btn btn-secondary delete" id="'.$row["post_ID"].'">Delete</button>
 		</div>';
+		// <div class="btn-group">
+		//   <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		//     Action
+		//   </button>
+		//   <div class="dropdown-menu">
+		//     <a class="dropdown-item view"  id="'.$row["post_ID"].'">View</a>
+		// 	'.$edit_by_user_who_posted.'
+		//     <div class="dropdown-divider"></div>
+		//     <a class="dropdown-item delete" id="'.$row["post_ID"].'">Delete</a>
+		//   </div>
+		// </div>
 		 $i++;
 	$data[] = $sub_array;
 }
 
 $q = "SELECT * FROM `room`";
-$filtered_rec = $account->get_total_all_records($q);
+$filtered_rec = $room->get_total_all_records($q);
 
 $output = array(
 	"draw"				=>	intval($_POST["draw"]),

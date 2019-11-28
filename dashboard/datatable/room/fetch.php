@@ -1,10 +1,11 @@
 <?php
 require_once('../class.function.php');
-$account = new DTFunction();  		 // Create new connection by passing in your configuration array
+$room = new DTFunction();  		 // Create new connection by passing in your configuration array
 
 
 $query = '';
 $output = array();
+
 $query .= "SELECT 
 rm.room_ID,
 rid.rid_FName,
@@ -25,11 +26,19 @@ LEFT JOIN `record_instructor_details` `rid` ON `rid`.`rid_ID` = `rm`.`rid_ID`
 LEFT JOIN `ref_suffixname` `rsn` ON `rsn`.`suffix_ID` = `rid`.`suffix_ID`
 LEFT JOIN `ref_semester` `sem` ON sem.sem_ID = `rm`.`sem_ID`
 LEFT JOIN `ref_status` `stat` ON `stat`.`status_ID` = `rm`.`status_ID`";
+
+
+if (isset($_REQUEST['rsecID'])) {
+	$rsecID = $_REQUEST['rsecID'];
+ 	$query .= '  WHERE rm.section_ID = '.$rsecID.' AND';
+}
+else{
+	 $query .= ' WHERE';
+}
 if(isset($_POST["search"]["value"]))
 {
- $query .= 'WHERE section_Name LIKE "%'.$_POST["search"]["value"].'%" ';
-    $query .= 'OR section_Name LIKE "%'.$_POST["search"]["value"].'%" ';
-    $query .= 'OR status_Name LIKE "%'.$_POST["search"]["value"].'%" ';
+ $query .= '(section_Name LIKE "%'.$_POST["search"]["value"].'%" ';
+    $query .= 'OR section_Name LIKE "%'.$_POST["search"]["value"].'%" )';
 }
 
 
@@ -45,7 +54,7 @@ if($_POST["length"] != -1)
 {
 	$query .= 'LIMIT ' . $_POST['start'] . ', ' . $_POST['length'];
 }
-$statement = $account->runQuery($query);
+$statement = $room->runQuery($query);
 $statement->execute();
 $result = $statement->fetchAll();
 $data = array();
@@ -78,28 +87,33 @@ foreach($result as $row)
 		$sub_array[] = $row["semyear"];
 		$sub_array[] = $row["status_Name"];
 		
-		$sub_array[] = '
-		<div class="btn-group">
-		  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		    Action
-		  </button>
-		  <div class="dropdown-menu">
-		    <a class="dropdown-item view"  id="'.$row["room_ID"].'">View</a>
-		   	<a class="dropdown-item edit"  id="'.$row["room_ID"].'">Edit</a>
-		    <a class="dropdown-item ann"  href="room_announcement?room_ID='.$row["room_ID"].'">Announcement</a>
-		   	<a class="dropdown-item mod"  href="room_module?room_ID='.$row["room_ID"].'">Modules</a>
-		   	<a class="dropdown-item std"  href="room_student?room_ID='.$row["room_ID"].'">Student</a>
-		   	<a class="dropdown-item std"  href="room_activity?room_ID='.$row["room_ID"].'">Activity</a>
-		     <div class="dropdown-divider"></div>
-		    <a class="dropdown-item delete" id="'.$row["room_ID"].'">Delete</a>
-		  </div>
-		</div>';
+		  $sub_array[] = '
+     <a  class="btn btn-secondary ann"  href="room_announcement?room_ID='.$row["room_ID"].'">View Room</a>
+    ';
+		// <div class="btn-group">
+		//   <button type="button" class="btn btn-primary  btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		//     Action
+		//   </button>
+		//   <div class="dropdown-menu">
+		    
+		//     <a class="dropdown-item ann"  href="room_announcement?room_ID='.$row["room_ID"].'">Announcement</a>
+		//    	<a class="dropdown-item mod"  href="room_module?room_ID='.$row["room_ID"].'">Modules</a>
+		//    	<a class="dropdown-item std"  href="room_student?room_ID='.$row["room_ID"].'">Student</a>
+		//    	<a class="dropdown-item std"  href="room_activity?room_ID='.$row["room_ID"].'">Activity</a>
+		  
+		  
+		  
+		//   </div>
+		// </div>
+		 // <div class="dropdown-divider"></div>
+		  // <a class="dropdown-item edit" id="'.$row["room_ID"].'">Edit</a>
+		  // <a class="dropdown-item delete" id="'.$row["room_ID"].'">Delete</a>
 		 
 	$data[] = $sub_array;
 }
 
 $q = "SELECT * FROM `room`";
-$filtered_rec = $account->get_total_all_records($q);
+$filtered_rec = $room->get_total_all_records($q);
 
 $output = array(
 	"draw"				=>	intval($_POST["draw"]),

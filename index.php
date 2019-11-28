@@ -28,7 +28,7 @@ if ($auth_user->is_loggedin() !="") {
                   <div class="text-center msg">
                      <img src="assets/img/logo/logo.png" alt="Naic Logo" style="width: 100px;">
                      <h5>Naic Coastal National High School</h5>
-                     <h3>E-Learning System</h3>
+                     <h3>Information System</h3>
                      <small id="f_stext">Login here using your username and password</small>
                   </div>
                   <div id="f_login">
@@ -44,7 +44,7 @@ if ($auth_user->is_loggedin() !="") {
                         <input type="hidden" name="operation" value="submit_login">
                         <button class="btn btn-lg btn-primary btn-block" type="submit" style="background-color: #e91e63;border: none !important;" name="submit_login">Sign in</button>
                         <div class="text-center">
-                           Don't have an account? <a href="#" id="a_sign" >Sign up</a>
+                           <!-- Don't have an account? <a href="#" id="a_sign" >Sign up</a> -->
                         </div>
                      </form>
                   </div>

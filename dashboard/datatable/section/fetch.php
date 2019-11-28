@@ -1,6 +1,6 @@
 <?php
 require_once('../class.function.php');
-$account = new DTFunction();  		 // Create new connection by passing in your configuration array
+$section = new DTFunction();  		 // Create new connection by passing in your configuration array
 
 
 $query = '';
@@ -27,7 +27,7 @@ if($_POST["length"] != -1)
 {
 	$query .= 'LIMIT ' . $_POST['start'] . ', ' . $_POST['length'];
 }
-$statement = $account->runQuery($query);
+$statement = $section->runQuery($query);
 $statement->execute();
 $result = $statement->fetchAll();
 $data = array();
@@ -42,24 +42,21 @@ foreach($result as $row)
 		$sub_array[] = $row["section_ID"];
 		$sub_array[] =  $row["section_Name"];
 		$sub_array[] = '
-		<div class="btn-group">
-		  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		    Action
-		  </button>
-		  <div class="dropdown-menu">
-		    <a class="dropdown-item view"  id="'.$row["section_ID"].'">View</a>
-		    <a class="dropdown-item edit"  id="'.$row["section_ID"].'">Edit</a>
-		     
-		    
-		  </div>
-		</div>';
+
+		<div class="btn-group" role="group" aria-label="Basic example">
+		  <button type="button view" class="btn btn-primary btn-sm room" id="'.$row["section_ID"].'" data-toggle="modal" data-target="#room">Room</button>
+		  
+		  <button type="button edit" class="btn btn-info btn-sm edit" id="'.$row["section_ID"].'">Edit</button>
+		</div>
+		';
+		// <button type="button view" class="btn btn-info btn-sm view" id="'.$row["section_ID"].'">View</button>
 		// <div class="dropdown-divider"></div>
 		// <a class="dropdown-item delete" id="'.$row["section_ID"].'">Delete</a>
 	$data[] = $sub_array;
 }
 
 $q = "SELECT * FROM `ref_section`";
-$filtered_rec = $account->get_total_all_records($q);
+$filtered_rec = $section->get_total_all_records($q);
 
 $output = array(
 	"draw"				=>	intval($_POST["draw"]),

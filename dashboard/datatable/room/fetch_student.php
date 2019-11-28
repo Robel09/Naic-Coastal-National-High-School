@@ -1,6 +1,6 @@
 <?php
 require_once('../class.function.php');
-$account = new DTFunction();  		 // Create new connection by passing in your configuration array
+$room = new DTFunction();  		 // Create new connection by passing in your configuration array
 
 
 $query = '';
@@ -17,18 +17,26 @@ sx.sex_Name
 ";
 $query .= " FROM `room_student` `rs`
 LEFT JOIN `record_student_details` `rsd` ON `rsd`.`rsd_ID` = `rs`.`rsd_ID`
-LEFT JOIN `ref_suffixname` `sn` ON `sn`.`suffix_ID`  = `rsd`.`rsd_ID`
+LEFT JOIN `ref_suffixname` `sn` ON `sn`.`suffix_ID`  = `rsd`.`suffix_ID`
 LEFT JOIN `ref_sex` `sx` ON `sx`.`sex_ID` = `rsd`.`sex_ID`";
+
+
+if (isset($_REQUEST['room_ID'])) {
+	$room_ID = $_REQUEST['room_ID'];
+ 	$query .= '  WHERE rs.room_ID = '.$room_ID.' AND';
+}
+else{
+	 $query .= ' WHERE';
+}
 if(isset($_POST["search"]["value"]))
 {
- $query .= 'WHERE res_ID LIKE "%'.$_POST["search"]["value"].'%" ';
+ $query .= '(res_ID LIKE "%'.$_POST["search"]["value"].'%" ';
     $query .= 'OR rsd_StudNum LIKE "%'.$_POST["search"]["value"].'%" ';
     $query .= 'OR rsd_FName LIKE "%'.$_POST["search"]["value"].'%" ';
     $query .= 'OR rsd_MName LIKE "%'.$_POST["search"]["value"].'%" ';
     $query .= 'OR rsd_LName LIKE "%'.$_POST["search"]["value"].'%" ';
-    $query .= 'OR sex_Name LIKE "%'.$_POST["search"]["value"].'%" ';
+    $query .= 'OR sex_Name LIKE "%'.$_POST["search"]["value"].'%" )';
 }
-
 
 if(isset($_POST["order"]))
 {
@@ -36,13 +44,13 @@ if(isset($_POST["order"]))
 }
 else
 {
-	$query .= 'ORDER BY res_ID DESC ';
+	$query .= 'ORDER BY rsd.rsd_FName DESC ';
 }
 if($_POST["length"] != -1)
 {
 	$query .= 'LIMIT ' . $_POST['start'] . ', ' . $_POST['length'];
 }
-$statement = $account->runQuery($query);
+$statement = $room->runQuery($query);
 $statement->execute();
 $result = $statement->fetchAll();
 $data = array();
@@ -65,33 +73,31 @@ foreach($result as $row)
 		}
 		else
 		{
-			$mname = $row["rsd_MName"].'. ';
+			$mname = substr(ucfirst($row["rsd_MName"]),0,1).'. ';
 		}
 		$sub_array = array();
 	
 		
 		$sub_array[] = $i;
 		$sub_array[] = $row["rsd_StudNum"];
-		$sub_array[] =  $row["rsd_FName"].' '.$mname.$row["rsd_LName"].' '.$suffix;
+		$sub_array[] = addslashes(ucwords(htmlspecialchars($row["rsd_LName"].', '.$row["rsd_FName"].' '.$mname.' '.$suffix)));
 		$sub_array[] = $row["sex_Name"];
 		
 		$sub_array[] = '
-		<div class="btn-group">
-		  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		    Action
-		  </button>
-		  <div class="dropdown-menu">
-		    <a class="dropdown-item view"  id="'.$row["res_ID"].'">View</a>
-		     <div class="dropdown-divider"></div>
-		    <a class="dropdown-item delete" id="'.$row["res_ID"].'">Delete</a>
-		  </div>
-		</div>';
+		
+		<div class="btn-group" role="group" aria-label="Basic example">
+		  <button type="button" class="btn btn-danger btn-sm delete" id="'.$row["res_ID"].'">Delete</button>
+		</div>
+		';
+
+		    // <a class="dropdown-item view"  id="'.$row["res_ID"].'">View</a>
+		    //  <div class="dropdown-divider"></div>
 		 $i++;
 	$data[] = $sub_array;
 }
 
 $q = "SELECT * FROM `room`";
-$filtered_rec = $account->get_total_all_records($q);
+$filtered_rec = $room->get_total_all_records($q);
 
 $output = array(
 	"draw"				=>	intval($_POST["draw"]),

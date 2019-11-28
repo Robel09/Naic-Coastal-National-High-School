@@ -1,6 +1,6 @@
 <?php
 require_once('../class.function.php');
-$account = new DTFunction();  		 // Create new connection by passing in your configuration array
+$room = new DTFunction();  		 // Create new connection by passing in your configuration array
 
 
 $query = '';
@@ -28,7 +28,7 @@ if($_POST["length"] != -1)
 {
 	$query .= 'LIMIT ' . $_POST['start'] . ', ' . $_POST['length'];
 }
-$statement = $account->runQuery($query);
+$statement = $room->runQuery($query);
 $statement->execute();
 $result = $statement->fetchAll();
 $data = array();
@@ -50,6 +50,7 @@ foreach($result as $row)
 		  </button>
 		  <div class="dropdown-menu">
 		    <a class="dropdown-item view"  id="'.$row["mod_ID"].'">View</a>
+		    <a class="dropdown-item edit"  id="'.$row["mod_ID"].'">Edit</a>
 		     <div class="dropdown-divider"></div>
 		    <a class="dropdown-item delete" id="'.$row["mod_ID"].'">Delete</a>
 		  </div>
@@ -59,7 +60,7 @@ foreach($result as $row)
 }
 
 $q = "SELECT * FROM `room`";
-$filtered_rec = $account->get_total_all_records($q);
+$filtered_rec = $room->get_total_all_records($q);
 
 $output = array(
 	"draw"				=>	intval($_POST["draw"]),

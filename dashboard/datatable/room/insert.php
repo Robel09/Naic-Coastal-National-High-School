@@ -1,31 +1,76 @@
 <?php
 require_once('../class.function.php');
-$account = new DTFunction(); 
+$room = new DTFunction(); 
 if(isset($_POST["operation"]))
 {
 
-	if($_POST["operation"] == "submit_section")
+if($_POST["operation"] == "submit_classroom")
 	{	
 		try
 		{
-			$section_title = $_POST["section_title"];
+			
+		
+			$teacher_ID = $_POST["rsd_ID"];
+			$section_ID = $_POST["teacher_section"];
+			$semester_ID = $_POST["teacher_semester"];
 
-			$sql = "INSERT INTO `ref_section` 
-			(`section_ID`, `section_Name`) 
-			VALUES 
-			(NULL, :section_title);";
-				$statement = $account->runQuery($sql);
+
+			$stmt1 = $room->runQuery("SELECT * FROM `room` WHERE 
+			rid_ID = '$teacher_ID' AND
+			section_ID = '$section_ID' AND
+			sem_ID = '$semester_ID' LIMIT 1");
+			$stmt1->execute();
+			$rs = $stmt1->fetchAll();
+			if($stmt1->rowCount() > 0){
+				echo "You Cannot Add Same Teacher in Same Semester & Section";
+			}
+			else
+			{
+				$q = "SELECT * FROM `ref_semester` WHERE sem_ID = ".$semester_ID.";";
+				$s1 = $room->runQuery($q);
+				$s1->execute();
+				$r1 = $s1->fetchAll();
+				foreach ($r1 as $rz){
 					
-				$result = $statement->execute(
-				array(
-
-						':section_title'		=>	$section_title ,
-					)
-				);
-				if(!empty($result))
-				{
-					echo 'Successfully Added';
+					if ($rz["stat_ID"] == 0){
+						$status_ID = 2;
+					}
+					else{
+						$status_ID = 1;
+					}
 				}
+
+				$sql = "INSERT INTO `room` 
+				(`room_ID`,
+				 `rid_ID`,
+				  `section_ID`,
+				   `sem_ID`,
+				    `status_ID`) 
+				    VALUES (
+				    NULL,
+				     :teacher_ID,
+				      :section_ID,
+				       :semester_ID,
+				        :status_ID);";
+					$statement = $room->runQuery($sql);
+						
+					$result = $statement->execute(
+					array(
+
+							':teacher_ID'		=>	$teacher_ID ,
+							':section_ID'		=>	$section_ID ,
+							':semester_ID'		=>	$semester_ID ,
+							':status_ID'		=>	$status_ID ,
+
+						)
+					);
+					if(!empty($result))
+					{
+						echo 'Successfully Added';
+					}
+			}
+
+			
 
 		}
 		catch (PDOException $e)
@@ -35,37 +80,16 @@ if(isset($_POST["operation"]))
 		
 	}
 
-	if($_POST["operation"] == "section_edit")
+
+
+	if($_POST["operation"] == "delete_classroom")
 	{
-		
-		
-
-		$section_title = $_POST["section_title"];
-
-		$sql = "UPDATE `ref_section` SET `section_Name` = :section_title WHERE `ref_section`.`section_ID` =  :section_ID;";
-		$statement = $account->runQuery($sql);
-			
-		$result = $statement->execute(
-		array(
-				':section_ID'	=>	$_POST["section_ID"],
-				':section_title'		=>	$section_title ,
-			)
-		);
-		if(!empty($result))
-		{
-			echo 'Successfully Updated';
-		}
-	
-	}
-
-	if($_POST["operation"] == "delete_section")
-	{
-		$statement = $account->runQuery(
-			"DELETE FROM `ref_section` WHERE `section_ID` = :section_ID"
+		$statement = $room->runQuery(
+			"DELETE FROM `room` WHERE `room_ID` = :room_ID"
 		);
 		$result = $statement->execute(
 			array(
-				':section_ID'	=>	$_POST["section_ID"]
+				':room_ID'	=>	$_POST["room_ID"]
 			)
 		);
 		
@@ -76,6 +100,76 @@ if(isset($_POST["operation"]))
 		
 	
 	}
+
+
+	//ROOM LIST OF STUDENT
+	if($_POST["operation"] == "submit_student")
+	{	
+		
+
+ 		$vstmt = $room->runQuery(
+			"SELECT * FROM `room_student` WHERE rsd_ID = :rsd_ID AND room_ID = :room_ID"
+		);
+        $vstmt->execute(
+        array(
+				':rsd_ID'	=>	$_POST["rsd_ID"],
+				':room_ID'	=>	$_POST["room_ID"]
+			)
+    	);
+		
+		if($vstmt->rowCount() > 0)
+		{
+			echo 'You cannot add same student in this room.';
+		}
+		else
+		{
+
+			$statement = $room->runQuery(
+			"INSERT INTO `room_student` (`res_ID`, `rsd_ID`, `room_ID`) VALUES (NULL, :rsd_ID, :room_ID);"
+			);
+			$result = $statement->execute(
+				array(
+					':rsd_ID'	=>	$_POST["rsd_ID"],
+					':room_ID'	=>	$_POST["room_ID"]
+				)
+			);
+			
+			if(!empty($result))
+			{
+				echo 'Successfully Added';
+			}
+
+		}
+
+		
+		
+	
+	}
+
+	if($_POST["operation"] == "delete_student")
+	{
+		$statement = $room->runQuery(
+			"DELETE FROM `room_student` WHERE `res_ID` = :res_ID"
+		);
+		$result = $statement->execute(
+			array(
+				':res_ID'	=>	$_POST["student_ID"]
+			)
+		);
+		
+		if(!empty($result))
+		{
+			echo 'Successfully Deleted';
+		}
+		
+	
+	}
+	
+
+
+
+
+	
 }
 ?>
 

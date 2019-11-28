@@ -1,6 +1,6 @@
 <?php
 require_once('../class.function.php');
-$account = new DTFunction(); 
+$schoolyear = new DTFunction(); 
 if(isset($_POST["operation"]))
 {
 
@@ -20,7 +20,7 @@ if(isset($_POST["operation"]))
 				echo "Password not match";
 			}
 			else{
-				$newpass = $account->encryptIt($acc_pass);
+				$newpass = $schoolyear->encryptIt($acc_pass);
 				$sql = "INSERT INTO `user` (
 				`user_ID`,
 				`lvl_ID`,
@@ -39,7 +39,7 @@ if(isset($_POST["operation"]))
 				:acc_email,
 				:acc_address,
 				CURRENT_TIMESTAMP);";
-				$statement = $account->runQuery($sql);
+				$statement = $schoolyear->runQuery($sql);
 					
 				$result = $statement->execute(
 				array(
@@ -82,9 +82,9 @@ if(isset($_POST["operation"]))
 			echo "Password not match";
 		}
 		else{
-			$newpass = $account->encryptIt($acc_pass);
+			$newpass = $schoolyear->encryptIt($acc_pass);
 			$sql = "UPDATE `user` SET `lvl_ID` = :acc_lvl,  `user_Pass` = :acc_pass, `user_Email` = :acc_email, `user_Address` = :acc_address WHERE `user`.`user_ID` = :account_ID;";
-			$statement = $account->runQuery($sql);
+			$statement = $schoolyear->runQuery($sql);
 				
 			$result = $statement->execute(
 			array(
@@ -106,7 +106,7 @@ if(isset($_POST["operation"]))
 
 	if($_POST["operation"] == "delete_account")
 	{
-		$statement = $account->runQuery(
+		$statement = $schoolyear->runQuery(
 			"DELETE FROM `user` WHERE `user`.`user_ID` = :user_ID"
 		);
 		$result = $statement->execute(

@@ -1,6 +1,6 @@
 <?php
 require_once('../class.function.php');
-$account = new DTFunction();  		 // Create new connection by passing in your configuration array
+$student = new DTFunction();  		 // Create new connection by passing in your configuration array
 
 
 $query = '';
@@ -8,6 +8,7 @@ $output = array();
 $query .= " 
 SELECT 
 `rsd`.`rsd_ID`,
+`rsd`.`user_ID`,
 `rsd`.`rsd_Img`,
 `rsd`.`rsd_StudNum`,
 `rsd`.`rsd_FName`,
@@ -17,7 +18,7 @@ SELECT
 `rm`.`marital_Name`,
 `sf`.`suffix`
 ";
-$query .= "FROM `record_student_details` `rsd`
+$query .= " FROM `record_student_details` `rsd`
 LEFT JOIN `ref_marital` `rm` ON `rm`.`marital_ID` = `rsd`.`marital_ID`
 LEFT JOIN `ref_sex` `rs` ON `rs`.`sex_ID` = `rsd`.`sex_ID`
 LEFT JOIN `ref_suffixname` `sf` ON `sf`.`suffix_ID` = `rsd`.`suffix_ID`";
@@ -45,7 +46,7 @@ if($_POST["length"] != -1)
 {
 	$query .= 'LIMIT ' . $_POST['start'] . ', ' . $_POST['length'];
 }
-$statement = $account->runQuery($query);
+$statement = $student->runQuery($query);
 $statement->execute();
 $result = $statement->fetchAll();
 $data = array();
@@ -69,35 +70,47 @@ foreach($result as $row)
 	}
 	else
 	{
-		$mname = $row["rsd_MName"].'. ';
+		$mname = substr($row["rsd_MName"],0,1).'. ';
+	}
+
+		if(empty($row["user_ID"]))
+	{
+		$reg = "<span class='badge badge-danger'>Unregistered</span>";
+		$acreg = "UN";
+		$btnrg = '
+		 <button type="button" class="btn btn-success btn-sm gen_account" id="'.$row["rsd_ID"].'"><i class="icon-key" style="font-size: 20px;"></i></button>';
+	}
+	else
+	{
+		$reg = "<span class='badge badge-success'>Registered</span>";
+		$acreg = "RG";
+		$btnrg = '';
 	}
 	$sub_array = array();
 	
-		
+		 
 		$sub_array[] = $row["rsd_ID"];
 		$sub_array[] =  $row["rsd_StudNum"];
 		$sub_array[] =  $row["rsd_FName"].' '.$mname.$row["rsd_LName"].' '.$suffix;
 		$sub_array[] =  $row["sex_Name"];
 		$sub_array[] =  $row["marital_Name"];
+		$sub_array[] =  $reg;
+	
 		$sub_array[] = '
-		<div class="btn-group">
-		  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		    Action
-		  </button>
-		  <div class="dropdown-menu">
-		    <a class="dropdown-item view"  id="'.$row["rsd_ID"].'">View</a>
-		    <a class="dropdown-item edit"  id="'.$row["rsd_ID"].'">Edit</a>
-		     
-		   
-		  </div>
-		</div>';
+	
+		<div class="btn-group" role="group" aria-label="Basic example" >
+		  <button type="button" class="btn btn-info btn-sm view" id="'.$row["rsd_ID"].'">View</button>
+		  <button type="button" class="btn btn-primary btn-sm edit" acreg="'.$acreg.'"  id="'.$row["rsd_ID"].'">Edit</button>
+		  '.$btnrg.'
+		</div>
+		';
 		// <div class="dropdown-divider"></div>
 		 // <a class="dropdown-item delete" id="'.$row["rsd_ID"].'">Delete</a>
 	$data[] = $sub_array;
 }
 
 $q = "SELECT * FROM `record_student_details`";
-$filtered_rec = $account->get_total_all_records($q);
+$filtered_rec = $student->get_total_all_records($q);
 
 $output = array(
 	"draw"				=>	intval($_POST["draw"]),

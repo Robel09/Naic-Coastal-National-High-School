@@ -88,7 +88,7 @@ include('x-nav.php');
                         if($auth_user->admin_level() || $auth_user->instructor_level()){
                         ?>
                         <tr>
-                          <th scope="row">Goverment ID:</th>
+                          <th scope="row">School ID:</th>
                           <td><?php  $auth_user->profile_school_id()?></td>
                           <td  colspan="1"></td>
                         </tr>
@@ -112,6 +112,7 @@ include('x-nav.php');
                         <tr>
                           <th scope="row">Address:</th>
                           <td><?php  $auth_user->profile_address()?></td>
+                          <td  colspan="1"></td>
                         </tr>
                         <tr>
                           <th scope="row">Email:</th>
