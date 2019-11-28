@@ -80,7 +80,7 @@ include('x-nav.php');
               <th>Sex</th>
               <th>Marital</th>
               <th>Account Status</th>
-              <th>Action</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -112,7 +112,7 @@ include('x-nav.php');
                   
                 </div>
                 <div class="form-group col-md-4">
-                  <label for="teacher_EmpID">Government ID<span class="text-danger">*</span></label>
+                  <label for="teacher_EmpID">School ID<span class="text-danger">*</span></label>
                   <input type="number" class="form-control" id="teacher_EmpID" name="teacher_EmpID" placeholder="" value="" required="">
                 </div>
                 <div class="form-group col-md-3">
