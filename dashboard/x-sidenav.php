@@ -77,16 +77,17 @@ function navlist($pagefile_name,$name,$link,$icon){
           <?php 
        
           navlist($pagefile_name,"Dashboard","index",'home');
-          if($auth_user->student_level()) { 
-          navlist($pagefile_name,"My Room","room_announcement",'monitor');
+          if($auth_user->student_level() || $auth_user->instructor_level() ) { 
+          navlist($pagefile_name,"My Room","room",'monitor');
           }
           if($auth_user->admin_level()) { 
           navlist($pagefile_name,"Account Management","account","users");
-          navlist($pagefile_name,"Student Management (.)","student","book");
-          navlist($pagefile_name,"Teacher Management (.)","teacher","book");
-          navlist($pagefile_name,"Section (.)","section","paperclip");
-          navlist($pagefile_name,"Classroom","room","monitor");
-          navlist($pagefile_name,"School Year (.)","acadamicyear","book");
+          navlist($pagefile_name,"Admin Management","admin","book");
+          navlist($pagefile_name,"Student Management","student","book");
+          navlist($pagefile_name,"Teacher Management","teacher","book");
+          navlist($pagefile_name,"Section & Room","section","paperclip");
+          // navlist($pagefile_name,"Room","room","monitor");
+          navlist($pagefile_name,"School Year","acadamicyear","book");
           }
           ?>
         </ul>
