@@ -1,5 +1,7 @@
 <?php 
-
+if (isset($_REQUEST["room_ID"])){
+  $room_ID =  $_REQUEST["room_ID"];
+}
 function roomtablist($req_name,$name,$link,$id){
  
   if ($req_name == $link) {
@@ -24,7 +26,7 @@ $rad = $auth_user->room_adviser($room_ID);
 <nav aria-label="breadcrumb" >
         <ol class="breadcrumb bcrum">
           <li class="breadcrumb-item "><a href="index" class="bcrum_i_a">Dashboard</a></li>
-          <li class="breadcrumb-item "><a href="room" class="bcrum_i_a">Classroom</a></li>
+          <li class="breadcrumb-item "><a href="room" class="bcrum_i_a">Room</a></li>
           <li class="breadcrumb-item  active bcrum_i_ac" aria-current="page"><?php echo $rtab_c?></li>
         </ol>
       </nav>

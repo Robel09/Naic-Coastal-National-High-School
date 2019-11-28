@@ -11,9 +11,9 @@ if(isset($_POST["operation"]))
 	if($_POST["operation"] == "submit_teacher")
 	{	
 		$teacher_EmpID = $_POST["teacher_EmpID"];
-		$teacher_fname = $_POST["teacher_fname"];
-		$teacher_mname = $_POST["teacher_mname"];
-		$teacher_lname = $_POST["teacher_lname"];
+		$teacher_fname = ucfirst($_POST["teacher_fname"]);
+		$teacher_mname = ucfirst($_POST["teacher_mname"]);
+		$teacher_lname = ucfirst($_POST["teacher_lname"]);
 		$teacher_bday = $_POST["teacher_bday"];
 		$teacher_suffix = $_POST["teacher_suffix"];
 		$teacher_sex = $_POST["teacher_sex"];

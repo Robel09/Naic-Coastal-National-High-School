@@ -57,21 +57,26 @@ include('x-nav.php');
 
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Manage Section</h1>
+        <h1 class="h2">Manage Section & Room</h1>
         
       </div>
 
       <div class="table-responsive">
+        <div class="btn-group">
          <button type="button" class="btn btn-sm btn-success add" >
-            Add 
+            Add Section
           </button>
+          <button type="button" class="btn btn-sm btn-info add_room" >
+            Add Room
+          </button>
+          </div>
          <br><br>
         <table class="table table-striped table-sm" id="section_data">
           <thead>
             <tr>
               <th>#</th>
-              <th>Title</th>
-              <th>Action</th>
+              <th width="70%">Title</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -114,6 +119,134 @@ include('x-nav.php');
 
 
       </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="room" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Room</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+            <table class="table table-striped table-sm" id="sectionroom_data">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Teacher</th>
+              <th>Section</th>
+              <th>School Year</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            
+     
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="classroom_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Classroom</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+            <div class="btn-group float-right" >
+            <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#browse_teacher_modal">BROWSE TEACHER</button>
+            </div>
+            <br><br>
+      <form method="post" id="classroom_form" enctype="multipart/form-data">
+            <div class="form-row">
+             
+                <div class="form-group col-md-12">
+                  <label for="teacher_name">Teacher Name<span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="teacher_name" name="teacher_name" placeholder="" value=""  required="" disabled >
+                </div>
+                  <div class="form-group col-md-6">
+                  <label for="teacher_section">Section<span class="text-danger">*</span></label>
+                  <select class="form-control" id="teacher_section" name="teacher_section">
+                  <?php 
+                   $auth_user->ref_section();
+                  ?>
+                </select>
+                </div>
+                  <div class="form-group col-md-6">
+                  <label for="teacher_semester">School Year<span class="text-danger">*</span></label>
+                  <select class="form-control" id="teacher_semester" name="teacher_semester">
+                  <?php 
+                   $auth_user->ref_semester();
+                  ?>
+                </select>
+                </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+       <input type="hidden" name="rsd_ID" id="rsd_ID" />
+        <input type="hidden" name="room_ID" id="room_ID"  />
+        <input type="hidden" name="operation" id="operation1" />
+        <div class="">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary submit" id="submit_input1" value="submit_classroom">Submit</button>
+        </div>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="browse_teacher_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">TEACHER</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped table-sm" id="teacher_data">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>School ID</th>
+              <th>Name</th>
+              <th>Sex</th>
+              <th>RID</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+     
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="modal fade" id="delsection_modal" tabindex="-1" role="dialog" aria-labelledby="product_modal_title" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
@@ -168,6 +301,71 @@ include('x-script.php');
             ],
 
           });
+          function sectionroom(section_ID){
+            var dataTable1 = $('#sectionroom_data').DataTable({
+              "processing":true,
+              "serverSide":true,
+              "order":[],
+              "bAutoWidth": false,
+              "ajax":{
+                url:"datatable/room/fetch.php?rsecID="+section_ID,
+                type:"POST"
+              },
+              "columnDefs":[
+                {
+                  "targets":[0],
+                  "orderable":false,
+                },
+              ],
+
+            });
+          }
+       
+
+          var teacher_dataTable = $('#teacher_data').DataTable({
+           "processing":true,
+           "serverSide":true,
+           "order":[],
+             "bAutoWidth": false,
+           "ajax":{
+             url:"datatable/teacher/fetch.php",
+             type:"POST"
+           },
+           "columnDefs":[
+             {
+               "targets":[0],
+               "orderable":false,
+             },
+           ],
+
+         });
+        teacher_dataTable.columns( [4] ).visible( false );
+
+
+        //JQUERY FOR SELECTING  TEACHER FOR ROOM  WHEN BROWSING
+        //----------------------------------------------------------------
+          var teach_Rec = '#teacher_data tbody';
+
+          $(teach_Rec).on('click', 'tr', function(){
+            
+            var cursor = teacher_dataTable.row($(this));//get the clicked row
+            var data=cursor.data();// this will give you the data in the current row.
+             if(confirm("Are you sure you want to use ("+data[2]+") for this room?"))
+              {
+
+                
+                jQuery('#rsd_ID').val(data[0])
+                $('#classroom_form').find("input[name='teacher_name'][type='text']").val(data[2]);
+                
+
+              }
+                else
+              {
+                return false; 
+              }
+            $('#browse_teacher_modal').modal('hide');
+            
+          });
 
 
 
@@ -204,7 +402,7 @@ include('x-script.php');
 
           $(document).on('click', '.view', function(){
             var section_ID = $(this).attr("id");
-            $('#section_modal_title').text('View News');
+            $('#section_modal_title').text('View Section');
             $('#section_modal').modal('show');
             $("#submit_input").hide();
             
@@ -231,6 +429,15 @@ include('x-script.php');
 
 
             });
+
+
+                    
+          $(document).on('click', '.room', function(){
+            var section_ID = $(this).attr("id");
+            $('#sectionroom_data').DataTable().destroy();
+            sectionroom(section_ID);
+          });
+
           $(document).on('click', '.edit', function(){
             var section_ID = $(this).attr("id");
             $('#section_modal_title').text('Edit Section');
@@ -289,6 +496,41 @@ include('x-script.php');
              }
             })
            
+          });
+
+
+
+
+
+          $(document).on('submit', '#classroom_form', function(event){
+            event.preventDefault();
+
+              $.ajax({
+                url:"datatable/room/insert.php",
+                method:'POST',
+                data:new FormData(this),
+                contentType:false,
+                processData:false,
+                success:function(data)
+                {
+                  alertify.alert(data).setHeader('Classroom');
+                  $('#classroom_form')[0].reset();
+                  $('#classroom_modal').modal('hide');
+                  dataTable.ajax.reload();
+                }
+              });
+           
+          });
+
+          $(document).on('click', '.add_room', function(){
+            $('#classroom_modal_title').text('Add Classroom');
+            $("#teacher_name").prop("disabled", true);
+            $('#classroom_form')[0].reset();
+            $('#classroom_modal').modal('show');
+            $('#submit_input1').show();
+            $('#submit_input1').text('Submit');
+            $('#submit_input1').val('submit_classroom');
+            $('#operation1').val("submit_classroom");
           });
           
           } );

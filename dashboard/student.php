@@ -79,7 +79,8 @@ include('x-nav.php');
               <th>Name</th>
               <th>Sex</th>
               <th>Marital</th>
-              <th>Action</th>
+              <th>Account Status</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -112,7 +113,7 @@ include('x-nav.php');
                   
                 </div>
                 <div class="form-group col-md-4">
-                  <label for="student_lrn">LRN ID<span class="text-danger">*</span></label>
+                  <label for="student_lrn">School ID<span class="text-danger">*</span></label>
                   <input type="number" class="form-control" id="student_lrn" name="student_lrn" placeholder="" value="" required="">
                 </div>
                 <div class="form-group col-md-3">
@@ -440,6 +441,31 @@ include('x-script.php');
                 
              }
             })
+           
+          });
+
+            $(document).on('click', '.gen_account', function(event){
+             var student_ID = $(this).attr("id");
+             alertify.confirm('Are you sure you want to create this person account?', 
+            function(){
+              $.ajax({
+               type        :   'POST',
+               url:"datatable/student/insert.php",
+               data        :   {operation:"gen_account",student_ID:student_ID},
+               dataType    :   'json',
+               complete     :   function(data) {
+                 alertify.alert(data.responseText).setHeader('Generated Account');
+                 student_dataTable.ajax.reload();
+                  
+               }
+              })
+
+               student_dataTable.ajax.reload();
+               alertify.success('Ok') 
+             },
+            function(){ 
+              alertify.error('Cancel')
+            }).setHeader('Generate Account');
            
           });
           

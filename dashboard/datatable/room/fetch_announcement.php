@@ -58,23 +58,31 @@ foreach($result as $row)
 		$sub_array[] = $row["post_Date"];
 		
 		if($_SESSION['user_ID'] === $row["user_ID"]){
-			$edit_by_user_who_posted = '<a class="dropdown-item edit" user-id="'.$row["user_ID"].'" id="'.$row["post_ID"].'">Edit</a>';
+			// <a class="dropdown-item edit" user-id="'.$row["user_ID"].'" id="'.$row["post_ID"].'">Edit</a>
+			$edit_by_user_who_posted = '
+			<button type="button" class="btn btn-secondary edit" user-id="'.$row["user_ID"].'" id="'.$row["post_ID"].'">Edit</button>
+			';
 		}
 		else{
 			$edit_by_user_who_posted='';
 		}
 		$sub_array[] = '
-		<div class="btn-group">
-		  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		    Action
-		  </button>
-		  <div class="dropdown-menu">
-		    <a class="dropdown-item view"  id="'.$row["post_ID"].'">View</a>
-			'.$edit_by_user_who_posted.'
-		    <div class="dropdown-divider"></div>
-		    <a class="dropdown-item delete" id="'.$row["post_ID"].'">Delete</a>
-		  </div>
+		<div class="btn-group" role="group" aria-label="Basic example">
+		  <button type="button" class="btn btn-secondary view"  id="'.$row["post_ID"].'">View</button>
+		  '.$edit_by_user_who_posted.'
+		  <button type="button" class="btn btn-secondary delete" id="'.$row["post_ID"].'">Delete</button>
 		</div>';
+		// <div class="btn-group">
+		//   <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		//     Action
+		//   </button>
+		//   <div class="dropdown-menu">
+		//     <a class="dropdown-item view"  id="'.$row["post_ID"].'">View</a>
+		// 	'.$edit_by_user_who_posted.'
+		//     <div class="dropdown-divider"></div>
+		//     <a class="dropdown-item delete" id="'.$row["post_ID"].'">Delete</a>
+		//   </div>
+		// </div>
 		 $i++;
 	$data[] = $sub_array;
 }

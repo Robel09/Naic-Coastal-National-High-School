@@ -77,7 +77,9 @@ foreach($result as $row)
 	{
 		$reg = "<span class='badge badge-danger'>Unregistered</span>";
 		$acreg = "UN";
-		$btnrg = '<a class="dropdown-item gen_account"  id="'.$row["rid_ID"].'">Generate Account</a>';
+		
+		$btnrg = '
+		 <button type="button" class="btn btn-success btn-sm gen_account" id="'.$row["rid_ID"].'"><i class="icon-key" style="font-size: 20px;"></i></button>';
 	}
 	else
 	{
@@ -94,17 +96,17 @@ foreach($result as $row)
 		$sub_array[] =  $row["sex_Name"];
 		$sub_array[] =  $row["marital_Name"];
 		$sub_array[] =  $reg;
+		
 		$sub_array[] = '
-		<div class="btn-group">
-		  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		    Action
-		  </button>
-		  <div class="dropdown-menu">
-		    <a class="dropdown-item view"  id="'.$row["rid_ID"].'">View</a>
-		    <a class="dropdown-item edit"  acreg="'.$acreg.'"  id="'.$row["rid_ID"].'">Edit</a>
-		    '.$btnrg.'
-		  </div>
-		</div>';
+	
+		<div class="btn-group" role="group" aria-label="Basic example" >
+		  <button type="button" class="btn btn-info btn-sm view" id="'.$row["rid_ID"].'">View</button>
+		  <button type="button" class="btn btn-primary btn-sm edit" acreg="'.$acreg.'"  id="'.$row["rid_ID"].'">Edit</button>
+		  '.$btnrg.'
+		</div>
+		';
+
+		
 		// <div class="dropdown-divider"></div>
 		// <a class="dropdown-item delete" id="'.$row["rid_ID"].'">Delete</a>
 	$data[] = $sub_array;

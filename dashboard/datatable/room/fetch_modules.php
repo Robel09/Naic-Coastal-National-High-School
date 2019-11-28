@@ -50,6 +50,7 @@ foreach($result as $row)
 		  </button>
 		  <div class="dropdown-menu">
 		    <a class="dropdown-item view"  id="'.$row["mod_ID"].'">View</a>
+		    <a class="dropdown-item edit"  id="'.$row["mod_ID"].'">Edit</a>
 		     <div class="dropdown-divider"></div>
 		    <a class="dropdown-item delete" id="'.$row["mod_ID"].'">Delete</a>
 		  </div>

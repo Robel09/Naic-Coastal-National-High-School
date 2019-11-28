@@ -66,7 +66,15 @@ include('x-nav.php');
             <div class="row" >
               <?php if($auth_user->admin_level() ){ ?>
              <div class="col-6 col-sm-6">
-                <div class="card ">
+              <div class="card ">
+                  <div class="card-header text-center" style=" border-bottom: 5px solid ;">
+                    <strong>MISSION</strong>
+                  </div>
+                  <div class="card-body text-center"  style="min-height: 250px">
+                    MISSION HERE
+                  </div>
+                  </div>
+             <!--    <div class="card ">
                   <div class="card-header text-center" style=" border-bottom: 5px solid ;">
                    <strong>Student Enrolled</strong>
                   </div>
@@ -74,10 +82,18 @@ include('x-nav.php');
                     
                   <div id="chartContainer" style="height: 300px; width: 100%;"></div>
                   </div>
-                </div>
+                 -->
               </div>
               <div class="col-6 col-sm-6">
                 <div class="card ">
+                  <div class="card-header text-center" style=" border-bottom: 5px solid ;">
+                    <strong>VISION</strong>
+                  </div>
+                  <div class="card-body text-center"  style="min-height: 250px">
+                    VISION HERE
+                  </div>
+                </div>
+                <!-- <div class="card ">
                   <div class="card-header text-center" style=" border-bottom: 5px solid ;">
                     <strong>Student Enrolled Per Section</strong>
                   </div>
@@ -85,7 +101,7 @@ include('x-nav.php');
                     
                   <div id="chartContainer1" style="height: 300px; width: 100%;"></div>
                   </div>
-                </div>
+                </div> -->
               </div>
               <?php } ?>
               <?php  if($auth_user->student_level()) { ?>
@@ -103,7 +119,7 @@ include('x-nav.php');
                       <div class="col-lg-8">
                         <h3><b>Name:</b> <?php  $auth_user->profile_name()?> </h3>
                         <h3><b>LRN:</b> <?php  $auth_user->profile_school_id()?></h3>
-                        <h3><b>Sex:</b> <?php  $auth_user->profile_sex()?></h3>
+                        <h3><b>Sex:</b> <?php $auth_user->profile_sex()?></h3>
                         
                       </div>
                     </div>
@@ -130,7 +146,7 @@ include('x-nav.php');
 
                       <div class="col-lg-8">
                         <h3><b>Name:</b> <?php  $auth_user->profile_name()?> </h3>
-                        <h3><b>Goverment ID:</b> <?php  $auth_user->profile_school_id()?></h3>
+                        <h3><b>School ID:</b> <?php  $auth_user->profile_school_id()?></h3>
                         <h3><b>Sex:</b> <?php  $auth_user->profile_sex()?></h3>
                         
                       </div>
@@ -140,29 +156,6 @@ include('x-nav.php');
                 </div>
               </div>
 
-                   <div class="col-12 col-sm-12" style="padding-bottom:5px;">
-                <div class="card ">
-                  <div class="card-header bg-primary text-center text-white" style=" border-bottom: 5px solid #adb5bd ;">
-                    <strong>Access your information quickly</strong>
-                  </div>
-                  <div class="card-body text-center"  style="min-height: 250px">
-                    <div class="row">
-                    <div class="col-lg-6 text-center">
-                      <i class="icon-book" style="font-size: 100px;" data-toggle="modal" data-target="#advisory_section"></i>
-                      <span data-feather="user" data-toggle="modal" data-target="#advisory_section"></span>
-                      <br>
-                      <h3>Advisory Section</h3>
-                    </div>
-                    <div class="col-lg-6 text-center">
-                      <i class="icon-clipboard" style="font-size: 100px;" data-toggle="modal" data-target="#handle_section"></i>
-                      <br>
-                      <h3>Handle Section</h3>
-                    </div>
-                  </div>
-
-                  </div>
-                </div>
-              </div>
               <?php } ?>
 
             </div>

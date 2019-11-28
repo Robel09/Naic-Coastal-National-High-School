@@ -78,7 +78,7 @@ include('x-nav.php');
               <th>#</th>
               <th>School Year</th>
               <th>Status</th>
-              <th>Action</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>

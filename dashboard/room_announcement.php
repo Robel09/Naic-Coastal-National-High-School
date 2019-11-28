@@ -10,6 +10,7 @@ $auth_user = new USER();
 // $auth_user->check_accesslevel($page_level);
 
 $pageTitle = "Manage Classroom";
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -97,13 +98,13 @@ include('x-nav.php');
             Add 
           </button>
          <br><br>
-        <table class="table table-striped table-sm" id="announcement_data">
+     <table class="table table-striped table-sm" id="post_data">
           <thead>
             <tr>
               <th>#</th>
-              <th>Title</th>
+              <th width="60%;">Title</th>
               <th>Date</th>
-              <th>Action</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -115,43 +116,58 @@ include('x-nav.php');
 
 
 
-
-
-
-
-
-
-
-
-
-
-<div class="modal fade" id="section_modal" tabindex="-1" role="dialog" aria-labelledby="product_modal_title" aria-hidden="true">
+<div class="modal fade" id="post_modal" tabindex="-1" role="dialog" aria-labelledby="product_modal_title" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="section_modal_title">Add Section</h5>
+        <h5 class="modal-title" id="post_modal_title">Add Post</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body" id="product_modal_content">
     
-      <form method="post" id="section_form" enctype="multipart/form-data">
+      <form method="post" id="post_form" enctype="multipart/form-data">
             <div class="form-row">
-                <div class="form-group col-md-12">
-                  <label for="section_title">Title<span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="section_title" name="section_title" placeholder="" value="" required="">
-                </div>
+            <div class="form-group col-md-12">
+              <label for="post_title">Title<span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="post_title" name="post_title" placeholder="" value="" required="">
+            </div>
+             <div class="form-group col-md-12">
+              <textarea class="form-control" id="post_content" name="post_content" placeholder="" value="" required=""></textarea>
+            </div>
       </div>
       <div class="modal-footer">
-        <input type="hidden" name="section_ID" id="section_ID" />
+        <input type="hidden" name="post_ID" id="post_ID" />
+        <input type="hidden" name="room_ID" id="room_ID" value="<?php echo $room_ID?>"/>
         <input type="hidden" name="operation" id="operation" />
         <div class="">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" id="submit_x" data-dismiss="modal">Close</button>
         <button type="submit" class="btn btn-primary submit" id="submit_input" value="submit_section">Submit</button>
         </div>
       </div>
        </form>
+       <div id="post_comment">
+         <h5>Comment</h5>
+          <table class="table table-striped table-sm" id="comment_data">
+      
+          <tbody>
+            
+     
+          </tbody>
+        </table>
+          <form method="post" id="comment_form" enctype="multipart/form-data">
+            <div class="input-group mb-2 mr-sm-2">
+              <input type="text" class="form-control" id="comment_box" placeholder="Type here to comment">
+              <div class="input-group-prepend ">
+             <!--    <div class="input-group-text btn-primary" id="send_comment" style="background-color:#007bff !important; color:white!important;">SEND</div> -->
+                <input type="submit" class="input-group-text btn-primary" id="send_comment" style="background-color:#007bff !important; color:white!important;"type="" value="SEND">
+                
+              </div>
+            </div>
+          </form>
+          <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">Close</button>
+       </div>
     </div>
   </div>
 </div>
@@ -159,11 +175,11 @@ include('x-nav.php');
 
       </div>
 
-<div class="modal fade" id="delsection_modal" tabindex="-1" role="dialog" aria-labelledby="product_modal_title" aria-hidden="true">
+<div class="modal fade" id="delpost_modal" tabindex="-1" role="dialog" aria-labelledby="product_modal_title" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="section_modal_title">Delete this Section</h5>
+        <h5 class="modal-title" id="post_modal_title">Delete this Post</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -171,7 +187,7 @@ include('x-nav.php');
       <div class="modal-body">
         <div class="text-center">
         <div class="btn-group">
-        <button type="submit" class="btn btn-danger" id="Section_delform">Delete</button>
+        <button type="submit" class="btn btn-danger" id="post_delform">Delete</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
         </div>
         </div>
@@ -190,18 +206,18 @@ include('x-nav.php');
 <?php 
 include('x-script.php');
 ?>
-        <script type="text/javascript">
+           <script type="text/javascript">
    
 
 
           $(document).ready(function() {
              
-            var dataTable = $('#announcement_data').DataTable({
+            var dataTable = $('#post_data').DataTable({
             "processing":true,
             "serverSide":true,
             "order":[],
             "ajax":{
-              url:"datatable/room/fetch_announcement.php",
+              url:"datatable/room_announcement/fetch.php?room_ID=<?php echo $room_ID?>",
               type:"POST"
             },
             "columnDefs":[
@@ -213,22 +229,44 @@ include('x-script.php');
 
           });
 
+            function comment_data(post_ID){
+                  var dataTable = $('#comment_data').DataTable({
+                "processing":true,
+                "serverSide":true,
+                "bAutoWidth": false,
+                "order":[],
+                "ajax":{
+                  url:"datatable/room_comment/fetch.php?post_ID="+post_ID,
+                  type:"POST"
+                },
+                "columnDefs":[
+                  {
+                    "targets":[0],
+                    "orderable":false,
+                  },
+                ],
+
+              });
+            }
+
+            
 
 
-          $(document).on('submit', '#section_form', function(event){
+
+          $(document).on('submit', '#post_form', function(event){
             event.preventDefault();
 
               $.ajax({
-                url:"datatable/section/insert.php",
+                url:"datatable/room_announcement/insert.php",
                 method:'POST',
                 data:new FormData(this),
                 contentType:false,
                 processData:false,
                 success:function(data)
                 {
-                  alertify.alert(data).setHeader('Section');
-                  $('#section_form')[0].reset();
-                  $('#section_modal').modal('hide');
+                  alertify.alert(data).setHeader('Post');
+                  $('#post_form')[0].reset();
+                  $('#post_modal').modal('hide');
                   dataTable.ajax.reload();
                 }
               });
@@ -236,39 +274,54 @@ include('x-script.php');
           });
 
           $(document).on('click', '.add', function(){
-            $('#section_modal_title').text('Add Section');
-            $("#section_title").prop("disabled", false);
-            $('#section_form')[0].reset();
-            $('#section_modal').modal('show');
+            $('#post_modal_title').text('Add Post');
+            $("#post_title").prop("disabled", false);
+            $("#post_content").prop("disabled", false);
+            $('#post_form')[0].reset();
+            $('#post_modal').modal('show');
+
             $('#submit_input').show();
+            $('#submit_x').show();
+            $('#post_comment').hide();
+
             $('#submit_input').text('Submit');
-            $('#submit_input').val('submit_section');
-            $('#operation').val("submit_section");
+            $('#submit_input').val('post_submit');
+            $('#operation').val("post_submit");
           });
 
           $(document).on('click', '.view', function(){
-            var section_ID = $(this).attr("id");
-            $('#section_modal_title').text('View News');
-            $('#section_modal').modal('show');
+            var post_ID = $(this).attr("id");
+            $('#post_modal_title').text('View Post');
+            $('#post_modal').modal('show');
             $("#submit_input").hide();
             
              $.ajax({
-                url:"datatable/section/fetch_single.php",
+                url:"datatable/room_announcement/fetch_single.php",
                 method:'POST',
-                data:{action:"section_view",section_ID:section_ID},
+                data:{operation:"post_view",post_ID:post_ID},
                 dataType    :   'json',
                 success:function(data)
                 {
 
-                $("#section_title").prop("disabled", true);
+                  $("#post_title").prop("disabled", true);
+                  $("#post_content").prop("disabled", true);
 
-                  $('#section_title').val(data.section_Name);
+                  $('#post_title').val(data.post_Name);
+                  $('#post_content').val(data.post_Description);
+
 
                   $('#submit_input').hide();
-                  $('#section_ID').val(section_ID);
+                  $('#submit_x').hide();
+                  $('#post_comment').show();
+                  
+                  $('#post_ID').val(post_ID);
                   $('#submit_input').text('View');
-                  $('#submit_input').val('section_view');
-                  $('#operation').val("section_view");
+                  $('#submit_input').val('post_view');
+                  $('#operation').val("post_view");
+
+                  comment_data(post_ID);
+                  $('#comment_data').DataTable().destroy();
+                  
                   
                 }
               });
@@ -276,30 +329,33 @@ include('x-script.php');
 
             });
           $(document).on('click', '.edit', function(){
-            var section_ID = $(this).attr("id");
-            $('#section_modal_title').text('Edit Section');
-            $('#section_modal').modal('show');
+            var post_ID = $(this).attr("id");
+            $('#post_modal_title').text('Edit Post');
+            $('#post_modal').modal('show');
             $("#submit_input").show();
-
+            $('#submit_x').show();
+            $('#post_comment').hide();
             
              $.ajax({
-                url:"datatable/section/fetch_single.php",
+                url:"datatable/room_announcement/fetch_single.php",
                 method:'POST',
-                data:{action:"section_view",section_ID:section_ID},
+                data:{operation:"post_edit",post_ID:post_ID},
                 dataType    :   'json',
                 success:function(data)
                 {
 
                   
-                $("#section_title").prop("disabled", false);
+                  $("#post_title").prop("disabled", false);
+                  $("#post_content").prop("disabled", false);
 
-                  $('#section_title').val(data.section_Name);
+                  $('#post_title').val(data.post_Name);
+                  $('#post_content').val(data.post_Description);
 
                   $('#submit_input').show();
-                  $('#section_ID').val(section_ID);
+                  $('#post_ID').val(post_ID);
                   $('#submit_input').text('Update');
-                  $('#submit_input').val('section_update');
-                  $('#operation').val("section_edit");
+                  $('#submit_input').val('post_edit');
+                  $('#operation').val("post_edit");
                   
                 }
               });
@@ -307,26 +363,26 @@ include('x-script.php');
 
             });
             $(document).on('click', '.delete', function(){
-            var section_ID = $(this).attr("id");
-             $('#delsection_modal').modal('show');
+            var post_ID = $(this).attr("id");
+             $('#delpost_modal').modal('show');
              $('.submit').hide();
              
-             $('#section_ID').val(section_ID);
+             $('#post_ID').val(post_ID);
             });
 
            
 
 
-          $(document).on('click', '#Section_delform', function(event){
-             var section_ID =  $('#section_ID').val();
+          $(document).on('click', '#post_delform', function(event){
+             var post_ID =  $('#post_ID').val();
             $.ajax({
              type        :   'POST',
-             url:"datatable/section/insert.php",
-             data        :   {operation:"delete_section",section_ID:section_ID},
+             url:"datatable/room_announcement/insert.php",
+             data        :   {operation:"post_delete",post_ID:post_ID},
              dataType    :   'json',
              complete     :   function(data) {
-               $('#delsection_modal').modal('hide');
-               alertify.alert(data.responseText).setHeader('Delete this Section');
+               $('#delpost_modal').modal('hide');
+               alertify.alert(data.responseText).setHeader('Delete this Post');
                dataTable.ajax.reload();
                dataTable_product_data.ajax.reload();
                 
@@ -334,6 +390,26 @@ include('x-script.php');
             })
            
           });
+
+              $(document).on('submit', '#comment_form', function(event){
+              // $(document).on('click', '#send_comment', function(){
+              event.preventDefault();
+              
+              var comment_box = $('#comment_box').val();
+              var post_ID = $('#post_ID').val();
+               $.ajax({
+                  url:"datatable/room_announcement/insert.php",
+                  method:'POST',
+                  data:{operation:"post_comment",comment:comment_box,post_ID:post_ID},
+                  dataType    :   'json',
+                  complete     :   function(data) {
+                  comment_data(post_ID);
+                  $('#comment_data').DataTable().destroy();
+                  }
+                });
+                
+               
+              });
           
           } );
 

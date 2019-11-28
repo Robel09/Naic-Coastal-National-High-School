@@ -8,7 +8,7 @@ require_once("../class.user.php");
 $auth_user = new USER();
 // $page_level = 3;
 // $auth_user->check_accesslevel($page_level);
-$pageTitle = "Manage Classroom";
+$pageTitle = "Manage Room";
 ?>
 <!doctype html>
 <html lang="en">
@@ -71,29 +71,55 @@ include('x-nav.php');
 
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Manage Classroom</h1>
+        <h1 class="h2">Manage Room</h1>
         
       </div>
 <nav aria-label="breadcrumb" >
         <ol class="breadcrumb bcrum">
           <li class="breadcrumb-item "><a href="index" class="bcrum_i_a">Dashboard</a></li>
-          <li class="breadcrumb-item  active bcrum_i_ac" aria-current="page">Classroom</li>
+          <li class="breadcrumb-item  active bcrum_i_ac" aria-current="page">Room</li>
         </ol>
       </nav>
       <div class="table-responsive">
-         <button type="button" class="btn btn-sm btn-success add" >
-            Add 
-          </button>
+
+     
+           <?php 
+              if($auth_user->student_level() || $auth_user->instructor_level() ){
+                
+              }
+              else{
+                ?>
+                <button type="button" class="btn btn-sm btn-success add" >
+                  Add 
+                </button>
+                <?php
+              }
+              ?>
          <br><br>
         <table class="table table-striped table-sm" id="classroom_data">
           <thead>
             <tr>
+              <?php 
+              if($auth_user->student_level()){
+                ?>
+
+              <th>#</th>
+              <th>Section</th>
+              <th></th>
+                <?php
+              }
+              else{
+                ?>
+
               <th>#</th>
               <th>Teacher</th>
               <th>Section</th>
               <th>School Year</th>
               <th>Status</th>
-              <th>Action</th>
+              <th></th>
+              <?php
+              }
+              ?>
             </tr>
           </thead>
           <tbody>
@@ -239,7 +265,27 @@ include('x-script.php');
             "serverSide":true,
             "order":[],
             "ajax":{
+              <?php 
+              if($auth_user->admin_level()){
+                ?>
               url:"datatable/room/fetch.php",
+                <?php
+              }
+              ?>
+              <?php 
+              if($auth_user->student_level()){
+                ?>
+              url:"datatable/room/fetch_studentlevel.php",
+                <?php
+              }
+              ?>
+              <?php 
+              if($auth_user->instructor_level()){
+                ?>
+              url:"datatable/room/fetch_teacherlevel.php",
+                <?php
+              }
+              ?>
               type:"POST"
             },
             "columnDefs":[
@@ -392,6 +438,7 @@ include('x-script.php');
             $(document).on('click', '.delete', function(){
             var room_ID = $(this).attr("id");
              $('#delclassroom_modal').modal('show');
+            $('#classroom_modal_title').text('Delete Classroom');
              $('.submit').hide();
              
              $('#room_ID').val(room_ID);

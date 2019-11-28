@@ -317,6 +317,25 @@ class USER
 		}
 		
 	}
+	public function get_test($test_ID)
+	{
+		$query ="SELECT * FROM `room_test` WHERE test_ID = $test_ID";
+		$stmt = $this->conn->prepare($query);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		return $result;
+		
+	}
+	public function get_score($score_ID)
+	{
+		$query ="SELECT * FROM `room_test_score` WHERE score_ID = $score_ID";
+		$stmt = $this->conn->prepare($query);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		return $result;
+		
+	}
+
 	public function user_sex_option()
 	{
 		$query ="SELECT * FROM `ref_sex`";
@@ -650,36 +669,103 @@ class USER
 		}
 		return $output;
 	}
-	
-	
-
-	public function test_json()
-	{
-		$query ="SELECT * FROM `ref_status`";
+	public function test_choices($choices_ID,$i_x_n){
+		
+		$query ="SELECT * FROM `room_test_choices` WHERE question_ID = $choices_ID";
 		$stmt = $this->conn->prepare($query);
 		$stmt->execute();
 		$result = $stmt->fetchAll();
 		
-		$output = array();
-		$count = count($result);
-		$i =1;
+		$x = 1;
 		foreach($result as $row)
-		{	
-			if ($i < $count){
-				$x = ',';
-			}
-			else{
-				$x = ' ';
-			}
-			$output['y'] =  $row["status_ID"];
-			$output['label'] = $row["status_Name"];
+		{
+			?>
+			<div class="form-check ">
+                <input class="form-check-input" type="radio" name="q_coption<?php echo $i_x_n?>" id="inlineRadio<?php echo $x?>" value="<?php echo $row["choice_ID"]?>">
+                <label class="form-check-label" for="inlineRadio<?php echo $x?>"><?php echo $row["choice"]?></label>
+             </div>
+			<?php
 
-			echo json_encode($output).$x;
-			$i++;
+			$x++;
 		}
+	}
+	public function test_question($test_ID){
+		$query ="SELECT * FROM `room_test_questions` WHERE test_ID = $test_ID AND  type  = 1";
+		$stmt = $this->conn->prepare($query);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		$count = $stmt->rowCount();
+		$x = 1;
+		if($count < 1){
+			// echo "NO CONTENT";
+		}
+		else{
+
+			echo '<h4>Multiple Choices</h4>';
+			foreach($result as $row)
+			{
+				
+
+				?>
+				<div class="form-group col-md-4">
+	              <label for=""><?php echo $x?>.) <?php echo $row["question"]?></label>
+	              <?php $this->test_choices($row["question_ID"],$x)?>
+	            </div>
+				<?php
+
+				$x++;
+			}
+
+		}
+		echo "<hr>";
+		$query1 ="SELECT * FROM `room_test_questions` WHERE test_ID = $test_ID AND  type  = 2";
+		$stmt1 = $this->conn->prepare($query1);
+		$stmt1->execute();
+		$result1 = $stmt1->fetchAll();
+		$count1 = $stmt1->rowCount();
+		$x1 = 1;
+		if($count1 < 1){
+			// echo "NO CONTENT";
+		}
+		else{
+			echo '<h4>True or False</h4>';
+			foreach($result1 as $row)
+			{
+				
+
+				?>
+				<div class="form-group col-md-4">
+	              <label for=""><?php echo $x1?>.) <?php echo $row["question"]?></label>
+	              <?php $this->test_choices($row["question_ID"],$x1+3)?>
+	            </div>
+				<?php
+
+				$x1++;
+			}
+
+		}
+		// $tcount = $count+$count1;
 
 		
+		?>
+		<input type="hidden" name="qcount" value="<?php echo $count;?>">
+		<input type="hidden" name="qcount_tf" value="<?php echo $count1;?>">
+		<?php
 	}
+
+	public function test_time($test_ID){
+		$query ="SELECT test_Timer FROM `room_test` WHERE test_ID =$test_ID";
+		$stmt = $this->conn->prepare($query);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		foreach($result as $row)
+		{
+			$time = $row["test_Timer"];
+		}
+		return $time;
+	}
+	
+
 
 
 

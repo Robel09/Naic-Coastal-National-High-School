@@ -9,6 +9,10 @@ $auth_user = new USER();
 // $page_level = 3;
 // $auth_user->check_accesslevel($page_level);
 $pageTitle = "Manage Classroom";
+if(isset($_REQUEST["room_ID"])){
+   $this_room_ID = $_REQUEST["room_ID"];
+}
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -89,6 +93,9 @@ include('x-nav.php');
           <button type="button" class="btn btn-sm btn-success add" >
               Add 
           </button>
+          <button type="button" class="btn btn-sm btn-info float-right print" >
+              Print Student List
+          </button>
         <?php }?>
         <br><br>
          <br><br>
@@ -99,7 +106,7 @@ include('x-nav.php');
               <th>LRN</th>
               <th>Name</th>
               <th>Sex</th>
-              <th>Action</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -121,30 +128,36 @@ include('x-nav.php');
 
 
 
-<div class="modal fade" id="section_modal" tabindex="-1" role="dialog" aria-labelledby="product_modal_title" aria-hidden="true">
+<div class="modal fade" id="student_modal" tabindex="-1" role="dialog" aria-labelledby="product_modal_title" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="section_modal_title">Add Section</h5>
+        <h5 class="modal-title" id="student_modal_title">Add Student</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body" id="product_modal_content">
-    
-      <form method="post" id="section_form" enctype="multipart/form-data">
+      <div class="btn-group float-right" >
+      <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#browse_student_modal">BROWSE STUDENT</button>
+      </div>
+      <br><br>
+      <form method="post" id="student_form" enctype="multipart/form-data">
             <div class="form-row">
                 <div class="form-group col-md-12">
-                  <label for="section_title">Title<span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="section_title" name="section_title" placeholder="" value="" required="">
+                  <label for="a_student_name">Name<span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="a_student_name" name="a_student_name" placeholder="" value="" required="" disabled>
                 </div>
       </div>
       <div class="modal-footer">
-        <input type="hidden" name="section_ID" id="section_ID" />
+
+        <input type="hidden" name="res_ID" id="res_ID" />
+        <input type="hidden" name="rsd_ID" id="rsd_ID" />
+        <input type="hidden" name="room_ID" id="room_ID"  value="<?php echo $this_room_ID?>"/>
         <input type="hidden" name="operation" id="operation" />
         <div class="">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary submit" id="submit_input" value="submit_section">Submit</button>
+        <button type="submit" class="btn btn-primary submit" id="submit_input" value="submit_student">Submit</button>
         </div>
       </div>
        </form>
@@ -153,13 +166,47 @@ include('x-nav.php');
 </div>
 
 
-      </div>
+</div>
 
-<div class="modal fade" id="delsection_modal" tabindex="-1" role="dialog" aria-labelledby="product_modal_title" aria-hidden="true">
+
+<!-- Modal -->
+<div class="modal fade" id="browse_student_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Student</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped table-sm" id="all_student_data">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>LRN ID</th>
+              <th>Name</th>
+              <th>Sex</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+     
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="delstudent_modal" tabindex="-1" role="dialog" aria-labelledby="product_modal_title" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="section_modal_title">Delete this Section</h5>
+        <h5 class="modal-title" id="student_modal_title">Delete this Student</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -167,7 +214,7 @@ include('x-nav.php');
       <div class="modal-body">
         <div class="text-center">
         <div class="btn-group">
-        <button type="submit" class="btn btn-danger" id="Section_delform">Delete</button>
+        <button type="submit" class="btn btn-danger" id="student_delform">Delete</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
         </div>
         </div>
@@ -196,8 +243,26 @@ include('x-script.php');
             "processing":true,
             "serverSide":true,
             "order":[],
+            "ordering": false,
             "ajax":{
-              url:"datatable/room/fetch_student.php",
+              url:"datatable/room/fetch_student.php?room_ID="+<?php echo $this_room_ID?>,
+              type:"POST"
+            },
+            "columnDefs":[
+              {
+                "targets":[0],
+                "orderable":false,
+              },
+            ],
+
+          });
+          var stud_dataTable = $('#all_student_data').DataTable({
+            "processing":true,
+            "serverSide":true,
+            "order":[],
+              "bAutoWidth": false,
+            "ajax":{
+              url:"datatable/student/fetch.php",
               type:"POST"
             },
             "columnDefs":[
@@ -212,21 +277,48 @@ include('x-script.php');
           dataTable.columns( [4] ).visible( false );
           <?php }?>
 
+          //JQUERY FOR SELECTING  STUDENT FOR ROOM  WHEN BROWSING
+          //----------------------------------------------------------------
+            var stud_Rec = '#all_student_data tbody';
 
-          $(document).on('submit', '#section_form', function(event){
+            $(stud_Rec).on('click', 'tr', function(){
+              
+              var cursor = stud_dataTable.row($(this));//get the clicked row
+              var data=cursor.data();// this will give you the data in the current row.
+               if(confirm("Are you sure you want to use ("+data[2]+") for this room?"))
+                {
+
+                  
+                  jQuery('#rsd_ID').val(data[0])
+                  $('#student_form').find("input[name='a_student_name'][type='text']").val(data[2]);
+                  $('#browse_student_modal').modal('hide');
+
+                }
+                  else
+                {
+                  return false; 
+                }
+             
+              
+            });
+
+
+
+
+          $(document).on('submit', '#student_form', function(event){
             event.preventDefault();
 
               $.ajax({
-                url:"datatable/section/insert.php",
+                url:"datatable/room/insert.php",
                 method:'POST',
                 data:new FormData(this),
                 contentType:false,
                 processData:false,
                 success:function(data)
                 {
-                  alertify.alert(data).setHeader('Section');
-                  $('#section_form')[0].reset();
-                  $('#section_modal').modal('hide');
+                  alertify.alert(data).setHeader('Student');
+                  $('#student_form')[0].reset();
+                  $('#student_modal').modal('hide');
                   dataTable.ajax.reload();
                 }
               });
@@ -234,97 +326,37 @@ include('x-script.php');
           });
 
           $(document).on('click', '.add', function(){
-            $('#section_modal_title').text('Add Section');
-            $("#section_title").prop("disabled", false);
-            $('#section_form')[0].reset();
-            $('#section_modal').modal('show');
+            $('#student_modal_title').text('Add Student');
+            $("#student_title").prop("disabled", false);
+            $('#student_form')[0].reset();
+            $('#student_modal').modal('show');
             $('#submit_input').show();
             $('#submit_input').text('Submit');
-            $('#submit_input').val('submit_section');
-            $('#operation').val("submit_section");
+            $('#submit_input').val('submit_student');
+            $('#operation').val("submit_student");
           });
 
-          $(document).on('click', '.view', function(){
-            var section_ID = $(this).attr("id");
-            $('#section_modal_title').text('View News');
-            $('#section_modal').modal('show');
-            $("#submit_input").hide();
-            
-             $.ajax({
-                url:"datatable/section/fetch_single.php",
-                method:'POST',
-                data:{action:"section_view",section_ID:section_ID},
-                dataType    :   'json',
-                success:function(data)
-                {
-
-                $("#section_title").prop("disabled", true);
-
-                  $('#section_title').val(data.section_Name);
-
-                  $('#submit_input').hide();
-                  $('#section_ID').val(section_ID);
-                  $('#submit_input').text('View');
-                  $('#submit_input').val('section_view');
-                  $('#operation').val("section_view");
-                  
-                }
-              });
-
-
-            });
-          $(document).on('click', '.edit', function(){
-            var section_ID = $(this).attr("id");
-            $('#section_modal_title').text('Edit Section');
-            $('#section_modal').modal('show');
-            $("#submit_input").show();
-
-            
-             $.ajax({
-                url:"datatable/section/fetch_single.php",
-                method:'POST',
-                data:{action:"section_view",section_ID:section_ID},
-                dataType    :   'json',
-                success:function(data)
-                {
-
-                  
-                $("#section_title").prop("disabled", false);
-
-                  $('#section_title').val(data.section_Name);
-
-                  $('#submit_input').show();
-                  $('#section_ID').val(section_ID);
-                  $('#submit_input').text('Update');
-                  $('#submit_input').val('section_update');
-                  $('#operation').val("section_edit");
-                  
-                }
-              });
-
-
-            });
             $(document).on('click', '.delete', function(){
-            var section_ID = $(this).attr("id");
-             $('#delsection_modal').modal('show');
+            var student_ID = $(this).attr("id");
+             $('#delstudent_modal').modal('show');
              $('.submit').hide();
              
-             $('#section_ID').val(section_ID);
+             $('#res_ID').val(student_ID);
             });
 
            
 
 
-          $(document).on('click', '#Section_delform', function(event){
-             var section_ID =  $('#section_ID').val();
+          $(document).on('click', '#student_delform', function(event){
+             var student_ID =  $('#res_ID').val();
             $.ajax({
              type        :   'POST',
-             url:"datatable/section/insert.php",
-             data        :   {operation:"delete_section",section_ID:section_ID},
+             url:"datatable/room/insert.php",
+             data        :   {operation:"delete_student",student_ID:student_ID},
              dataType    :   'json',
              complete     :   function(data) {
-               $('#delsection_modal').modal('hide');
-               alertify.alert(data.responseText).setHeader('Delete this Section');
+               $('#delstudent_modal').modal('hide');
+               alertify.alert(data.responseText).setHeader('Delete this Student');
                dataTable.ajax.reload();
                dataTable_product_data.ajax.reload();
                 

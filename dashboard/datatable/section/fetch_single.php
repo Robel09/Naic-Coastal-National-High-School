@@ -9,6 +9,8 @@ if (isset($_POST['action'])) {
 			LIMIT 1");
 	$stmt->execute();
 	$result = $stmt->fetchAll();
+
+
 	foreach($result as $row)
 	{
 
@@ -18,6 +20,10 @@ if (isset($_POST['action'])) {
 		$output["section_Name"] = $row["section_Name"];
 	
 	}
+
+	
+
+
 	
 	echo json_encode($output);
 	

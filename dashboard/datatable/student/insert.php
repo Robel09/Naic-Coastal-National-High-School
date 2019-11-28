@@ -167,6 +167,13 @@ if(isset($_POST["operation"]))
 		
 	
 	}
+	if($_POST["operation"] == "gen_account")
+	{
+		$student_ID = $_POST["student_ID"];
+
+		$student->generate_account($student_ID,"student");
+
+	}
 }
 ?>
 
