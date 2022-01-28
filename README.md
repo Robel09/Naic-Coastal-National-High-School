@@ -1,6 +1,5 @@
 # Naic-Coastal National High School E-Learning - (ELS) E-Learning  System 
-=======================
-
+ 
 
 **Naic-Coastal National High School E-Learning - (ELS) E-Learning  System .** It was developed with [Bootstrap 4.x Framework](http://getbootstrap.com)
 
@@ -22,6 +21,25 @@ You can choose one from multiple ways for installation.
 ```
 git clone https://github.com/rhalp10/Greengate-Annex.git
 ```
+**Note**
+ - windows 11 will require you to indicate port on your db configuration. Change port number on these files.
+ ```DIR 
+ dbconfig.php 
+ ```
+ - You can find your mysql port in `my.ini` file.
+## Requirements 
+- Maria 10.4.10+ / MySQL 8.0.18+   
+- phpMyAdmin 4.9.2 
+- Apache 2.4.41 
+- PHP 7.1.33+
+
+## Demo credentials 
+| Username       | Password       | Type           |
+|----------------|----------------|----------------|
+|admin           |password        | admin          |
+|30203013	     |saboc123        | teacher        |
+|201910661	     |dianito123      | student        |
+|201910660	     |paor123         |student         |
 
 
 Browser Support
@@ -37,6 +55,8 @@ Browser Support
 Change Logs
 ----------
 See  **[commits](https://github.com/rhalp10/Naic-Coastal-National-High-School/commits/master)**
+
+
 
 # What's Included?
 
